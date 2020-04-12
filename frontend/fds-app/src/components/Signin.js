@@ -72,20 +72,21 @@ class SignIn extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    console.log(this.state.password);
     let result = auth.login(
-      () => {
-        this.props.history.push("/about");
+      (result) => {
+        if (!result) {
+          this.setState({
+            errorMsg: "there is an error with your login",
+          });
+        } else {
+          this.props.onIsLoginValue();
+          this.props.history.push("/about");
+        }
       },
       this.state.email,
       this.state.password
     );
-
-    if (!result) {
-      this.setState({
-        errorMsg: "there is an error with your login",
-      });
-    }
+    console.log(result);
   }
 
   render() {

@@ -7,27 +7,38 @@ import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
+import auth from "../auth";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   toolbar: {
-    borderBottom: `1px solid ${theme.palette.divider}`
+    borderBottom: `1px solid ${theme.palette.divider}`,
   },
   toolbarTitle: {
-    flex: 1
+    flex: 1,
   },
   toolbarSecondary: {
     justifyContent: "flex-start",
-    overflowX: "auto"
+    overflowX: "auto",
   },
   toolbarLink: {
     padding: theme.spacing(1),
-    flexShrink: 0
-  }
+    flexShrink: 0,
+  },
 }));
 
 export default function Header(props) {
   const classes = useStyles();
   const { sections, title } = props;
+
+  const handleSignIn = (event) => {
+    props.onIsLoginValue();
+    props.history.push("/signin");
+  };
+  const handleSignOut = (event) => {
+    auth.logout();
+    props.onIsLoginValue();
+    props.history.push("/");
+  };
 
   return (
     <React.Fragment>
@@ -46,18 +57,27 @@ export default function Header(props) {
         <IconButton>
           <SearchIcon />
         </IconButton>
-        <Link href="/signin">
-          <Button variant="outlined" size="small">
-            Sign in
-          </Button>
-        </Link>
+        {props.isLogin == false && (
+          <Link href="/signin">
+            <Button variant="outlined" size="small" onClick={handleSignIn}>
+              Sign in
+            </Button>
+          </Link>
+        )}
+        {props.isLogin && (
+          <Link href="/signin">
+            <Button variant="outlined" size="small" onClick={handleSignOut}>
+              Logout
+            </Button>
+          </Link>
+        )}
       </Toolbar>
       <Toolbar
         component="nav"
         variant="dense"
         className={classes.toolbarSecondary}
       >
-        {sections.map(section => (
+        {sections.map((section) => (
           <Link
             color="inherit"
             noWrap
@@ -76,5 +96,5 @@ export default function Header(props) {
 
 Header.propTypes = {
   sections: PropTypes.array,
-  title: PropTypes.string
+  title: PropTypes.string,
 };

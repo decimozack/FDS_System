@@ -17,9 +17,9 @@ class auth {
         if (response.data.rowCount == 1) {
           console.log(response.data);
           localStorage.setItem("user", response.data.rows[0]);
-          cb();
+          cb(true);
         } else {
-          return false;
+          cb(false);
         }
       })
       .catch((e) => {
@@ -27,9 +27,8 @@ class auth {
       });
   }
 
-  logout(cb) {
+  logout() {
     localStorage.removeItem("user");
-    cb();
   }
 
   isAuthenticated() {

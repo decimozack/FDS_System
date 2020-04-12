@@ -76,13 +76,7 @@ class Home extends Component {
         </div>
         <button
           onClick={() => {
-            auth.login(
-              () => {
-                this.props.history.push("/about");
-              },
-              "email",
-              "password"
-            );
+            auth.login("email", "password");
           }}
         >
           Login
