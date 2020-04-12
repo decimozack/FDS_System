@@ -46,7 +46,8 @@ CREATE TABLE Customers (
 	cname CHAR(50),
 	email CHAR(50),
 	cpassword CHAR(50),
-	reward_pts INTEGER
+	reward_pts INTEGER,
+	join_date DATE
 ); 
 
 CREATE TYPE ostatus as ENUM('WAITING', 'DELIVERING', 'COMPLETED');

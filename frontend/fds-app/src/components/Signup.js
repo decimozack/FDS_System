@@ -49,7 +49,7 @@ const useStyles = (theme) => ({
   },
 });
 
-class SignIn extends React.Component {
+class SingUp extends React.Component {
   constructor(props) {
     super(props);
 
@@ -153,7 +153,7 @@ class SignIn extends React.Component {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/signup" variant="body2">
+                <Link to="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
@@ -168,4 +168,4 @@ class SignIn extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(SignIn);
+export default withStyles(useStyles)(SingUp);
