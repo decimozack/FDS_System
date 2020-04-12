@@ -9,17 +9,18 @@ import About from "./components/About";
 import Contact from "./components/Contact";
 import SignIn from "./components/Signin";
 import Header from "./components/Header";
+import { ProtectedRoute } from "./protected.route";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   mainGrid: {
-    marginTop: theme.spacing(3)
-  }
+    marginTop: theme.spacing(3),
+  },
 }));
 
 const sections = [
   { title: "Home", url: "/" },
   { title: "Contact", url: "/contact" },
-  { title: "About", url: "/about" }
+  { title: "About", url: "/about" },
 ];
 
 const routing = (
@@ -32,9 +33,10 @@ const routing = (
           <div>
             <Switch>
               <Route exact path="/" component={Home} />
-              <Route path="/about" component={About} />
+              <ProtectedRoute path="/about" component={About} />
               <Route path="/contact" component={Contact} />
               <Route path="/signin" component={SignIn} />
+              <Route path="*" component={() => "404 Not Found"} />
             </Switch>
           </div>
         </BrowserRouter>

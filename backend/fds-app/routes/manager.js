@@ -19,6 +19,29 @@ router.get("/getUserList", (req, res, next) => {
     });
 });
 
+router.post("/verifyLogin", (req, res, next) => {
+  var { email, password } = req.body;
+  var db = req.app.locals.db;
+
+  console.log(req.body);
+
+  db.query("SELECT * FROM LoginTable WHERE (email=$1 AND upassword=$2)", [
+    email,
+    password,
+  ])
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find user information");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
 /* Sample Post request from localhost:3001/sample/addNewUser for creating a new user */
 router.post("/addNewUser", (req, res, next) => {
   var { name, emql } = req.body;
