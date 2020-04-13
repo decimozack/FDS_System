@@ -49,7 +49,8 @@ CREATE TABLE Customers (
 	email CHAR(50),
 	cpassword CHAR(50),
 	credit_card_info CHAR(50),
-	reward_pts INTEGER
+	reward_pts INTEGER,
+	created_on TIMESTAMP NOT NULL 
 ); 
 
 CREATE TYPE ostatus as ENUM('WAITING', 'DELIVERING', 'COMPLETED');
@@ -263,7 +264,7 @@ CREATE TABLE OrderWaitingList (
 --INSERT INTO RestaurantStaff (rsid) VALUES (0, '');
 INSERT INTO Restaurants (rid, rname, min_order_cost) VALUES (1, 'KFC', 3), (2, 'MacDonalds' , 2.50), (3, 'Deck', 2.10), (4, 'The Tea Party', 4.50), (5, 'Fong Seng Nasi Lemak', 1.00);
 INSERT INTO RestaurantStaff (rsid, rsname, email, rspassword, rid) VALUES (1, 'John Doe', 'john@example.com', 'johndoe123', 1), (2, 'Dominic Frank', 'domthed@gmail.com', 'benedict312', 3), (3, 'Dominic Quek', 'quek@example.com', '65nf76', 5), (4, 'Peter Pan', 'pan@ocbc.edu', '87ghf', 4);
-INSERT INTO Customers (cid, cname, email, cpassword, credit_card_info, reward_pts) VALUES (1, 'Benedict Quek', 'bene@hotmail.com', 'dictdict96', 'DBS 9821-2112', 10), (2, 'Zachary Tan', 'tanzack@nus.com', 'fhas7612', 'POSB 312321132', 0), (3, 'Chen Hua', 'chenhua@gmail.com', 'fdsf64324', 'DBS 1232', 50), (4, 'Joyce Tan', 'joyceytan@gmail.com', 'ashda6969', 'OCBC 321123', 61), (5, 'John Elijah Tan', 'elijah@dbs.email.co', 'dasni324', 'DBS 1213', 1);
+INSERT INTO Customers (cid, cname, email, cpassword, credit_card_info, reward_pts, created_on) VALUES (1, 'Benedict Quek', 'bene@hotmail.com', 'dictdict96', 'DBS 9821-2112', 10, current_timestamp), (2, 'Zachary Tan', 'tanzack@nus.com', 'fhas7612', 'POSB 312321132', 0, current_timestamp), (3, 'Chen Hua', 'chenhua@gmail.com', 'fdsf64324', 'DBS 1232', 50, current_timestamp), (4, 'Joyce Tan', 'joyceytan@gmail.com', 'ashda6969', 'OCBC 321123', 61, current_timestamp), (5, 'John Elijah Tan', 'elijah@dbs.email.co', 'dasni324', 'DBS 1213', 1, current_timestamp);
 INSERT INTO Orders (oid, use_credit_card, use_points, order_time, order_status, price, delivery_fee, address, cid) VALUES (1, true, false, '2038-01-19 03:14:07' ,'WAITING', 10.50, 3.00, 'Clementi 96', 1);
 INSERT INTO Menu (mid, mname, start_time, end_time) VALUES (1, 'All-time', '09:00:00', '18:00:00'), (2, 'Breakfast', '08:00:00', '12:00:00');
 INSERT INTO Category (catid, catname, description) VALUES (1, 'Western', 'This is western cuisine.'), (2, 'Asian', 'Delicious cooked by Singaporeans');
