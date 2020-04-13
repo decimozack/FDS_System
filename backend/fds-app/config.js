@@ -1,8 +1,8 @@
 const config = {
 	DB_CONNECTION: {
-	  user: 'FDS',
+	  user: 'fds',
 	  host: 'localhost',
-	  database: 'FDS',
+	  database: 'fds',
 	  password: 'password',
 	  port: '5432'
 	},
