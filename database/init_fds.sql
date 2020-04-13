@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS RestaurantStaff CASCADE;
 DROP TABLE IF EXISTS Restaurants CASCADE;
-DROP TABLE IF EXISTS Has CASCADE;
+DROP TABLE IF EXISTS Sells CASCADE;
 DROP TABLE IF EXISTS Menu CASCADE;
 DROP TABLE IF EXISTS FoodItem CASCADE;
 DROP TABLE IF EXISTS Category CASCADE;
@@ -8,24 +8,26 @@ DROP TABLE IF EXISTS Offers CASCADE;
 DROP TABLE IF EXISTS OrderItem CASCADE;
 DROP TABLE IF EXISTS Place CASCADE;
 DROP TABLE IF EXISTS Customers CASCADE;
-DROP TABLE IF EXISTS Reviews CASCADE;
-DROP TABLE IF EXISTS Review CASCADE;
+DROP TABLE IF EXISTS RestaurantReviews CASCADE;
+DROP TABLE IF EXISTS RestaurantReview CASCADE;
 DROP TABLE IF EXISTS Orders CASCADE;
 DROP TABLE IF EXISTS Belongs CASCADE;
 DROP TABLE IF EXISTS PromoCampaign CASCADE;
+DROP TABLE IF EXISTS Uses CASCADE;
 DROP TABLE IF EXISTS Eligible CASCADE;
 DROP TABLE IF EXISTS FDSEmployee CASCADE;
 DROP TABLE IF EXISTS Rider CASCADE;
 DROP TABLE IF EXISTS WWS CASCADE;
 DROP TABLE IF EXISTS OrderWaitingList CASCADE;
 DROP TABLE IF EXISTS WorkShift CASCADE;
+DROP TABLE IF EXISTS RiderReviews CASCADE;
+DROP TABLE IF EXISTS RiderReview CASCADE;
 DROP TABLE IF EXISTS Assigned CASCADE;
 DROP TABLE IF EXISTS ClockIn CASCADE;
 DROP TABLE IF EXISTS Manager CASCADE;
 DROP TYPE IF EXISTS ostatus CASCADE;
 DROP TYPE IF EXISTS emp_type CASCADE;
 
--- Restaurant side --
 CREATE TABLE Restaurants (
 	rid SERIAL PRIMARY KEY,
 	rname CHAR(50) NOT NULL,
@@ -46,8 +48,9 @@ CREATE TABLE Customers (
 	cname CHAR(50),
 	email CHAR(50),
 	cpassword CHAR(50),
+	credit_card_info CHAR(50),
 	reward_pts INTEGER,
-	join_date DATE
+	created_on TIMESTAMP NOT NULL 
 ); 
 
 CREATE TYPE ostatus as ENUM('WAITING', 'DELIVERING', 'COMPLETED');
@@ -81,17 +84,17 @@ CREATE TABLE FoodItem (
 	fid SERIAl PRIMARY KEY,
 	fname CHAR(50) NOT NULL,
 	description TEXT,
-	price DECIMAL(5, 2) NOT NULL,
 	catid INTEGER NOT NULL,
 	FOREIGN KEY (catid) references Category
 );
 
-CREATE TABLE Has (
+CREATE TABLE Sells (
 	rid INTEGER NOT NULL,
 	mid INTEGER NOT NULL,
 	fid INTEGER NOT NULL,
 	food_limit INTEGER NOT NULL,
 	current_qty INTEGER NOT NULL,
+	price DECIMAL(5, 2) NOT NULL,
 	PRIMARY KEY (rid, mid, fid),
 	FOREIGN KEY (rid) REFERENCES Restaurants,
 	FOREIGN KEY (mid) REFERENCES Menu,
@@ -104,6 +107,12 @@ CREATE TABLE PromoCampaign (
 	from_restaurant CHAR(50) NOT NULL, -- ? --
 	start_time TIMESTAMP NOT NULL,
 	end_time TIMESTAMP NOT NULL	
+);
+
+CREATE TABLE Uses (
+	oid INTEGER NOT NULL,
+	pcid INTEGER NOT NULL,
+	PRIMARY KEY(oid, pcid)
 );
 
 CREATE TABLE Offers (
@@ -128,31 +137,28 @@ CREATE TABLE Place (
 	fid INTEGER,
 	qty INTEGER NOT NULL,
 	PRIMARY KEY (ooid, rid, mid, fid),
-	FOREIGN KEY (rid, mid, fid) REFERENCES Has(rid, mid, fid) ON DELETE CASCADE
+	FOREIGN KEY (rid, mid, fid) REFERENCES Sells(rid, mid, fid) ON DELETE CASCADE
 );
 
--- Customer side --
-
-CREATE TABLE Review (
+CREATE TABLE RestaurantReview (
 	rid SERIAL PRIMARY KEY,
 	rating SMALLINT NOT NULL,
 	description TEXT
 );
 
-CREATE TABLE Reviews (
+CREATE TABLE RestaurantReviews (
 	cid INTEGER,
 	rid INTEGER,
 	oid INTEGER,
 	PRIMARY KEY (cid, rid, oid),
 	FOREIGN KEY (cid) REFERENCES Customers,
-	FOREIGN KEY (rid) REFERENCES Review,
+	FOREIGN KEY (rid) REFERENCES RestaurantReview,
 	FOREIGN KEY (oid) REFERENCES Orders
 );
 
 CREATE TABLE Belongs (
 	oid INTEGER, 
 	rid INTEGER,
-	min_monetary_amt DECIMAL(5, 2) NOT NULL, -- What is this for? --
 	PRIMARY KEY (oid, rid),
 	FOREIGN KEY (oid) REFERENCES Orders,
 	FOREIGN KEY (rid) REFERENCES Restaurants
@@ -226,6 +232,20 @@ CREATE TABLE Assigned (
 	FOREIGN KEY (empid) REFERENCES Rider (empid)
 );
 
+CREATE TABLE RiderReview (
+	rrid SERIAL PRIMARY KEY,
+	rating SMALLINT NOT NULL,
+	description CHAR(100)
+);
+
+CREATE TABLE RiderReviews (
+	rrid INTEGER,
+	cid INTEGER,
+	PRIMARY KEY(rrid, cid),
+	FOREIGN KEY (rrid) REFERENCES RiderReview,
+	FOREIGN KEY (cid) REFERENCES Customers
+);
+
 CREATE TABLE ClockIn (
 	id					SERIAL PRIMARY KEY,
 	empid				INTEGER REFERENCES Rider (empid),
@@ -244,19 +264,20 @@ CREATE TABLE OrderWaitingList (
 --INSERT INTO RestaurantStaff (rsid) VALUES (0, '');
 INSERT INTO Restaurants (rid, rname, min_order_cost) VALUES (1, 'KFC', 3), (2, 'MacDonalds' , 2.50), (3, 'Deck', 2.10), (4, 'The Tea Party', 4.50), (5, 'Fong Seng Nasi Lemak', 1.00);
 INSERT INTO RestaurantStaff (rsid, rsname, email, rspassword, rid) VALUES (1, 'John Doe', 'john@example.com', 'johndoe123', 1), (2, 'Dominic Frank', 'domthed@gmail.com', 'benedict312', 3), (3, 'Dominic Quek', 'quek@example.com', '65nf76', 5), (4, 'Peter Pan', 'pan@ocbc.edu', '87ghf', 4);
-INSERT INTO Customers (cid, cname, email, cpassword, reward_pts) VALUES (1, 'Benedict Quek', 'bene@hotmail.com', 'dictdict96', 10), (2, 'Zachary Tan', 'tanzack@nus.com', 'fhas7612', 0), (3, 'Chen Hua', 'chenhua@gmail.com', 'fdsf64324', 50), (4, 'Joyce Tan', 'joyceytan@gmail.com', 'ashda6969', 61), (5, 'John Elijah Tan', 'elijah@dbs.email.co', 'dasni324', 1);
+INSERT INTO Customers (cid, cname, email, cpassword, credit_card_info, reward_pts, created_on) VALUES (1, 'Benedict Quek', 'bene@hotmail.com', 'dictdict96', 'DBS 9821-2112', 10, current_timestamp), (2, 'Zachary Tan', 'tanzack@nus.com', 'fhas7612', 'POSB 312321132', 0, current_timestamp), (3, 'Chen Hua', 'chenhua@gmail.com', 'fdsf64324', 'DBS 1232', 50, current_timestamp), (4, 'Joyce Tan', 'joyceytan@gmail.com', 'ashda6969', 'OCBC 321123', 61, current_timestamp), (5, 'John Elijah Tan', 'elijah@dbs.email.co', 'dasni324', 'DBS 1213', 1, current_timestamp);
 INSERT INTO Orders (oid, use_credit_card, use_points, order_time, order_status, price, delivery_fee, address, cid) VALUES (1, true, false, '2038-01-19 03:14:07' ,'WAITING', 10.50, 3.00, 'Clementi 96', 1);
 INSERT INTO Menu (mid, mname, start_time, end_time) VALUES (1, 'All-time', '09:00:00', '18:00:00'), (2, 'Breakfast', '08:00:00', '12:00:00');
 INSERT INTO Category (catid, catname, description) VALUES (1, 'Western', 'This is western cuisine.'), (2, 'Asian', 'Delicious cooked by Singaporeans');
-INSERT INTO FoodItem (fid, fname, description, price, catid) VALUES (1, 'Black Pepper Steak', 'Steak topped with pepper sauce', 9.00, 1), (2, 'Carrot Cake', 'Cake made of red carrot. Yummy!', 3.50, 2);
-INSERT INTO Has (rid, mid, fid, food_limit, current_qty) VALUES (2, 1, 1, 100, 100), (3, 2, 2, 200, 190), (1, 1, 1, 50, 50);
+INSERT INTO FoodItem (fid, fname, description, catid) VALUES (1, 'Black Pepper Steak', 'Steak topped with pepper sauce', 1), (2, 'Carrot Cake', 'Cake made of red carrot. Yummy!', 2);
+INSERT INTO Sells (rid, mid, fid, food_limit, current_qty, price) VALUES (2, 1, 1, 100, 100, 3.00), (3, 2, 2, 200, 190, 5.10), (1, 1, 1, 50, 50, 4.50);
 INSERT INTO PromoCampaign (pcid, campaign_type, from_restaurant, start_time, end_time) VALUES (1, 'Chinese New Year', 'KFC' , '2038-01-19 03:14:07', '2038-01-19 03:15:07');
+INSERT INTO Uses (oid, pcid) VALUES (1, 1), (3, 1);
 INSERT INTO Offers (rid, pcid) VALUES (1, 1), (2, 1);
 INSERT INTO OrderItem (ooid, oid) VALUES (1, 1), (2, 1), (3, 1);
 INSERT INTO Place (ooid, rid, mid, fid, qty) VALUES (1, 2, 1, 1 , 3), (2, 1, 1, 1, 10);
-INSERT INTO Review (rid, rating, description) VALUES (1, 3, 'Goodplace'), (2, 4, 'Conducive'), (3, 5,'');
-INSERT INTO Reviews (cid, rid, oid) VALUES (3, 1, 1); 
-INSERT INTO Belongs (oid, rid, min_monetary_amt) VALUES (1, 1, 3.00);
+INSERT INTO RestaurantReview (rid, rating, description) VALUES (1, 3, 'Goodplace'), (2, 4, 'Conducive'), (3, 5,'');
+INSERT INTO RestaurantReviews (cid, rid, oid) VALUES (3, 1, 1); 
+INSERT INTO Belongs (oid, rid) VALUES (1, 1);
 INSERT INTO Eligible (cid, pcid) VALUES (2, 1), (3, 1), (4, 1);
 
 INSERT INTO WorkShift (wsid, all_work_hours, num_hours) VALUES (0, 0, 0);
