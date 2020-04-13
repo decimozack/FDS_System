@@ -14,7 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { withStyles } from "@material-ui/core/styles";
-import auth from "../auth";
+import auth from "../../auth";
 
 function Copyright() {
   return (
@@ -49,7 +49,7 @@ const useStyles = (theme) => ({
   },
 });
 
-class SingUp extends React.Component {
+class CustomerSignUp extends React.Component {
   constructor(props) {
     super(props);
 
@@ -188,4 +188,4 @@ class SingUp extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(SingUp);
+export default withStyles(useStyles)(CustomerSignUp);

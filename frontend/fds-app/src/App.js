@@ -9,7 +9,7 @@ import About from "./components/About";
 import Contact from "./components/Contact";
 import SignIn from "./components/Signin";
 import Header from "./components/Header";
-import SingUp from "./components/Signup";
+import CustomerSignUp from "./components/Customer/Signup";
 import { ProtectedRoute } from "./protected.route";
 import auth from "./auth";
 
@@ -55,7 +55,7 @@ class App extends Component {
                   <Route exact path="/" component={Home} />
                   <ProtectedRoute path="/about" component={About} />
                   <Route path="/contact" component={Contact} />
-                  <Route path="/signup" component={SingUp} />
+                  <Route path="/signup" component={CustomerSignUp} />
                   <Route
                     path="/signin"
                     render={(routeProps) => (
