@@ -20,7 +20,7 @@ class Home extends Component {
   retrieveTutorials() {
     ManagerDataService.getAll()
       .then((response) => {
-        console.log(response.data.rows);
+        // console.log(response.data.rows);
         this.setState({
           tutorials: response.data.rows,
         });
@@ -57,7 +57,7 @@ class Home extends Component {
         <p>This is Home page.</p>
 
         <div className="col-md-6">
-          <h4>Tutorials List</h4>
+          <h4>User List</h4>
 
           <ul className="list-group">
             {tutorials &&
@@ -69,18 +69,11 @@ class Home extends Component {
                   }
                   key={index}
                 >
-                  {tutorial.cid}
+                  {tutorial.userid} - {tutorial.email}
                 </li>
               ))}
           </ul>
         </div>
-        <button
-          onClick={() => {
-            auth.login("email", "password");
-          }}
-        >
-          Login
-        </button>
       </div>
     );
   }

@@ -7,15 +7,6 @@ class About extends Component {
       <div>
         <h4>About</h4>
         <p>This is About page.</p>
-        <button
-          onClick={() => {
-            auth.logout(() => {
-              this.props.history.push("/about");
-            });
-          }}
-        >
-          Logout
-        </button>
       </div>
     );
   }
