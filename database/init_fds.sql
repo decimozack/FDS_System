@@ -65,7 +65,8 @@ CREATE TABLE Orders ( -- total part from Order to Contains not enforced
 	price DECIMAL(5, 2) NOT NULL,
 	delivery_fee DECIMAL(5, 2) NOT NULL,
 	address VARCHAR(100) NOT NULL,
-	cid INTEGER,
+	cid INTEGER NOT NULL,
+	gain_reward_pts INTEGER NOT NULL,
 	FOREIGN KEY (cid) REFERENCES Customers
 );
 
@@ -149,11 +150,9 @@ CREATE TABLE RestaurantReview (
 );
 
 CREATE TABLE RestaurantReviews (
-	cid INTEGER,
 	rid INTEGER,
 	oid INTEGER,
-	PRIMARY KEY (cid, rid, oid),
-	FOREIGN KEY (cid) REFERENCES Customers,
+	PRIMARY KEY (rid, oid),
 	FOREIGN KEY (rid) REFERENCES RestaurantReview,
 	FOREIGN KEY (oid) REFERENCES Orders
 );
@@ -273,11 +272,10 @@ CREATE TABLE OrderWaitingList (
 	orderAssigned		BOOLEAN NOT NULL DEFAULT FALSE
 );
 
---INSERT INTO RestaurantStaff (rsid) VALUES (0, '');
 INSERT INTO Restaurants (rid, rname, min_order_cost) VALUES (1, 'KFC', 3), (2, 'MacDonalds' , 2.50), (3, 'Deck', 2.10), (4, 'The Tea Party', 4.50), (5, 'Fong Seng Nasi Lemak', 1.00);
 INSERT INTO RestaurantStaff (rsid, rs_first_name, rs_last_name, email, rspassword, rid) VALUES (1, 'John','Doe', 'john@example.com', 'johndoe123', 1), (2, 'Dominic', 'Frank', 'domthed@gmail.com', 'benedict312', 3), (3, 'Dominic', 'Quek', 'quek@example.com', '65nf76', 5), (4, 'Peter', 'Pan', 'pan@ocbc.edu', '87ghf', 4);
 INSERT INTO Customers (cid, c_first_name, c_last_name, email, cpassword, credit_card_info, reward_pts, created_on) VALUES (1, 'Benedict', 'Quek', 'bene@hotmail.com', 'dictdict96', 'DBS 9821-2112', 10, current_timestamp), (2, 'Zachary', 'Tan', 'tanzack@nus.com', 'fhas7612', 'POSB 312321132', 0, current_timestamp), (3, 'Chen', 'Hua', 'chenhua@gmail.com', 'fdsf64324', 'DBS 1232', 50, current_timestamp), (4, 'Joyce', 'Tan', 'joyceytan@gmail.com', 'ashda6969', 'OCBC 321123', 61, current_timestamp), (5, 'John', 'Elijah Tan', 'elijah@dbs.email.co', 'dasni324', 'DBS 1213', 1, current_timestamp);
-INSERT INTO Orders (oid, use_credit_card, use_points, order_time, order_status, price, delivery_fee, address, cid) VALUES (1, true, false, '2038-01-19 03:14:07' ,'WAITING', 10.50, 3.00, 'Clementi 96', 1);
+INSERT INTO Orders (oid, use_credit_card, use_points, order_time, order_status, price, delivery_fee, address, gain_reward_pts, cid) VALUES (1, true, false, '2038-01-19 03:14:07' ,'WAITING', 10.50, 3.00, 'Clementi 96', 20, 1);
 INSERT INTO Menu (mid, mname, start_time, end_time) VALUES (1, 'All-time', '09:00:00', '18:00:00'), (2, 'Breakfast', '08:00:00', '12:00:00');
 INSERT INTO Category (catid, catname, description) VALUES (1, 'Western', 'This is western cuisine.'), (2, 'Asian', 'Delicious cooked by Singaporeans');
 INSERT INTO FoodItem (fid, fname, description, catid) VALUES (1, 'Black Pepper Steak', 'Steak topped with pepper sauce', 1), (2, 'Carrot Cake', 'Cake made of red carrot. Yummy!', 2);
@@ -288,7 +286,7 @@ INSERT INTO Offers (rid, pcid) VALUES (1, 1), (2, 1);
 INSERT INTO OrderItem (ooid, oid) VALUES (1, 1), (2, 1), (3, 1);
 INSERT INTO Place (ooid, rid, mid, fid, qty) VALUES (1, 2, 1, 1 , 3), (2, 1, 1, 1, 10);
 INSERT INTO RestaurantReview (rid, rating, description) VALUES (1, 3, 'Goodplace'), (2, 4, 'Conducive'), (3, 5,'');
-INSERT INTO RestaurantReviews (cid, rid, oid) VALUES (3, 1, 1); 
+INSERT INTO RestaurantReviews (rid, oid) VALUES (1, 1); 
 INSERT INTO Belongs (oid, rid) VALUES (1, 1);
 INSERT INTO Eligible (cid, pcid) VALUES (2, 1), (3, 1), (4, 1);
 
