@@ -150,11 +150,9 @@ CREATE TABLE RestaurantReview (
 );
 
 CREATE TABLE RestaurantReviews (
-	cid INTEGER,
 	rid INTEGER,
 	oid INTEGER,
-	PRIMARY KEY (cid, rid, oid),
-	FOREIGN KEY (cid) REFERENCES Customers,
+	PRIMARY KEY (rid, oid),
 	FOREIGN KEY (rid) REFERENCES RestaurantReview,
 	FOREIGN KEY (oid) REFERENCES Orders
 );
@@ -288,7 +286,7 @@ INSERT INTO Offers (rid, pcid) VALUES (1, 1), (2, 1);
 INSERT INTO OrderItem (ooid, oid) VALUES (1, 1), (2, 1), (3, 1);
 INSERT INTO Place (ooid, rid, mid, fid, qty) VALUES (1, 2, 1, 1 , 3), (2, 1, 1, 1, 10);
 INSERT INTO RestaurantReview (rid, rating, description) VALUES (1, 3, 'Goodplace'), (2, 4, 'Conducive'), (3, 5,'');
-INSERT INTO RestaurantReviews (cid, rid, oid) VALUES (3, 1, 1); 
+INSERT INTO RestaurantReviews (rid, oid) VALUES (1, 1); 
 INSERT INTO Belongs (oid, rid) VALUES (1, 1);
 INSERT INTO Eligible (cid, pcid) VALUES (2, 1), (3, 1), (4, 1);
 
