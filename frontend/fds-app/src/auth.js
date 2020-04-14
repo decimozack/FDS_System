@@ -14,7 +14,7 @@ class auth {
 
     ManagerDataService.verifyLogin(email, password)
       .then((response) => {
-        if (response.data.rowCount == 1) {
+        if (response.data.rowCount === 1) {
           console.log(response.data);
           localStorage.setItem("user", response.data.rows[0]);
           cb(true);

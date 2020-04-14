@@ -66,7 +66,10 @@ class App extends Component {
                       />
                     )}
                   />
-                  <Route path="*" component={() => "404 Not Found"} />
+                  <Route
+                    path="*"
+                    component={() => <h1 align="center">404 Not Found</h1>}
+                  />
                 </Switch>
               </div>
             </BrowserRouter>

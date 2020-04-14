@@ -1,6 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
@@ -24,11 +27,28 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     flexShrink: 0,
   },
+  overrides: {
+    color: "white",
+    textTransform: "none",
+    textEmphasis: "none",
+  },
+  linkcolor: {
+    color: "black",
+  },
 }));
 
 export default function Header(props) {
   const classes = useStyles();
   const { sections, title } = props;
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleSignIn = (event) => {
     props.onIsLoginValue();
@@ -69,24 +89,59 @@ export default function Header(props) {
           </Link>
         )}
       </Toolbar>
-      <Toolbar
-        component="nav"
-        variant="dense"
-        className={classes.toolbarSecondary}
-      >
-        {sections.map((section) => (
-          <Link
-            color="inherit"
-            noWrap
-            key={section.title}
-            variant="body2"
-            href={section.url}
-            className={classes.toolbarLink}
+      <AppBar position="static">
+        <Toolbar
+          component="nav"
+          variant="dense"
+          className={classes.toolbarSecondary}
+        >
+          {sections.map((section) => (
+            <Link
+              color="inherit"
+              noWrap
+              key={section.title}
+              variant="body2"
+              href={section.url}
+              className={classes.toolbarLink}
+            >
+              {section.title}
+            </Link>
+          ))}
+
+          <Button
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            onClick={handleClick}
+            color="white"
+            className={classes.overrides}
           >
-            {section.title}
-          </Link>
-        ))}
-      </Toolbar>
+            Manager
+          </Button>
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleClose}>
+              <Link className={classes.linkcolor} href="/about">
+                Profile
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
+              <Link className={classes.linkcolor} href="/about">
+                Profile
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
+              <Link className={classes.linkcolor} href="/about">
+                Profile
+              </Link>
+            </MenuItem>
+          </Menu>
+        </Toolbar>
+      </AppBar>
     </React.Fragment>
   );
 }
