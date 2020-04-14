@@ -42,6 +42,35 @@ router.post("/verifyLogin", (req, res, next) => {
     });
 });
 
+router.post("/customerSignup", (req, res, next) => {
+  var { email, firstName, lastName, creditCardInfo, password } = req.body;
+  var db = req.app.locals.db;
+
+  console.log(req.body);
+  var datetime = new Date();
+
+  var queryStr =
+    "INSERT INTO Customers(c_first_name, c_last_name, email, cpassword, credit_card_info, reward_pts, created_on)" +
+    "VALUES ($1,$2,$3,$4,$5,$6,$7)";
+
+  db.query(queryStr, [
+    firstName,
+    lastName,
+    email,
+    password,
+    creditCardInfo,
+    0,
+    datetime,
+  ])
+    .then(function (results) {
+      res.status(201).send(`Customer added`);
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
 /* Sample Post request from localhost:3001/sample/addNewUser for creating a new user */
 router.post("/addNewUser", (req, res, next) => {
   var { name, emql } = req.body;

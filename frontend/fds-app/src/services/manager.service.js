@@ -13,6 +13,11 @@ class ManagerDataService {
 
     return http.post(`/verifyLogin/`, data);
   }
+
+  customerSignUp(customerData) {
+    console.log(customerData);
+    return http.post(`/customerSignup/`, customerData);
+  }
 }
 
 export default new ManagerDataService();
