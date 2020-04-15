@@ -6,6 +6,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import MenuItem from "@material-ui/core/MenuItem";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -49,7 +50,18 @@ const useStyles = (theme) => ({
   },
 });
 
-class CustomerSignUp extends React.Component {
+const workRoles = [
+  {
+    value: "Rider",
+    label: "Rider",
+  },
+  {
+    value: "Manager",
+    label: "Manager",
+  },
+];
+
+class EmployeeSignUp extends React.Component {
   constructor(props) {
     super(props);
 
@@ -58,7 +70,7 @@ class CustomerSignUp extends React.Component {
       password: "",
       firstName: "",
       lastName: "",
-      creditCardInfo: "",
+      workRole: "",
       errorMsg: "",
     };
 
@@ -86,7 +98,7 @@ class CustomerSignUp extends React.Component {
       return object;
     }, {});
 
-    ManagerDataService.customerSignUp(userObj)
+    ManagerDataService.employeeSignUp(userObj)
       .then((response) => {
         console.log(response);
         this.props.history.push("/signin");
@@ -107,7 +119,7 @@ class CustomerSignUp extends React.Component {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Customer Sign Up
+            Employee Sign Up
           </Typography>
           {this.state.errorMsg.length > 0 && (
             <Alert severity="error">{this.state.errorMsg}</Alert>
@@ -117,6 +129,22 @@ class CustomerSignUp extends React.Component {
             onSubmit={this.handleSubmit}
             noValidate
           >
+            <TextField
+              id="workRole"
+              select
+              fullWidth
+              label="Select"
+              value={this.state.workRole}
+              onChange={this.handleChange}
+              helperText="Please select your role"
+              name="workRole"
+            >
+              {workRoles.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
             <TextField
               variant="outlined"
               margin="normal"
@@ -156,17 +184,6 @@ class CustomerSignUp extends React.Component {
               margin="normal"
               required
               fullWidth
-              name="creditCardInfo"
-              label="Credit Card Info"
-              id="creditCardInfo"
-              onChange={this.handleChange}
-              autoComplete="creditCardInfo"
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
               name="password"
               label="Password"
               type="password"
@@ -193,4 +210,4 @@ class CustomerSignUp extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(CustomerSignUp);
+export default withStyles(useStyles)(EmployeeSignUp);

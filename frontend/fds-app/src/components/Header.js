@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Header(props) {
   const classes = useStyles();
-  const { sections, title } = props;
+  const { sections, managerSections, title } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -124,21 +124,18 @@ export default function Header(props) {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleClose}>
-              <Link className={classes.linkcolor} href="/about">
-                Profile
-              </Link>
-            </MenuItem>
-            <MenuItem onClick={handleClose}>
-              <Link className={classes.linkcolor} href="/about">
-                Profile
-              </Link>
-            </MenuItem>
-            <MenuItem onClick={handleClose}>
-              <Link className={classes.linkcolor} href="/about">
-                Profile
-              </Link>
-            </MenuItem>
+            {managerSections.map((section) => (
+              <MenuItem onClick={handleClose}>
+                <Link
+                  className={classes.linkcolor}
+                  noWrap
+                  key={section.title}
+                  href={section.url}
+                >
+                  {section.title}
+                </Link>
+              </MenuItem>
+            ))}
           </Menu>
         </Toolbar>
       </AppBar>

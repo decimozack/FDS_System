@@ -2,10 +2,10 @@ var express = require("express");
 var router = express.Router();
 
 /* Sample GET request from localhost:3001/sample/getUserList */
-router.get("/getUserList", (req, res, next) => {
+router.get("/getCustomerList", (req, res, next) => {
   var db = req.app.locals.db;
 
-  db.query("SELECT * FROM LoginTable")
+  db.query("SELECT * FROM Customers")
     .then(function (rows) {
       if (rows) {
         res.status(200).send(rows);
@@ -71,20 +71,26 @@ router.post("/customerSignup", (req, res, next) => {
     });
 });
 
-/* Sample Post request from localhost:3001/sample/addNewUser for creating a new user */
-router.post("/addNewUser", (req, res, next) => {
-  var { name, emql } = req.body;
+router.post("/EmpSignup", (req, res, next) => {
+  var { email, firstName, lastName, workRole, password } = req.body;
   var db = req.app.locals.db;
 
-  pool
-    .query("INSERT INTO users (name, email) VALUES ($1, $2)", [name, email])
+  console.log(req.body);
+
+  var queryStr =
+    "INSERT INTO FDSEmployee(emptype, emp_first_name, emp_last_name, email, emppassword)" +
+    "VALUES ($1,$2,$3,$4,$5)";
+
+  // write a trigger/store procedure here
+  // to insert a record into rider or manager
+  // use trigger to check for logintable before inserting
+  db.query(queryStr, [workRole, firstName, lastName, email, password])
     .then(function (results) {
-      res.status(201).send("User added with ID: ${result.insertId}");
+      res.status(201).send(`Employee added`);
     })
     .catch(function (err) {
       console.error(err);
       res.status(500).send(err);
     });
 });
-
 module.exports = router;
