@@ -19,6 +19,24 @@ router.get("/getCustomerList", (req, res, next) => {
     });
 });
 
+router.post("/retrieveCustomer", (req, res, next) => {
+  var { id } = req.body;
+  var db = req.app.locals.db;
+
+  db.query("SELECT * FROM Customers WHERE (cid=$1)", [id])
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find user information");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
 router.post("/verifyLogin", (req, res, next) => {
   var { email, password } = req.body;
   var db = req.app.locals.db;
@@ -64,6 +82,31 @@ router.post("/customerSignup", (req, res, next) => {
   ])
     .then(function (results) {
       res.status(201).send(`Customer added`);
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/updateCustomer", (req, res, next) => {
+  var { cid, email, firstName, lastName, creditCardInfo, password } = req.body;
+  var db = req.app.locals.db;
+
+  var queryStr =
+    "UPDATE Customers SET c_first_name=$1, c_last_name=$2, email=$3, cpassword=$4, credit_card_info=$5" +
+    "WHERE cid=$6";
+
+  db.query(queryStr, [
+    firstName,
+    lastName,
+    email,
+    password,
+    creditCardInfo,
+    cid,
+  ])
+    .then(function (results) {
+      res.status(201).send(`Customer updated`);
     })
     .catch(function (err) {
       console.error(err);

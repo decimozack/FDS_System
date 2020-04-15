@@ -10,8 +10,10 @@ import Contact from "./components/Contact";
 import SignIn from "./components/Signin";
 import Header from "./components/Header";
 import CustomerSignUp from "./components/Customer/Signup";
+import UpdateCustomer from "./components/Customer/UpdateCustomer";
 import EmployeeSignUp from "./components/Employee/Signup";
 import { ProtectedRoute } from "./protected.route";
+import { CustomerProtectedRoute } from "./customer_protected.route";
 import auth from "./auth";
 
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 const sections = [
   { title: "Home", url: "/" },
-  { title: "Contact", url: "/contact" },
+  { title: "Update Info", url: "/updateCustomer" },
   { title: "About", url: "/about" },
 ];
 
@@ -64,6 +66,10 @@ class App extends Component {
                 <Switch>
                   <Route exact path="/" component={Home} />
                   <ProtectedRoute path="/about" component={About} />
+                  <CustomerProtectedRoute
+                    path="/updateCustomer"
+                    component={UpdateCustomer}
+                  />
                   <Route path="/contact" component={Contact} />
                   <Route path="/signup" component={CustomerSignUp} />
                   <Route path="/empsignup" component={EmployeeSignUp} />

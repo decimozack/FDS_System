@@ -23,6 +23,17 @@ class ManagerDataService {
     console.log(emprData);
     return http.post(`/EmpSignup/`, emprData);
   }
+
+  retrieveCustomer(cid) {
+    const data = {
+      id: cid,
+    };
+    return http.post(`/retrieveCustomer/`, data);
+  }
+
+  updateCustomer(customerData) {
+    return http.post(`/updateCustomer/`, customerData);
+  }
 }
 
 export default new ManagerDataService();

@@ -14,7 +14,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { withStyles } from "@material-ui/core/styles";
-import auth from "../auth";
+import ManagerDataService from "../../services/manager.service";
+import auth from "../../auth";
 
 function Copyright() {
   return (
@@ -49,14 +50,46 @@ const useStyles = (theme) => ({
   },
 });
 
-class SignIn extends React.Component {
+class UpdateCustomer extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { email: "", password: "", errorMsg: "" };
+    this.state = {
+      email: "",
+      password: "",
+      firstName: "",
+      lastName: "",
+      creditCardInfo: "",
+      errorMsg: "",
+      successMsg: "",
+    };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.retrieveCustomer = this.retrieveCustomer.bind(this);
+  }
+
+  retrieveCustomer() {
+    const user = auth.getUser();
+    ManagerDataService.retrieveCustomer(user.userid)
+      .then((response) => {
+        // console.log(response.data.rows);
+        console.log(response.data.rows[0]);
+        this.setState({
+          email: response.data.rows[0].email.trim(),
+          password: response.data.rows[0].cpassword.trim(),
+          firstName: response.data.rows[0].c_first_name.trim(),
+          lastName: response.data.rows[0].c_last_name.trim(),
+          creditCardInfo: response.data.rows[0].credit_card_info.trim(),
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
+  componentDidMount() {
+    this.retrieveCustomer();
   }
 
   handleChange(event) {
@@ -72,20 +105,23 @@ class SignIn extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    let result = auth.login(
-      (result) => {
-        if (!result) {
-          this.setState({
-            errorMsg: "there is an error with your login",
-          });
-        } else {
-          this.props.onIsLoginValue();
-          this.props.history.push("/about");
-        }
-      },
-      this.state.email,
-      this.state.password
-    );
+    const userObj = Object.keys(this.state).reduce((object, key) => {
+      if (key !== "errorMsg") {
+        object[key] = this.state[key];
+      }
+      return object;
+    }, {});
+    userObj.cid = auth.getUser().userid;
+    ManagerDataService.updateCustomer(userObj)
+      .then((response) => {
+        console.log(response);
+        this.setState({ successMsg: "Customer updated" });
+        this.retrieveCustomer();
+      })
+      .catch((e) => {
+        console.log(e);
+        this.setState({ errorMsg: "Please try again" });
+      });
   }
 
   render() {
@@ -98,10 +134,13 @@ class SignIn extends React.Component {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Update Info
           </Typography>
           {this.state.errorMsg.length > 0 && (
             <Alert severity="error">{this.state.errorMsg}</Alert>
+          )}
+          {this.state.successMsg.length > 0 && (
+            <Alert severity="success">{this.state.successMsg}</Alert>
           )}
           <form
             className={classes.form}
@@ -116,6 +155,7 @@ class SignIn extends React.Component {
               id="email"
               label="Email Address"
               name="email"
+              value={this.state.email}
               autoComplete="email"
               onChange={this.handleChange}
               autoFocus
@@ -125,16 +165,49 @@ class SignIn extends React.Component {
               margin="normal"
               required
               fullWidth
+              name="firstName"
+              label="First Name"
+              value={this.state.firstName}
+              id="firstName"
+              onChange={this.handleChange}
+              autoComplete="firstName"
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="lastName"
+              label="Last Name"
+              value={this.state.lastName}
+              id="lastName"
+              onChange={this.handleChange}
+              autoComplete="lastName"
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="creditCardInfo"
+              label="Credit Card Info"
+              value={this.state.creditCardInfo}
+              id="creditCardInfo"
+              onChange={this.handleChange}
+              autoComplete="creditCardInfo"
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
               name="password"
               label="Password"
+              value={this.state.password}
               type="password"
               id="password"
               onChange={this.handleChange}
               autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
             />
             <Button
               type="submit"
@@ -143,20 +216,8 @@ class SignIn extends React.Component {
               color="primary"
               className={classes.submit}
             >
-              Sign In
+              Sign Up
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/signup" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
           </form>
         </div>
         <Box mt={8}>
@@ -167,4 +228,4 @@ class SignIn extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(SignIn);
+export default withStyles(useStyles)(UpdateCustomer);
