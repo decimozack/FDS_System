@@ -14,7 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { withStyles } from "@material-ui/core/styles";
-import auth from "../../auth";
+import ManagerDataService from "../../services/manager.service";
 
 function Copyright() {
   return (
@@ -58,6 +58,7 @@ class CustomerSignUp extends React.Component {
       password: "",
       firstName: "",
       lastName: "",
+      creditCardInfo: "",
       errorMsg: "",
     };
 
@@ -78,21 +79,22 @@ class CustomerSignUp extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    let result = auth.login(
-      (result) => {
-        if (!result) {
-          this.setState({
-            errorMsg: "there is an error with your login",
-          });
-        } else {
-          this.props.onIsLoginValue();
-          this.props.history.push("/about");
-        }
-      },
-      this.state.email,
-      this.state.password
-    );
-    console.log(result);
+    const userObj = Object.keys(this.state).reduce((object, key) => {
+      if (key !== "errorMsg") {
+        object[key] = this.state[key];
+      }
+      return object;
+    }, {});
+
+    ManagerDataService.customerSignUp(userObj)
+      .then((response) => {
+        console.log(response);
+        this.props.history.push("/signin");
+      })
+      .catch((e) => {
+        console.log(e);
+        this.setState({ errorMsg: "Please try again" });
+      });
   }
 
   render() {
@@ -105,7 +107,7 @@ class CustomerSignUp extends React.Component {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign Up
+            Customer Sign Up
           </Typography>
           {this.state.errorMsg.length > 0 && (
             <Alert severity="error">{this.state.errorMsg}</Alert>
@@ -132,36 +134,33 @@ class CustomerSignUp extends React.Component {
               margin="normal"
               required
               fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
+              name="firstName"
+              label="First Name"
+              id="firstName"
               onChange={this.handleChange}
-              autoComplete="current-password"
+              autoComplete="firstName"
             />
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
+              name="lastName"
+              label="Last Name"
+              id="lastName"
               onChange={this.handleChange}
-              autoComplete="current-password"
+              autoComplete="lastName"
             />
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
+              name="creditCardInfo"
+              label="Credit Card Info"
+              id="creditCardInfo"
               onChange={this.handleChange}
-              autoComplete="current-password"
+              autoComplete="creditCardInfo"
             />
             <TextField
               variant="outlined"

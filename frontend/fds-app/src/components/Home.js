@@ -69,7 +69,7 @@ class Home extends Component {
                   }
                   key={index}
                 >
-                  {tutorial.userid} - {tutorial.email}
+                  {tutorial.cid} - {tutorial.email}
                 </li>
               ))}
           </ul>

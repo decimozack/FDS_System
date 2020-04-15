@@ -106,6 +106,8 @@ INSERT INTO FDSEmployee VALUES
 (99,'Manager','Gaye','Blasi','gblasi2q@un.org','j7mJ44lJcXN'),
 (100,'Rider','Sally','Plascott','splascott2r@statcounter.com','jaNrvYe2f');
 
+ALTER SEQUENCE fdsemployee_empid_seq RESTART WITH 101;
+
 INSERT INTO WorkShift VALUES
 (1,1,1,0,0,0,0,1,null,1,0,0,1,11),
 (2,1,0,1,1,1,1,0,null,0,0,1,1,10),
@@ -208,6 +210,8 @@ INSERT INTO WorkShift VALUES
 (99,0,1,1,0,null,1,0,0,0,0,1,0,5),
 (100,0,null,1,1,1,0,0,1,1,1,0,1,0);
 
+ALTER SEQUENCE workshift_wsid_seq RESTART WITH 101;
+
 INSERT INTO WWS VALUES
 (1,79,63,null,94,86,40,51),
 (2,null,24,11,null,64,35,null),
@@ -309,6 +313,8 @@ INSERT INTO WWS VALUES
 (98,5,97,31,24,26,30,13),
 (99,92,62,62,10,44,74,72),
 (100,9,62,6,99,38,85,75);
+
+ALTER SEQUENCE wws_wid_seq RESTART WITH 101;
 
 INSERT INTO Manager VALUES
 (25),

@@ -16,7 +16,8 @@ class auth {
       .then((response) => {
         if (response.data.rowCount === 1) {
           console.log(response.data);
-          localStorage.setItem("user", response.data.rows[0]);
+          // console.log(response.data.rows[0].usertype);
+          localStorage.setItem("user", JSON.stringify(response.data.rows[0]));
           cb(true);
         } else {
           cb(false);
@@ -29,6 +30,10 @@ class auth {
 
   logout() {
     localStorage.removeItem("user");
+  }
+
+  getUser() {
+    return JSON.parse(localStorage.getItem("user"));
   }
 
   isAuthenticated() {
