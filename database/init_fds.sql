@@ -30,27 +30,27 @@ DROP TYPE IF EXISTS emp_type CASCADE;
 
 CREATE TABLE Restaurants (
 	rid SERIAL PRIMARY KEY,
-	rname CHAR(50) NOT NULL,
+	rname VARCHAR(50) NOT NULL,
 	min_order_cost DECIMAL(5, 2) NOT NULL
 );
 
 CREATE TABLE RestaurantStaff (
 	rsid SERIAL PRIMARY KEY,
-	rs_first_name CHAR(50) NOT NULL,
-	rs_last_name CHAR(50) NOT NULL,
-	email CHAR(50) UNIQUE NOT NULL,
-	rspassword CHAR(50) NOT NULL,
+	rs_first_name VARCHAR(50) NOT NULL,
+	rs_last_name VARCHAR(50) NOT NULL,
+	email VARCHAR(50) UNIQUE NOT NULL,
+	rspassword VARCHAR(50) NOT NULL,
 	rid INTEGER NOT NULL,
 	FOREIGN KEY (rid) REFERENCES Restaurants
 );
 
 CREATE TABLE Customers (
 	cid SERIAL PRIMARY KEY,
-	c_first_name CHAR(50) NOT NULL,
-	c_last_name CHAR(50) NOT NULL,
-	email CHAR(50) UNIQUE NOT NULL,
-	cpassword CHAR(50),
-	credit_card_info CHAR(50),
+	c_first_name VARCHAR(50) NOT NULL,
+	c_last_name VARCHAR(50) NOT NULL,
+	email VARCHAR(50) UNIQUE NOT NULL,
+	cpassword VARCHAR(50),
+	credit_card_info VARCHAR(50),
 	reward_pts INTEGER,
 	created_on TIMESTAMP NOT NULL 
 ); 
@@ -72,20 +72,20 @@ CREATE TABLE Orders ( -- total part from Order to Contains not enforced
 
 CREATE TABLE Menu (
 	mid SERIAL PRIMARY KEY,
-	mname CHAR(50),
+	mname VARCHAR(50),
 	start_time TIME(0) NOT NULL,
 	end_time TIME(0) NOT NULL
 );
 
 CREATE TABLE Category (
 	catid SERIAL PRIMARY KEY,
-	catname CHAR(50),
+	catname VARCHAR(50),
 	description VARCHAR(200)
 );
 
 CREATE TABLE FoodItem (
 	fid SERIAl PRIMARY KEY,
-	fname CHAR(50) NOT NULL,
+	fname VARCHAR(50) NOT NULL,
 	description TEXT,
 	catid INTEGER NOT NULL,
 	FOREIGN KEY (catid) references Category
@@ -106,8 +106,8 @@ CREATE TABLE Sells (
 
 CREATE TABLE PromoCampaign (
 	pcid SERIAL PRIMARY KEY,
-	campaign_type CHAR(20) NOT NULL,
-	from_restaurant CHAR(50) NOT NULL, -- ? --
+	campaign_type VARCHAR(20) NOT NULL,
+	from_restaurant VARCHAR(50) NOT NULL, -- ? --
 	start_time TIMESTAMP NOT NULL,
 	end_time TIMESTAMP NOT NULL	
 );
@@ -177,10 +177,10 @@ CREATE TYPE emp_type AS ENUM ('Manager', 'Rider');
 CREATE TABLE FDSEmployee (
 	empid		SERIAL PRIMARY KEY,
 	emptype     emp_type NOT NULL,  -- i changed the struct to implement exclusive ISA constraint
-	emp_first_name	CHAR(50) NOT NULL,
-	emp_last_name	CHAR(50) NOT NULL,
-	email		CHAR(50) UNIQUE NOT NULL,
-	emppassword	CHAR(20) NOT NULL
+	emp_first_name	VARCHAR(50) NOT NULL,
+	emp_last_name	VARCHAR(50) NOT NULL,
+	email		VARCHAR(50) UNIQUE NOT NULL,
+	emppassword	VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE WorkShift (
@@ -246,7 +246,7 @@ CREATE TABLE Assigned (
 CREATE TABLE RiderReview (
 	rrid SERIAL PRIMARY KEY,
 	rating SMALLINT NOT NULL,
-	description CHAR(100)
+	description VARCHAR(100)
 );
 
 CREATE TABLE RiderReviews (
