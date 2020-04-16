@@ -3,347 +3,143 @@ DELETE FROM Manager;
 DELETE FROM WWS;
 DELETE FROM WorkShift;
 DELETE FROM FDSEmployee;
+DELETE FROM WWS;
 
-INSERT INTO FDSEmployee VALUES
-(1,'Manager','Bernadette','Childs','bchilds0@mit.edu','CtSZ30pjLcqu'),
-(2,'Manager','Omar','Foulser','ofoulser1@salon.com','eT2Y03cjgt'),
-(3,'Rider','Jazmin','Greveson','jgreveson2@businesswire.com','WE78u6as7'),
-(4,'Rider','Hildegarde','Germain','hgermain3@zdnet.com','5jdxQlWe'),
-(5,'Rider','Davita','Maudsley','dmaudsley4@accuweather.com','sCExlHzhSo'),
-(6,'Manager','Antin','Tosdevin','atosdevin5@paginegialle.it','hWOGMLUzOo8'),
-(7,'Manager','Mitch','Limrick','mlimrick6@sun.com','3zkmvW2xQ'),
-(8,'Rider','Lebbie','Wildey','lwildey7@apple.com','npxssH68XA'),
-(9,'Manager','Bren','Burcher','bburcher8@g.co','LqIraBh'),
-(10,'Manager','Alana','Lilliman','alilliman9@surveymonkey.com','ZMIjJ4z'),
-(11,'Manager','Dianna','Magnus','dmagnusa@123-reg.co.uk','wNO1ORU'),
-(12,'Rider','Khalil','Peek','kpeekb@soup.io','ETR6t9YkDc'),
-(13,'Manager','Auberon','Grishaev','agrishaevc@freewebs.com','xQPrxNEywY'),
-(14,'Rider','Imogene','Olin','iolind@altervista.org','wmGbO3DFl6'),
-(15,'Rider','Yurik','McCormack','ymccormacke@constantcontact.com','w2EsRuYv6'),
-(16,'Manager','Jammie','Brew','jbrewf@shinystat.com','Z5Dlaq'),
-(17,'Rider','Erinna','Duigenan','eduigenang@merriam-webster.com','5BzKbodT'),
-(18,'Rider','Bradney','Caig','bcaigh@blogspot.com','vWkUThmYbyI'),
-(19,'Manager','Tootsie','Benallack','tbenallacki@angelfire.com','lf1Y2LhbMWxR'),
-(20,'Rider','Seka','Aiskovitch','saiskovitchj@blinklist.com','hWk5XNImO3O'),
-(21,'Rider','Kirbee','Lemerle','klemerlek@wisc.edu','FUC5uSBA'),
-(22,'Rider','Bogart','Messum','bmessuml@weibo.com','tKLoANn'),
-(23,'Rider','Becki','Crew','bcrewm@eventbrite.com','hdseNuSu'),
-(24,'Rider','Errick','Timothy','etimothyn@hostgator.com','xPET96lOUAz'),
-(25,'Manager','Romona','Naisbit','rnaisbito@nba.com','IA0quVTt3MuY'),
-(26,'Rider','Willow','Murrthum','wmurrthump@abc.net.au','1Tva2eca'),
-(27,'Rider','Cecil','Shurmore','cshurmoreq@hibu.com','gRaV26HMxQzl'),
-(28,'Rider','Harriett','Tolefree','htolefreer@deviantart.com','K9GlWYxjPs'),
-(29,'Rider','Albrecht','Beeze','abeezes@house.gov','CnBs4HYMiE'),
-(30,'Manager','Emmott','Legh','eleght@sciencedirect.com','epik1Xx2Jztz'),
-(31,'Rider','Nilson','Talby','ntalbyu@bbb.org','gNfMhtyiiVez'),
-(32,'Manager','Cleo','Wansbury','cwansburyv@europa.eu','x4WUREhKvY'),
-(33,'Manager','Ros','Tetther','rtettherw@symantec.com','u3y3DxSYs63'),
-(34,'Rider','Euphemia','Clemenzo','eclemenzox@nytimes.com','LATRwQTvAJ'),
-(35,'Rider','Correy','Zorn','czorny@youku.com','qXzO1GQ4'),
-(36,'Manager','Zara','Hellis','zhellisz@360.cn','8TL2nik1OR2'),
-(37,'Manager','Malvin','Labat','mlabat10@icio.us','ifh2N7'),
-(38,'Rider','Helenelizabeth','Moyles','hmoyles11@google.de','H9PfNRIXu'),
-(39,'Manager','Woodrow','Batchelder','wbatchelder12@wordpress.org','mVPLU8Z'),
-(40,'Rider','Willem','Houltham','whoultham13@spiegel.de','YYeHGc6Y'),
-(41,'Rider','Rosalinde','Monketon','rmonketon14@businesswire.com','VWISeFyB5ZyG'),
-(42,'Rider','Priscella','Roscamp','proscamp15@yahoo.com','ItR1rptEhkC'),
-(43,'Manager','Cristie','Brandli','cbrandli16@youku.com','hX5Ylh'),
-(44,'Manager','Otis','Sawbridge','osawbridge17@360.cn','SBxo6R7r35p'),
-(45,'Rider','Lucias','Iveans','liveans18@newsvine.com','Ad2vB4'),
-(46,'Rider','Demetre','Dovermann','ddovermann19@lulu.com','Jx3eo45i3lE'),
-(47,'Rider','Nial','Lemon','nlemon1a@bluehost.com','QjKOzeZ'),
-(48,'Manager','Elaina','Purslow','epurslow1b@rakuten.co.jp','hpqyBD'),
-(49,'Manager','Timmy','Faich','tfaich1c@sciencedaily.com','0Wt9WlD1jPiI'),
-(50,'Manager','Harriet','Mewhirter','hmewhirter1d@arizona.edu','pAp385ALwBa'),
-(51,'Manager','Basilio','Topes','btopes1e@xinhuanet.com','DE8yG64'),
-(52,'Manager','Suzie','McMurray','smcmurray1f@cdc.gov','SPgJSVu2Kc'),
-(53,'Manager','Baily','Murison','bmurison1g@geocities.jp','rzr8PQc'),
-(54,'Rider','Drona','MacNucator','dmacnucator1h@ed.gov','rZagd0rpS'),
-(55,'Manager','Art','Doale','adoale1i@dropbox.com','40ncg4KffEZ'),
-(56,'Rider','Anthia','MacKeever','amackeever1j@mayoclinic.com','UeIDy1pCUzQ'),
-(57,'Manager','Cal','Younglove','cyounglove1k@imdb.com','b868o1JZbA'),
-(58,'Rider','Kasper','Quiddihy','kquiddihy1l@fc2.com','VZo9eU'),
-(59,'Rider','Celisse','Workman','cworkman1m@whitehouse.gov','ToI5ukPOf'),
-(60,'Manager','Alonso','Avrahamy','aavrahamy1n@nymag.com','08eOzJMzeC9'),
-(61,'Rider','Rae','Jordine','rjordine1o@jimdo.com','kOi6vo'),
-(62,'Rider','Carlen','Smetoun','csmetoun1p@narod.ru','bEcrrt46ot'),
-(63,'Manager','Saunders','Choldcroft','scholdcroft1q@jigsy.com','OkXFRLDySE'),
-(64,'Manager','Mariana','Dennis','mdennis1r@patch.com','YQuKYba7i'),
-(65,'Rider','Larina','Ropars','lropars1s@miibeian.gov.cn','ZnqFOh'),
-(66,'Rider','Barnett','Leggis','bleggis1t@msu.edu','wYifgoZ'),
-(67,'Rider','Giacinta','Sorbey','gsorbey1u@mlb.com','3XfI6j5EkB'),
-(68,'Rider','Tully','Thumann','tthumann1v@naver.com','kR9wBzR5S0'),
-(69,'Manager','Belle','Bapty','bbapty1w@wired.com','hS4H4g'),
-(70,'Manager','Gui','Kamall','gkamall1x@house.gov','1HtorlG'),
-(71,'Rider','Demetra','Matyasik','dmatyasik1y@dell.com','riFQ8S'),
-(72,'Rider','Damara','Semens','dsemens1z@shareasale.com','OftAzf4'),
-(73,'Rider','Dell','Meek','dmeek20@multiply.com','Yiz3iI47ow'),
-(74,'Manager','Timmie','Bilson','tbilson21@wix.com','qFrojawWx'),
-(75,'Manager','Faythe','Harback','fharback22@desdev.cn','N1ADztX9eN'),
-(76,'Rider','Virginie','Ropcke','vropcke23@deliciousdays.com','SMWjU5ghhW'),
-(77,'Rider','Nannie','Moehle','nmoehle24@google.com','1gelhTESex'),
-(78,'Manager','Abigail','Bottrell','abottrell25@domainmarket.com','u5FhGe7Vx'),
-(79,'Manager','Emmaline','Berggren','eberggren26@multiply.com','9A1h05CE'),
-(80,'Rider','Lauren','Demann','ldemann27@freewebs.com','QI3Apa8iBUqG'),
-(81,'Rider','Alysa','Issacof','aissacof28@issuu.com','yFIegIXI'),
-(82,'Manager','Olvan','Lewinton','olewinton29@istockphoto.com','gSIrzc7'),
-(83,'Rider','Leila','Crean','lcrean2a@amazonaws.com','qWhd1pDMqxn'),
-(84,'Manager','Clay','Denzilow','cdenzilow2b@microsoft.com','ic8rMq87'),
-(85,'Rider','Donielle','Mulvihill','dmulvihill2c@mit.edu','HcxTjw5Sw'),
-(86,'Manager','Raychel','Marklow','rmarklow2d@mac.com','UQRKB0MefM'),
-(87,'Manager','Pippy','Tod','ptod2e@statcounter.com','0d8GKeJlMTp'),
-(88,'Manager','Orlando','McDonand','omcdonand2f@360.cn','fz8fT4NleT1'),
-(89,'Manager','Germain','Castro','gcastro2g@hhs.gov','JkJplGi5'),
-(90,'Rider','Katrine','Dedrick','kdedrick2h@upenn.edu','hoqtqy0E6aC'),
-(91,'Rider','Trace','Melliard','tmelliard2i@java.com','rULN7TEYpjD'),
-(92,'Rider','Teddie','Hogben','thogben2j@paypal.com','uGIsOlGIO'),
-(93,'Rider','Ellie','Bartul','ebartul2k@netscape.com','OHZpcHr'),
-(94,'Manager','Marian','Maycock','mmaycock2l@hostgator.com','Cie3Ab'),
-(95,'Rider','Kennie','Radnedge','kradnedge2m@stumbleupon.com','EuCr3my'),
-(96,'Manager','Cordy','Barley','cbarley2n@instagram.com','IAOjQwLhQ'),
-(97,'Rider','Jerry','Barzen','jbarzen2o@springer.com','5R76aExBrYWg'),
-(98,'Manager','Gordan','O''Curran','gocurran2p@mozilla.com','sGdAV3zC'),
-(99,'Manager','Gaye','Blasi','gblasi2q@un.org','j7mJ44lJcXN'),
-(100,'Rider','Sally','Plascott','splascott2r@statcounter.com','jaNrvYe2f');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (1, 'Manager', 'Norine', 'Baglow', 'nbaglow0@hp.com', 'UYqkoIyltQoA');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (2, 'Manager', 'Baxie', 'Cannon', 'bcannon1@bing.com', 'Hv8Ea4');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (3, 'Manager', 'Derron', 'Tatchell', 'dtatchell2@stanford.edu', 'YTRNLX');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (4, 'Manager', 'Augustine', 'Sperwell', 'asperwell3@t-online.de', 'AyNgCpWQ');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (5, 'Manager', 'Margy', 'Bogeys', 'mbogeys4@php.net', '4ZJiIM');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (6, 'Manager', 'Fletcher', 'Burchnall', 'fburchnall5@google.com', '1cD6LWignKw');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (7, 'Manager', 'Guilbert', 'Ashleigh', 'gashleigh6@lycos.com', 'I8L9euQlTUK');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (8, 'Manager', 'Griswold', 'Bruhn', 'gbruhn7@mediafire.com', 'fq8mte9a09');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (9, 'Manager', 'Casi', 'Shimon', 'cshimon8@mail.ru', 'yNynEWNfR');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (10, 'Manager', 'Angelica', 'Drinkale', 'adrinkale9@latimes.com', 'C5qHLa0');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (11, 'Manager', 'Vikki', 'Overell', 'voverella@thetimes.co.uk', 'AlhAepDEdfH');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (12, 'Manager', 'Sybila', 'Longmate', 'slongmateb@globo.com', 'J89O7WR');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (13, 'Manager', 'Forster', 'Dawnay', 'fdawnayc@163.com', 'KwcAPtd');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (14, 'Manager', 'Silva', 'Ratcliff', 'sratcliffd@goo.gl', 'tWUFqVDEoBwp');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (15, 'Manager', 'Loraine', 'Fairholme', 'lfairholmee@cbc.ca', 'DlPfgCqBfOV');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (16, 'Manager', 'Sancho', 'Placidi', 'splacidif@sbwire.com', 'GnhWNx1HLU');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (17, 'Manager', 'Cammy', 'Pordall', 'cpordallg@sciencedirect.com', 'wFaYF2A63od');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (18, 'Manager', 'Lulita', 'Dimblebee', 'ldimblebeeh@cornell.edu', 'XR8YT3jkZ');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (19, 'Manager', 'Becca', 'Quoit', 'bquoiti@washingtonpost.com', 'nLVaYy8NdSJv');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (20, 'Manager', 'Nicky', 'Raff', 'nraffj@mit.edu', 'EvrYAyKeCdZ');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (21, 'Manager', 'Birgit', 'Elstub', 'belstubk@geocities.com', 'cMumSgSlq');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (22, 'Manager', 'Ali', 'Tapply', 'atapplyl@umn.edu', 'aqi6as0Bm');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (23, 'Manager', 'Haydon', 'Burford', 'hburfordm@washingtonpost.com', 't7vOc7ln');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (24, 'Manager', 'Maire', 'Birdfield', 'mbirdfieldn@godaddy.com', 'kzL60EoT');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (25, 'Manager', 'Tiff', 'Nudd', 'tnuddo@xinhuanet.com', 'F7M7Wo0Q9');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (26, 'Manager', 'Yvonne', 'Fossick', 'yfossickp@amazon.co.jp', 'yc8UTHy');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (27, 'Manager', 'Maribeth', 'Lewsey', 'mlewseyq@live.com', 'VXSoYQV');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (28, 'Manager', 'Augusto', 'Dessaur', 'adessaurr@fda.gov', 'RIErj3dt8G');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (29, 'Manager', 'Fletch', 'Mance', 'fmances@infoseek.co.jp', '15jebT');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (30, 'Manager', 'Alanah', 'Abramov', 'aabramovt@facebook.com', 'h4olV16FCN');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (31, 'Manager', 'Merrilee', 'Mardy', 'mmardyu@upenn.edu', 'U6KDbixs');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (32, 'Manager', 'Verney', 'Jope', 'vjopev@youku.com', 'tGvJcGH9W');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (33, 'Manager', 'Barry', 'Spindler', 'bspindlerw@lycos.com', 'QjmjJnvyZ');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (34, 'Manager', 'Elise', 'Warin', 'ewarinx@scientificamerican.com', 'm0lF9DwZE');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (35, 'Manager', 'Pippo', 'Cotsford', 'pcotsfordy@pen.io', '4FWjSFG2');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (36, 'Manager', 'Dannel', 'Defau', 'ddefauz@reference.com', 'oUx1goe');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (37, 'Manager', 'Roland', 'Urpeth', 'rurpeth10@pcworld.com', 'QwTP02ZvL');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (38, 'Manager', 'Agathe', 'Treneer', 'atreneer11@desdev.cn', 'SFJtswr1AM');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (39, 'Manager', 'Obediah', 'Mellon', 'omellon12@flavors.me', 'taxb0kwHRE');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (40, 'Manager', 'Ashly', 'Gillebert', 'agillebert13@soundcloud.com', '5JrG79eLi');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (41, 'Manager', 'Dasya', 'Aishford', 'daishford14@yelp.com', 'QrzjAld');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (42, 'Manager', 'Michell', 'Fidoe', 'mfidoe15@bloglovin.com', 'sCIGkThQKQ');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (43, 'Manager', 'Julie', 'Dawton', 'jdawton16@scientificamerican.com', 'Qk9vOO');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (44, 'Manager', 'Anetta', 'Keemar', 'akeemar17@homestead.com', 'eYEbRYP2');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (45, 'Manager', 'Pincus', 'Brombell', 'pbrombell18@java.com', 'pi5BetJvCs');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (46, 'Manager', 'Town', 'Fawks', 'tfawks19@quantcast.com', 'L4oYTnshp');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (47, 'Manager', 'Irving', 'Bonnier', 'ibonnier1a@tiny.cc', 'l1hk0Ju2QTQE');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (48, 'Manager', 'Ave', 'Adamczyk', 'aadamczyk1b@columbia.edu', 'SSow9loRKh3n');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (49, 'Manager', 'Chastity', 'Lepoidevin', 'clepoidevin1c@eventbrite.com', 'WpiNg9');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (50, 'Manager', 'Bertram', 'De Gowe', 'bdegowe1d@wufoo.com', 'MYtqPD5Ew');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (51, 'Rider', 'Margarethe', 'McWilliams', 'mmcwilliams0@t-online.de', 'h6hgYzcMtrw3');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (52, 'Rider', 'Ana', 'Youle', 'ayoule1@abc.net.au', 'VgpsNQj');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (53, 'Rider', 'Tiena', 'Lerohan', 'tlerohan2@is.gd', 'cUt2pCL');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (54, 'Rider', 'Bethany', 'Pagin', 'bpagin3@ocn.ne.jp', 'j67e9S');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (55, 'Rider', 'Dorette', 'Tingly', 'dtingly4@huffingtonpost.com', 'KugRZbhgEqHx');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (56, 'Rider', 'Timothy', 'Stanley', 'tstanley5@google.cn', 'DxZPLBp');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (57, 'Rider', 'Maren', 'Pachta', 'mpachta6@hatena.ne.jp', 'yDOHBY');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (58, 'Rider', 'Daron', 'Cleland', 'dcleland7@fema.gov', 'uw37YvSJzS6');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (59, 'Rider', 'Costanza', 'Pinsent', 'cpinsent8@myspace.com', '205RxF5XYu');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (60, 'Rider', 'Luise', 'Domanek', 'ldomanek9@amazon.com', '8dRd6d');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (61, 'Rider', 'Bridie', 'Kobpac', 'bkobpaca@va.gov', 'WSqjaa2VN');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (62, 'Rider', 'Lawry', 'Keson', 'lkesonb@prlog.org', '9bcnIJwLAz3');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (63, 'Rider', 'Janith', 'Swane', 'jswanec@hao123.com', 'GtNqyxMOBe9E');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (64, 'Rider', 'Raymond', 'Havill', 'rhavilld@vk.com', 'qGfzAVe');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (65, 'Rider', 'Abbi', 'Pendlebury', 'apendleburye@google.fr', 'eAUT1e6');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (66, 'Rider', 'Lambert', 'Dutton', 'lduttonf@hexun.com', '0UxtIX6ak');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (67, 'Rider', 'Curt', 'Clayfield', 'cclayfieldg@mapy.cz', '1nbNi9R');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (68, 'Rider', 'Isobel', 'McCorkindale', 'imccorkindaleh@bing.com', 'vdRvni7s4rK');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (69, 'Rider', 'Helsa', 'Bonnett', 'hbonnetti@a8.net', 'ud4p1N4M3xOu');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (70, 'Rider', 'Adair', 'Daelman', 'adaelmanj@blog.com', 'QflkcQEoQc');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (71, 'Rider', 'Rancell', 'Kilgallen', 'rkilgallenk@spotify.com', 'VfMpUmVkh6');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (72, 'Rider', 'Tabina', 'Meates', 'tmeatesl@yellowbook.com', 'iyC9AA');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (73, 'Rider', 'Cortie', 'Willoughway', 'cwilloughwaym@github.io', 'yiwzT7g');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (74, 'Rider', 'Lowell', 'Scoullar', 'lscoullarn@reuters.com', 'D7EZg6');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (75, 'Rider', 'Eben', 'Tester', 'etestero@goo.gl', 'BPHhgEFze9');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (76, 'Rider', 'Christan', 'Purvess', 'cpurvessp@ox.ac.uk', 'cKR72GVjAWGg');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (77, 'Rider', 'Nolie', 'Underwood', 'nunderwoodq@psu.edu', 'vV3fQtCK');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (78, 'Rider', 'Vladimir', 'Weaving', 'vweavingr@nytimes.com', '69hHCEboLazR');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (79, 'Rider', 'Lynnea', 'Audiss', 'laudisss@slashdot.org', 'znXYcFrKD');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (80, 'Rider', 'Vaughn', 'Sermin', 'vsermint@flavors.me', 'eR7RdYE9');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (81, 'Rider', 'Cori', 'L''Episcopi', 'clepiscopiu@cam.ac.uk', '36fqSf9NISZg');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (82, 'Rider', 'Arther', 'Anmore', 'aanmorev@opera.com', 'LE3NqFlNQ7Rr');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (83, 'Rider', 'Dulcia', 'Uebel', 'duebelw@marketwatch.com', 'zU7CgPHEA');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (84, 'Rider', 'Yanaton', 'Kupis', 'ykupisx@smugmug.com', 'zrn5ep9zUSN');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (85, 'Rider', 'Sayre', 'West', 'swesty@wix.com', 'RsuPNwe4l2I');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (86, 'Rider', 'Vinson', 'Aikman', 'vaikmanz@scientificamerican.com', 'MJT3VYaOrjeU');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (87, 'Rider', 'Katinka', 'Washtell', 'kwashtell10@nih.gov', '3BAaQfUJfIAi');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (88, 'Rider', 'Delano', 'Tocknell', 'dtocknell11@g.co', 'bzbI8m');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (89, 'Rider', 'Barris', 'Ossipenko', 'bossipenko12@elpais.com', 'ZGyuIkBc0Lxc');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (90, 'Rider', 'Grange', 'Dignan', 'gdignan13@goo.ne.jp', 'CZRgdFtX');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (91, 'Rider', 'Joni', 'Poluzzi', 'jpoluzzi14@altervista.org', 'MzTdvCjcj');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (92, 'Rider', 'Grata', 'Bendixen', 'gbendixen15@exblog.jp', '7kFg2wzGziA');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (93, 'Rider', 'Marlee', 'Roma', 'mroma16@sakura.ne.jp', 'YoOjyyfUq');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (94, 'Rider', 'Rancell', 'Gutman', 'rgutman17@intel.com', '9VJUFnM');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (95, 'Rider', 'Raina', 'Moylane', 'rmoylane18@sogou.com', 'c9gAy2EW');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (96, 'Rider', 'Reinald', 'Demke', 'rdemke19@tripod.com', 'yc0a5oWBai');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (97, 'Rider', 'Joyann', 'Sweeten', 'jsweeten1a@gravatar.com', '3aqfIS6L1tdH');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (98, 'Rider', 'Arlana', 'Muslim', 'amuslim1b@army.mil', 'YiOuCGhRhf');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (99, 'Rider', 'Petrina', 'Czadla', 'pczadla1c@hostgator.com', 'CPxkzcioDud');
+insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (100, 'Rider', 'Sonnie', 'Hulland', 'shulland1d@bizjournals.com', '9nHFwko92a3D');
 
-ALTER SEQUENCE fdsemployee_empid_seq RESTART WITH 101;
+INSERT INTO Manager VALUES (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12),(13),(14),(15),(16),(17),(18),(19),(20),(21),(22),(23),(24),(25),(26),(27),(28),(29),(30),(31),(32),(33),(34),(35),(36),(37),(38),(39),(40),(41),(42),(43),(44),(45),(46),(47),(48),(49),(50);
 
-INSERT INTO WorkShift VALUES
-(1,1,1,0,0,0,0,1,null,1,0,0,1,11),
-(2,1,0,1,1,1,1,0,null,0,0,1,1,10),
-(3,null,0,0,null,1,0,0,1,1,0,0,0,2),
-(4,0,0,1,0,0,null,1,0,1,0,1,1,12),
-(5,1,1,0,0,null,0,1,null,null,1,0,1,4),
-(6,null,1,null,null,1,1,null,0,0,0,0,1,3),
-(7,0,null,1,1,null,0,1,null,null,0,0,1,6),
-(8,1,1,0,0,1,1,1,0,1,0,1,1,1),
-(9,null,1,1,1,0,null,0,0,0,1,1,1,12),
-(10,1,null,1,0,0,0,1,null,null,1,1,0,11),
-(11,0,null,0,1,0,0,1,1,1,1,1,1,7),
-(12,0,1,1,1,null,0,0,0,0,0,1,1,10),
-(13,1,1,0,1,1,0,1,null,1,1,1,1,2),
-(14,null,1,1,1,0,0,0,null,0,1,0,1,1),
-(15,null,0,0,1,0,null,1,null,0,0,1,0,5),
-(16,0,1,1,1,null,1,1,1,1,1,1,1,11),
-(17,0,0,1,0,0,1,0,0,1,0,1,null,2),
-(18,0,0,1,null,1,null,1,null,null,null,0,1,9),
-(19,1,0,0,0,0,null,0,0,1,1,1,0,10),
-(20,0,null,1,1,0,0,0,1,1,1,1,null,2),
-(21,0,1,0,null,1,0,0,null,0,1,1,0,3),
-(22,1,0,1,0,1,null,0,null,1,1,0,1,12),
-(23,0,null,0,0,1,1,0,0,1,1,0,1,8),
-(24,0,null,1,1,null,null,0,null,1,0,0,1,7),
-(25,1,null,0,0,null,null,0,1,0,1,0,1,7),
-(26,1,0,1,1,null,0,1,0,0,1,null,0,0),
-(27,0,0,0,1,null,null,0,0,0,0,1,0,11),
-(28,1,1,1,1,1,1,0,null,1,1,1,1,2),
-(29,1,0,null,1,null,1,null,null,0,1,0,0,7),
-(30,null,0,1,0,1,0,0,0,1,0,1,0,6),
-(31,1,null,0,1,1,1,0,1,0,1,0,1,9),
-(32,0,0,1,0,1,1,0,0,1,0,0,0,1),
-(33,1,null,1,0,0,0,0,0,1,0,null,0,6),
-(34,0,1,1,1,0,1,1,1,0,1,1,0,0),
-(35,1,1,1,0,0,null,1,1,0,0,1,1,11),
-(36,0,0,null,0,null,1,null,null,1,1,1,0,8),
-(37,null,0,1,0,1,1,1,null,null,1,1,1,6),
-(38,null,1,0,1,0,1,0,null,0,0,1,0,9),
-(39,0,1,0,0,0,null,0,null,1,0,0,1,8),
-(40,1,1,null,1,0,1,null,1,0,0,0,null,9),
-(41,1,0,0,1,0,1,0,1,0,1,1,1,6),
-(42,1,1,null,0,1,null,null,1,null,1,0,1,7),
-(43,0,0,1,0,0,0,0,1,1,0,1,1,9),
-(44,0,0,1,1,0,1,0,0,0,1,1,1,12),
-(45,0,0,null,1,1,null,null,1,1,0,1,1,2),
-(46,0,null,0,0,1,1,1,0,0,1,1,1,11),
-(47,0,0,null,0,0,0,null,1,1,0,0,0,8),
-(48,0,0,0,null,0,1,1,0,0,0,0,1,5),
-(49,0,null,1,1,1,0,1,0,0,null,0,0,5),
-(50,0,1,0,1,null,0,0,0,1,1,null,1,6),
-(51,0,0,1,1,1,null,0,1,0,0,0,1,2),
-(52,0,null,0,null,0,0,0,null,0,1,0,0,7),
-(53,1,1,1,1,0,1,1,null,1,0,0,0,7),
-(54,null,0,1,0,0,0,1,0,1,0,1,1,12),
-(55,0,0,0,1,0,0,1,0,0,0,0,1,5),
-(56,1,1,0,1,0,null,0,null,0,1,0,0,1),
-(57,1,0,0,null,0,null,1,0,0,0,0,0,8),
-(58,null,1,1,1,null,1,1,1,0,1,1,0,10),
-(59,1,1,1,1,1,null,1,0,1,1,0,1,8),
-(60,1,0,1,1,0,0,1,0,1,0,1,1,3),
-(61,0,1,0,1,1,1,0,null,1,1,1,0,12),
-(62,1,0,0,1,1,1,1,1,1,1,1,1,8),
-(63,null,1,1,1,0,0,1,0,null,0,0,0,1),
-(64,0,0,0,1,0,null,1,0,1,0,1,0,10),
-(65,0,1,null,0,1,1,null,0,1,1,1,0,12),
-(66,1,0,1,1,null,null,1,1,1,1,1,0,1),
-(67,0,0,1,0,1,0,1,0,1,0,1,0,9),
-(68,1,0,1,0,1,0,0,null,0,0,0,1,10),
-(69,0,0,0,0,1,null,0,1,1,1,0,0,8),
-(70,1,0,1,1,0,1,0,1,1,1,1,1,7),
-(71,0,1,1,1,null,1,1,null,0,0,1,1,11),
-(72,1,1,1,1,0,0,0,0,1,0,0,0,10),
-(73,1,1,1,1,1,0,1,0,1,0,0,1,1),
-(74,1,1,1,0,0,1,0,0,1,1,0,1,4),
-(75,null,null,0,1,1,null,0,1,1,0,0,1,0),
-(76,0,null,0,1,0,1,0,1,1,1,0,1,0),
-(77,0,1,0,1,1,null,1,null,1,1,0,1,12),
-(78,1,null,1,1,1,1,1,null,null,0,0,1,5),
-(79,0,1,0,0,0,1,1,1,1,0,1,0,4),
-(80,1,1,0,0,1,null,1,null,1,1,0,0,12),
-(81,1,1,1,1,1,0,1,null,1,0,0,1,12),
-(82,1,1,0,1,0,1,0,1,1,1,1,1,10),
-(83,0,null,0,0,1,1,0,0,1,1,1,1,10),
-(84,1,1,0,1,0,null,1,1,0,null,0,1,7),
-(85,0,1,1,0,null,null,0,1,0,0,0,1,1),
-(86,0,1,0,1,1,0,1,null,1,1,0,0,0),
-(87,0,0,1,0,1,0,1,1,0,1,1,0,10),
-(88,1,0,0,null,0,1,0,0,0,1,0,0,0),
-(89,1,1,1,0,0,1,1,null,0,1,0,0,10),
-(90,1,1,0,0,0,0,0,1,0,1,1,1,7),
-(91,0,1,1,0,0,1,0,1,0,0,0,0,3),
-(92,1,1,1,0,0,0,0,null,0,0,0,0,0),
-(93,1,0,1,1,1,1,0,0,0,0,1,1,10),
-(94,null,null,1,1,0,null,0,null,1,0,1,0,7),
-(95,0,0,null,1,1,1,null,null,1,1,0,1,3),
-(96,1,0,0,0,0,1,1,null,1,1,0,1,9),
-(97,1,1,0,0,1,0,1,null,0,0,0,0,11),
-(98,1,1,1,0,null,0,0,1,1,1,null,0,8),
-(99,0,1,1,0,null,1,0,0,0,0,1,0,5),
-(100,0,null,1,1,1,0,0,1,1,1,0,1,0);
+INSERT INTO Rider VALUES (51,false),(52,false),(53,false),(54,false),(55,false),(56,false),(57,false),(58,false),(59,false),(60,false),(61,false),(62,false),(63,false),(64,false),(65,false),(66,false),(67,false),(68,false),(69,false),(70,false);
+INSERT INTO Rider VALUES (71,true),(72,true),(73,true),(74,true),(75,true),(76,true),(77,true),(78,true),(79,true),(80,true);
 
-ALTER SEQUENCE workshift_wsid_seq RESTART WITH 101;
+INSERT INTO WorkShift VALUES (0, false,false,false,false,false,false,false,false,false,false,false,false,true);
+INSERT INTO WorkShift VALUES (1, true, true, true, true, false, true, true, true, true, false, false, false, true);
+INSERT INTO WorkShift VALUES (2, false, true, true, true, true, false, true, true, true, true, false, false, true);
+INSERT INTO WorkShift VALUES (3, false, false, true, true, true, true, false, true, true, true, true, false, true);
+INSERT INTO WorkShift VALUES (4, false, false, false, true, true, true, true, false, true, true, true, true, true);
 
-INSERT INTO WWS VALUES
-(1,79,63,null,94,86,40,51),
-(2,null,24,11,null,64,35,null),
-(3,null,33,95,90,null,59,84),
-(4,40,null,94,41,null,74,40),
-(5,17,99,63,29,60,26,65),
-(6,42,50,25,37,18,80,24),
-(7,20,27,9,26,64,30,30),
-(8,17,41,83,27,78,29,6),
-(9,null,61,49,82,98,61,32),
-(10,null,16,60,57,47,66,null),
-(11,80,39,92,36,1,55,null),
-(12,63,49,70,42,97,64,78),
-(13,7,25,null,12,26,95,35),
-(14,58,97,null,58,81,80,null),
-(15,32,83,17,87,81,76,7),
-(16,93,4,40,null,55,null,null),
-(17,71,84,33,51,99,37,71),
-(18,75,92,96,46,19,53,null),
-(19,null,37,3,75,82,48,51),
-(20,34,57,null,18,53,61,81),
-(21,96,74,null,91,87,9,null),
-(22,null,78,93,19,100,12,53),
-(23,33,18,null,92,43,71,14),
-(24,66,74,10,7,8,45,78),
-(25,null,91,79,50,31,null,74),
-(26,70,47,77,91,76,23,42),
-(27,91,33,89,3,59,29,48),
-(28,32,null,28,56,null,null,null),
-(29,56,52,8,14,63,4,46),
-(30,44,45,null,99,73,60,null),
-(31,7,88,27,99,73,28,3),
-(32,96,76,98,78,48,null,71),
-(33,7,40,34,31,42,32,91),
-(34,35,91,85,55,57,87,57),
-(35,8,32,89,94,11,3,57),
-(36,null,37,21,65,47,35,43),
-(37,29,98,48,27,29,85,85),
-(38,70,89,47,91,91,28,null),
-(39,null,71,7,38,1,27,56),
-(40,68,89,84,76,44,47,80),
-(41,100,null,22,77,23,48,90),
-(42,9,45,22,26,92,29,23),
-(43,43,97,null,52,87,100,85),
-(44,null,96,99,24,68,23,16),
-(45,39,37,9,36,84,94,1),
-(46,40,86,3,79,86,76,66),
-(47,null,22,41,58,91,27,95),
-(48,41,57,5,21,32,31,null),
-(49,20,75,52,44,66,null,null),
-(50,42,31,10,52,81,19,95),
-(51,30,null,74,20,76,55,47),
-(52,56,81,41,51,18,15,40),
-(53,null,8,null,80,78,61,90),
-(54,33,5,50,45,91,25,59),
-(55,48,17,22,9,3,45,85),
-(56,97,23,46,84,20,61,5),
-(57,63,null,46,null,84,94,48),
-(58,null,2,21,74,26,44,null),
-(59,78,39,45,5,25,30,55),
-(60,null,17,41,77,null,null,48),
-(61,14,4,22,46,14,43,48),
-(62,88,24,53,10,1,63,66),
-(63,38,61,43,null,null,37,null),
-(64,20,52,90,25,51,null,null),
-(65,84,3,31,69,20,95,60),
-(66,null,null,21,14,25,13,80),
-(67,74,31,33,69,null,75,66),
-(68,78,64,1,21,20,60,null),
-(69,77,null,73,76,11,91,58),
-(70,90,16,18,36,89,45,15),
-(71,78,45,81,null,75,16,33),
-(72,71,84,43,83,64,null,26),
-(73,86,54,null,27,96,85,21),
-(74,36,16,84,86,87,13,15),
-(75,null,52,11,16,null,95,null),
-(76,93,6,4,5,41,64,47),
-(77,52,57,39,80,20,96,null),
-(78,51,100,null,38,87,57,83),
-(79,99,28,100,16,80,52,79),
-(80,57,52,19,60,17,null,null),
-(81,49,52,50,22,48,98,null),
-(82,25,14,55,19,null,91,64),
-(83,5,49,17,null,21,98,78),
-(84,7,76,40,23,85,null,45),
-(85,11,85,4,23,19,35,59),
-(86,84,62,81,null,99,81,42),
-(87,62,76,47,35,27,71,null),
-(88,39,98,null,58,100,75,68),
-(89,null,null,32,11,76,46,81),
-(90,14,null,22,79,68,36,84),
-(91,73,81,2,98,95,76,null),
-(92,70,34,77,12,59,91,68),
-(93,25,90,51,50,82,97,54),
-(94,62,83,46,1,22,90,64),
-(95,38,95,null,18,24,75,95),
-(96,null,89,15,33,15,68,null),
-(97,50,82,28,null,66,40,null),
-(98,5,97,31,24,26,30,13),
-(99,92,62,62,10,44,74,72),
-(100,9,62,6,99,38,85,75);
+insert into WorkShift (wsid, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12) values (5, false, false, false, false, true, true, false, false, true, false, true, false);
+insert into WorkShift (wsid, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12) values (6, false, true, false, false, true, false, true, true, true, false, false, false);
+insert into WorkShift (wsid, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12) values (7, false, false, true, true, true, true, false, false, true, false, true, true);
+insert into WorkShift (wsid, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12) values (8, true, false, true, true, true, false, false, false, true, true, false, true);
+insert into WorkShift (wsid, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12) values (9, true, true, false, false, true, true, false, false, true, true, false, false);
+insert into WorkShift (wsid, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12) values (10, true, true, false, false, true, false, true, true, true, false, true, false);
+insert into WorkShift (wsid, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12) values (11, false, false, true, true, false, true, true, false, true, true, false, false);
+insert into WorkShift (wsid, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12) values (12, true, true, false, false, false, false, true, false, false, true, true, true);
+insert into WorkShift (wsid, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12) values (13, false, false, true, false, true, false, false, false, false, false, true, false);
+insert into WorkShift (wsid, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12) values (14, true, false, false, true, true, false, true, true, false, false, false, true);
 
-ALTER SEQUENCE wws_wid_seq RESTART WITH 101;
+INSERT INTO WWS VALUES (51,1,1,1,1,1,0,0),(52,1,1,1,1,1,0,0),(53,1,1,1,1,1,0,0),(54,1,1,1,1,1,0,0),(55,1,1,1,1,1,0,0);
+INSERT INTO WWS VALUES (56,0,0,1,1,1,1,1),(57,0,0,1,1,1,1,1),(58,0,0,1,1,1,1,1),(59,0,0,1,1,1,1,1),(60,0,0,1,1,1,1,1);
+INSERT INTO WWS VALUES (61,4,4,4,4,4,0,0),(62,4,4,4,4,4,0,0),(63,4,4,4,4,4,0,0),(64,4,4,4,4,4,0,0),(65,4,4,4,4,4,0,0);
+INSERT INTO WWS VALUES (66,0,0,4,4,4,4,4),(67,0,0,4,4,4,4,4),(68,0,0,4,4,4,4,4),(69,0,0,4,4,4,4,4),(70,0,0,4,4,4,4,4);
 
-INSERT INTO Manager VALUES
-(25),
-(77),
-(55),
-(20),
-(95),
-(70),
-(69),
-(71),
-(41);
-
-INSERT INTO Rider VALUES
-(84,false,27),
-(27,true,57),
-(3,false,23),
-(90,true,28),
-(17,false,77),
-(83,false,1),
-(40,true,29),
-(28,false,96),
-(52,true,33),
-(2,true,56),
-(6,true,61),
-(45,false,59),
-(23,false,1),
-(74,false,10),
-(71,false,52),
-(29,false,7),
-(93,false,59);
-
-
+insert into WWS (empid, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday) values (71, 5, 6, 12, 8, 8, 8, 12);
+insert into WWS (empid, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday) values (72, 8, 12, 9, 14, 14, 13, 10);
+insert into WWS (empid, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday) values (73, 11, 12, 12, 10, 14, 5, 7);
+insert into WWS (empid, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday) values (74, 13, 11, 14, 5, 12, 7, 9);
+insert into WWS (empid, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday) values (75, 5, 12, 14, 11, 8, 13, 11);
+insert into WWS (empid, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday) values (76, 6, 10, 8, 7, 11, 11, 5);
+insert into WWS (empid, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday) values (77, 13, 14, 9, 10, 14, 12, 8);
+insert into WWS (empid, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday) values (78, 6, 6, 10, 14, 10, 14, 8);
+insert into WWS (empid, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday) values (79, 6, 7, 9, 14, 12, 6, 14);
+insert into WWS (empid, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday) values (80, 8, 5, 14, 10, 9, 6, 6);
