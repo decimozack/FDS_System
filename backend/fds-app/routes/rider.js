@@ -294,4 +294,22 @@ router.get('/getSalary/:id', (req, res, next) => {
 
 });
 
+router.get('/getRatings/:id', (req, res, next) => {
+  var db = req.app.locals.db;
+
+  var riderid = req.params.id;
+  
+  db.query('SELECT rating from RiderRatings R, Assigned A WHERE A.empid=$1 and A.oid=R.oid;', [riderid])
+  .then(results => {
+    var rows = results.rows
+    console.log(rows);
+    res.status(200).send(rows);
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(400).send(err);
+  })
+
+});
+
 module.exports = router;

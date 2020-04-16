@@ -8,7 +8,6 @@ DROP TABLE IF EXISTS Offers CASCADE;
 DROP TABLE IF EXISTS OrderItem CASCADE;
 DROP TABLE IF EXISTS Place CASCADE;
 DROP TABLE IF EXISTS Customers CASCADE;
-DROP TABLE IF EXISTS RestaurantReviews CASCADE;
 DROP TABLE IF EXISTS RestaurantReview CASCADE;
 DROP TABLE IF EXISTS Orders CASCADE;
 DROP TABLE IF EXISTS Salary CASCADE;
@@ -21,8 +20,7 @@ DROP TABLE IF EXISTS Rider CASCADE;
 DROP TABLE IF EXISTS WWS CASCADE;
 DROP TABLE IF EXISTS OrderWaitingList CASCADE;
 DROP TABLE IF EXISTS WorkShift CASCADE;
-DROP TABLE IF EXISTS RiderReviews CASCADE;
-DROP TABLE IF EXISTS RiderReview CASCADE;
+DROP TABLE IF EXISTS RiderRatings CASCADE;
 DROP TABLE IF EXISTS Assigned CASCADE;
 DROP TABLE IF EXISTS ClockIn CASCADE;
 DROP TABLE IF EXISTS Manager CASCADE;
@@ -79,23 +77,15 @@ CREATE TABLE Category (
 
 CREATE TABLE FoodItem (
 	fid SERIAl PRIMARY KEY,
+	rid INTEGER NOT NULL,
 	fname VARCHAR(50) NOT NULL,
 	description TEXT,
 	catid INTEGER NOT NULL,
-	FOREIGN KEY (catid) references Category
-);
-
-CREATE TABLE Sells (
-	rid INTEGER NOT NULL,
-	mid INTEGER NOT NULL,
-	fid INTEGER NOT NULL,
 	food_limit INTEGER NOT NULL,
 	current_qty INTEGER NOT NULL,
 	price DECIMAL(5, 2) NOT NULL,
-	PRIMARY KEY (rid, mid, fid),
-	FOREIGN KEY (rid) REFERENCES Restaurants,
-	FOREIGN KEY (mid) REFERENCES Menu,
-	FOREIGN KEY (fid) REFERENCES FoodItem 
+	FOREIGN KEY (rid) references Restaurants,
+	FOREIGN KEY (catid) references Category
 );
 
 CREATE TABLE PromoCampaign (
@@ -129,26 +119,16 @@ CREATE TABLE OrderItem (  -- full part from OrderItem to Place not enforced
 
 CREATE TABLE Place (
 	ooid INTEGER REFERENCES OrderItem(ooid) on DELETE CASCADE,
-	rid INTEGER,
-	mid INTEGER,
 	fid INTEGER,
 	qty INTEGER NOT NULL,
-	PRIMARY KEY (ooid, rid, mid, fid),
-	FOREIGN KEY (rid, mid, fid) REFERENCES Sells(rid, mid, fid) ON DELETE CASCADE
+	PRIMARY KEY (ooid, fid),
+	FOREIGN KEY (fid) REFERENCES FoodItem(fid) ON DELETE CASCADE
 );
 
 CREATE TABLE RestaurantReview (
-	rid SERIAL PRIMARY KEY,
-	rating SMALLINT NOT NULL,
-	description TEXT
-);
-
-CREATE TABLE RestaurantReviews (
-	rid INTEGER,
-	oid INTEGER,
-	PRIMARY KEY (rid, oid),
-	FOREIGN KEY (rid) REFERENCES RestaurantReview,
-	FOREIGN KEY (oid) REFERENCES Orders
+	oid INTEGER Primary key,
+	description TEXT,
+	FOREIGN key (oid) REFERENCES Orders
 );
 
 CREATE TABLE Belongs (
@@ -335,18 +315,10 @@ create or replace procedure update_monthly_salary (id integer)
 		DO nothing;
 	$$ language sql;
 
-CREATE TABLE RiderReview (
-	rrid SERIAL PRIMARY KEY,
+CREATE TABLE RiderRatings (
+	oid SERIAL PRIMARY KEY,
 	rating SMALLINT NOT NULL,
-	description VARCHAR(100)
-);
-
-CREATE TABLE RiderReviews (
-	rrid INTEGER,
-	cid INTEGER,
-	PRIMARY KEY(rrid, cid),
-	FOREIGN KEY (rrid) REFERENCES RiderReview,
-	FOREIGN KEY (cid) REFERENCES Customers
+	FOREIGN KEY (oid) REFERENCES Assigned
 );
 
 CREATE TABLE ClockIn (
@@ -391,24 +363,6 @@ FOR EACH ROW
 EXECUTE FUNCTION
 total_part_orderitem_wrt_place();
 
-
-INSERT INTO Restaurants (rid, rname, min_order_cost) VALUES (1, 'KFC', 3), (2, 'MacDonalds' , 2.50), (3, 'Deck', 2.10), (4, 'The Tea Party', 4.50), (5, 'Fong Seng Nasi Lemak', 1.00);
-INSERT INTO RestaurantStaff (rsid, rs_first_name, rs_last_name, email, rspassword, rid) VALUES (1, 'John','Doe', 'john@example.com', 'johndoe123', 1), (2, 'Dominic', 'Frank', 'domthed@gmail.com', 'benedict312', 3), (3, 'Dominic', 'Quek', 'quek@example.com', '65nf76', 5), (4, 'Peter', 'Pan', 'pan@ocbc.edu', '87ghf', 4);
-INSERT INTO Customers (cid, c_first_name, c_last_name, email, cpassword, credit_card_info, reward_pts, created_on) VALUES (1, 'Benedict', 'Quek', 'bene@hotmail.com', 'dictdict96', 'DBS 9821-2112', 10, current_timestamp), (2, 'Zachary', 'Tan', 'tanzack@nus.com', 'fhas7612', 'POSB 312321132', 0, current_timestamp), (3, 'Chen', 'Hua', 'chenhua@gmail.com', 'fdsf64324', 'DBS 1232', 50, current_timestamp), (4, 'Joyce', 'Tan', 'joyceytan@gmail.com', 'ashda6969', 'OCBC 321123', 61, current_timestamp), (5, 'John', 'Elijah Tan', 'elijah@dbs.email.co', 'dasni324', 'DBS 1213', 1, current_timestamp);
-INSERT INTO Orders (oid, use_credit_card, use_points, order_time, order_status, price, delivery_fee, address, gain_reward_pts, cid) VALUES (1, true, false, '2038-01-19 03:14:07' ,'WAITING', 10.50, 3.00, 'Clementi 96', 20, 1), (2, true, false, '2038-01-19 03:14:07' ,'WAITING', 10.50, 3.00, 'Clementi 96', 20, 1);
-INSERT INTO Menu (mid, mname, start_time, end_time) VALUES (1, 'All-time', '09:00:00', '18:00:00'), (2, 'Breakfast', '08:00:00', '12:00:00');
-INSERT INTO Category (catid, catname, description) VALUES (1, 'Western', 'This is western cuisine.'), (2, 'Asian', 'Delicious cooked by Singaporeans');
-INSERT INTO FoodItem (fid, fname, description, catid) VALUES (1, 'Black Pepper Steak', 'Steak topped with pepper sauce', 1), (2, 'Carrot Cake', 'Cake made of red carrot. Yummy!', 2);
-INSERT INTO Sells (rid, mid, fid, food_limit, current_qty, price) VALUES (2, 1, 1, 100, 100, 3.00), (3, 2, 2, 200, 190, 5.10), (1, 1, 1, 50, 50, 4.50);
-INSERT INTO PromoCampaign (pcid, campaign_type, from_restaurant, start_time, end_time) VALUES (1, 'Chinese New Year', 'KFC' , '2038-01-19 03:14:07', '2038-01-19 03:15:07');
-INSERT INTO Uses (oid, pcid) VALUES (1, 1), (3, 1);
-INSERT INTO Offers (rid, pcid) VALUES (1, 1), (2, 1);
-INSERT INTO OrderItem (ooid, oid) VALUES (1, 1), (2, 1), (3, 1);
-INSERT INTO Place (ooid, rid, mid, fid, qty) VALUES (1, 2, 1, 1 , 3), (2, 1, 1, 1, 10); -- (1, 1, 1, 1, 10);
-INSERT INTO RestaurantReview (rid, rating, description) VALUES (1, 3, 'Goodplace'), (2, 4, 'Conducive'), (3, 5,'');
-INSERT INTO RestaurantReviews (rid, oid) VALUES (1, 1); 
-INSERT INTO Belongs (oid, rid) VALUES (1, 1);
-INSERT INTO Eligible (cid, pcid) VALUES (2, 1), (3, 1), (4, 1);
 
 -- INSERT INTO WorkShift (wsid, all_work_hours, num_hours) VALUES (0, 0, 0);
 -- INSERT INTO WorkShift (all_work_hours, num_hours) VALUES (1,1), (2,1), (3,2), (4,1), (5,2), (6,2), (7,3), (8,1), (9,2), (10,2), (11,3), (12,2), (13,3), (14,3), (15,4), (16,1), (17,2), (18,2), (19,3), (20,2), (21,3), (22,3), (23,4), (24,2), (25,3), (26,3), (27,4), (28,3), (29,4), (30,4), (31,5), (32,1), (33,2), (34,2), (35,3), (36,2), (37,3), (38,3), (39,4), (40,2), (41,3), (42,3), (43,4), (44,3), (45,4), (46,4), (47,5), (48,2), (49,3), (50,3), (51,4), (52,3), (53,4), (54,4), (55,5), (56,3), (57,4), (58,4), (59,5), (60,4), (61,5), (62,5), (63,6), (64,1), (65,2), (66,2), (67,3), (68,2), (69,3), (70,3), (71,4), (72,2), (73,3), (74,3), (75,4), (76,3), (77,4), (78,4), (79,5), (80,2), (81,3), (82,3), (83,4), (84,3), (85,4), (86,4), (87,5), (88,3), (89,4), (90,4), (91,5), (92,4), (93,5), (94,5), (96,2), (97,3), (98,3), (99,4), (100,3), (101,4), (102,4), (103,5), (104,3), (105,4), (106,4), (107,5), (108,4), (109,5), (110,5), (111,6), (112,3), (113,4), (114,4), (115,5), (116,4), (117,5), (118,5), (119,6), (120,4), (121,5), (122,5), (123,6), (124,5), (125,6), (126,6), (127,7), (128,1), (129,2), (130,2), (131,3), (132,2), (133,3), (134,3), (135,4), (136,2), (137,3), (138,3), (139,4), (140,3), (141,4), (142,4), (143,5), (144,2), (145,3), (146,3), (147,4), (148,3), (149,4), (150,4), (151,5), (152,3), (153,4), (154,4), (155,5), (156,4), (157,5), (158,5), (160,2), (161,3), (162,3), (163,4), (164,3), (165,4), (166,4), (167,5), (168,3), (169,4), (170,4), (171,5), (172,4), (173,5), (174,5), (175,6), (176,3), (177,4), (178,4), (179,5), (180,4), (181,5), (182,5), (183,6), (184,4), (185,5), (186,5), (187,6), (188,5), (189,6), (192,2), (193,3), (194,3), (195,4), (196,3), (197,4), (198,4), (199,5), (200,3), (201,4), (202,4), (203,5), (204,4), (205,5), (206,5), (207,6), (208,3), (209,4), (210,4), (211,5), (212,4), (213,5), (214,5), (215,6), (216,4), (217,5), (218,5), (219,6), (220,5), (221,6), (222,6), (224,3), (225,4), (226,4), (227,5), (228,4), (229,5), (230,5), (231,6), (232,4), (233,5), (234,5), (235,6), (236,5), (237,6), (238,6), (239,7), (240,4), (241,5), (242,5), (243,6), (244,5), (245,6), (246,6), (247,7), (248,5), (249,6), (250,6), (251,7), (252,6), (253,7), (254,7), (255,8), (256,1), (257,2), (258,2), (259,3), (260,2), (261,3), (262,3), (263,4), (264,2), (265,3), (266,3), (267,4), (268,3), (269,4), (270,4), (271,5), (272,2), (273,3), (274,3), (275,4), (276,3), (277,4), (278,4), (279,5), (280,3), (281,4), (282,4), (283,5), (284,4), (285,5), (286,5), (288,2), (289,3), (290,3), (291,4), (292,3), (293,4), (294,4), (295,5), (296,3), (297,4), (298,4), (299,5), (300,4), (301,5), (302,5), (303,6), (304,3), (305,4), (306,4), (307,5), (308,4), (309,5), (310,5), (311,6), (312,4), (313,5), (314,5), (315,6), (316,5), (317,6), (320,2), (321,3), (322,3), (323,4), (324,3), (325,4), (326,4), (327,5), (328,3), (329,4), (330,4), (331,5), (332,4), (333,5), (334,5), (335,6), (336,3), (337,4), (338,4), (339,5), (340,4), (341,5), (342,5), (343,6), (344,4), (345,5), (346,5), (347,6), (348,5), (349,6), (350,6), (352,3), (353,4), (354,4), (355,5), (356,4), (357,5), (358,5), (359,6), (360,4), (361,5), (362,5), (363,6), (364,5), (365,6), (366,6), (367,7), (368,4), (369,5), (370,5), (371,6), (372,5), (373,6), (374,6), (375,7), (376,5), (377,6), (378,6), (379,7), (384,2), (385,3), (386,3), (387,4), (388,3), (389,4), (390,4), (391,5), (392,3), (393,4), (394,4), (395,5), (396,4), (397,5), (398,5), (399,6), (400,3), (401,4), (402,4), (403,5), (404,4), (405,5), (406,5), (407,6), (408,4), (409,5), (410,5), (411,6), (412,5), (413,6), (414,6), (416,3), (417,4), (418,4), (419,5), (420,4), (421,5), (422,5), (423,6), (424,4), (425,5), (426,5), (427,6), (428,5), (429,6), (430,6), (431,7), (432,4), (433,5), (434,5), (435,6), (436,5), (437,6), (438,6), (439,7), (440,5), (441,6), (442,6), (443,7), (444,6), (445,7), (448,3), (449,4), (450,4), (451,5), (452,4), (453,5), (454,5), (455,6), (456,4), (457,5), (458,5), (459,6), (460,5), (461,6), (462,6), (463,7), (464,4), (465,5), (466,5), (467,6), (468,5), (469,6), (470,6), (471,7), (472,5), (473,6), (474,6), (475,7), (476,6), (477,7), (478,7), (480,4), (481,5), (482,5), (483,6), (484,5), (485,6), (486,6), (487,7), (488,5), (489,6), (490,6), (491,7), (492,6), (493,7), (494,7), (495,8), (496,5), (497,6), (498,6), (499,7), (500,6), (501,7), (502,7), (503,8), (504,6), (505,7), (506,7), (507,8), (508,7), (509,8), (510,8), (511,9), (512,1), (513,2), (514,2), (515,3), (516,2), (517,3), (518,3), (519,4), (520,2), (521,3), (522,3), (523,4), (524,3), (525,4), (526,4), (527,5), (528,2), (529,3), (530,3), (531,4), (532,3), (533,4), (534,4), (535,5), (536,3), (537,4), (538,4), (539,5), (540,4), (541,5), (542,5), (544,2), (545,3), (546,3), (547,4), (548,3), (549,4), (550,4), (551,5), (552,3), (553,4), (554,4), (555,5), (556,4), (557,5), (558,5), (559,6), (560,3), (561,4), (562,4), (563,5), (564,4), (565,5), (566,5), (567,6), (568,4), (569,5), (570,5), (571,6), (572,5), (573,6), (576,2), (577,3), (578,3), (579,4), (580,3), (581,4), (582,4), (583,5), (584,3), (585,4), (586,4), (587,5), (588,4), (589,5), (590,5), (591,6), (592,3), (593,4), (594,4), (595,5), (596,4), (597,5), (598,5), (599,6), (600,4), (601,5), (602,5), (603,6), (604,5), (605,6), (606,6), (608,3), (609,4), (610,4), (611,5), (612,4), (613,5), (614,5), (615,6), (616,4), (617,5), (618,5), (619,6), (620,5), (621,6), (622,6), (623,7), (624,4), (625,5), (626,5), (627,6), (628,5), (629,6), (630,6), (631,7), (632,5), (633,6), (634,6), (635,7), (640,2), (641,3), (642,3), (643,4), (644,3), (645,4), (646,4), (647,5), (648,3), (649,4), (650,4), (651,5), (652,4), (653,5), (654,5), (655,6), (656,3), (657,4), (658,4), (659,5), (660,4), (661,5), (662,5), (663,6), (664,4), (665,5), (666,5), (667,6), (668,5), (669,6), (670,6), (672,3), (673,4), (674,4), (675,5), (676,4), (677,5), (678,5), (679,6), (680,4), (681,5), (682,5), (683,6), (684,5), (685,6), (686,6), (687,7), (688,4), (689,5), (690,5), (691,6), (692,5), (693,6), (694,6), (695,7), (696,5), (697,6), (698,6), (699,7), (700,6), (701,7), (704,3), (705,4), (706,4), (707,5), (708,4), (709,5), (710,5), (711,6), (712,4), (713,5), (714,5), (715,6), (716,5), (717,6), (718,6), (719,7), (720,4), (721,5), (722,5), (723,6), (724,5), (725,6), (726,6), (727,7), (728,5), (729,6), (730,6), (731,7), (732,6), (733,7), (734,7), (736,4), (737,5), (738,5), (739,6), (740,5), (741,6), (742,6), (743,7), (744,5), (745,6), (746,6), (747,7), (748,6), (749,7), (750,7), (751,8), (752,5), (753,6), (754,6), (755,7), (756,6), (757,7), (758,7), (759,8), (768,2), (769,3), (770,3), (771,4), (772,3), (773,4), (774,4), (775,5), (776,3), (777,4), (778,4), (779,5), (780,4), (781,5), (782,5), (783,6), (784,3), (785,4), (786,4), (787,5), (788,4), (789,5), (790,5), (791,6), (792,4), (793,5), (794,5), (795,6), (796,5), (797,6), (798,6), (800,3), (801,4), (802,4), (803,5), (804,4), (805,5);

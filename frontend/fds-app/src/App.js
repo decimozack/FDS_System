@@ -20,6 +20,7 @@ import WorkSchedule from "./components/Riders/workshift.js";
 import WorkHistory from "./components/Riders/workhistory.js";
 import WorkDetails from "./components/Riders/workdetails.js";
 import RiderSalary from "./components/Riders/salary.js";
+import RiderRatings from "./components/Riders/ratings.js";
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
@@ -46,6 +47,7 @@ const riderSections = [
   { title: "Work Details", url: "/riders/workdetails" },
   { title: "Work History", url: "/riders/workhistory" },
   { title: "Salary", url: "/riders/salary" },
+  { title: "Ratings", url: "/riders/ratings"}
 ];
 
 class App extends Component {
@@ -90,6 +92,7 @@ class App extends Component {
                   <RiderProtectedRoute path="/riders/workhistory" component={WorkHistory} />
                   <RiderProtectedRoute path="/riders/workdetails" component={WorkDetails} />
                   <RiderProtectedRoute path="/riders/salary" component={RiderSalary} />
+                  <RiderProtectedRoute path="/riders/ratings" component={RiderRatings} />
                   <Route
                     path="/signin"
                     render={(routeProps) => (
