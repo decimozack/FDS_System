@@ -71,13 +71,6 @@ CREATE TABLE Orders ( -- total part from Order to Contains not enforced
 	FOREIGN KEY (cid) REFERENCES Customers
 );
 
-CREATE TABLE Menu (
-	mid SERIAL PRIMARY KEY,
-	mname VARCHAR(50),
-	start_time TIME(0) NOT NULL,
-	end_time TIME(0) NOT NULL
-);
-
 CREATE TABLE Category (
 	catid SERIAL PRIMARY KEY,
 	catname VARCHAR(50),
@@ -174,8 +167,10 @@ CREATE TABLE Eligible (
 	FOREIGN KEY (pcid) REFERENCES PromoCampaign
 );
 
+CREATE TYPE emp_type AS ENUM ('Manager', 'Rider');
 CREATE TABLE FDSEmployee (
 	empid		SERIAL PRIMARY KEY,
+	emptype     emp_type NOT NULL,  -- i changed the struct to implement exclusive ISA constraint
 	emp_first_name	VARCHAR(50) NOT NULL,
 	emp_last_name	VARCHAR(50) NOT NULL,
 	email		VARCHAR(50) UNIQUE NOT NULL,
@@ -196,57 +191,9 @@ CREATE TABLE WorkShift (
 	h10				BOOLEAN DEFAULT false, -- 9-10
 	h11				BOOLEAN DEFAULT false, -- 10-11
 	h12				BOOLEAN DEFAULT false, -- 11-12
-	valid_full_time	BOOLEAN DEFAULT false
+	valid_full_time	BOOLEAN DEFAULT false,
+	UNIQUE (h1,h2,h3,h4,h5,h6,h7,h8,h9,h10,h11,h12)
 );
-
-CREATE OR REPLACE FUNCTION check_valid_workshift () RETURNS TRIGGER
-	AS $$
-DECLARE
-	window1	integer;
-	window2	integer;
-	window3	integer;
-	window4	integer;
-	window5	integer;
-	window6	integer;
-	window7	integer;
-	window8	integer;
-BEGIN
-	SELECT (W.h1::int + W.h2::int + W.h3::int + W.h4::int + W.h5::int) INTO window1
-		FROM WorkShift W
-		WHERE W.wsid = NEW.wsid;
-	SELECT (W.h2::int + W.h3::int + W.h4::int + W.h5::int + W.h6::int) INTO window2
-		FROM WorkShift W
-		WHERE W.wsid = NEW.wsid;
-	SELECT (W.h3::int + W.h4::int + W.h5::int + W.h6::int + W.h7::int) INTO window3
-		FROM WorkShift W
-		WHERE W.wsid = NEW.wsid;
-	SELECT (W.h4::int + W.h5::int + W.h6::int + W.h7::int + W.h8::int) INTO window4
-		FROM WorkShift W
-		WHERE W.wsid = NEW.wsid;
-	SELECT (W.h5::int + W.h6::int + W.h7::int + W.h8::int + W.h9::int) INTO window5
-		FROM WorkShift W
-		WHERE W.wsid = NEW.wsid;
-	SELECT (W.h6::int + W.h7::int + W.h8::int + W.h9::int + W.h10::int) INTO window6
-		FROM WorkShift W
-		WHERE W.wsid = NEW.wsid;
-	SELECT (W.h7::int + W.h8::int + W.h9::int + W.h10::int + W.h11::int) INTO window7
-		FROM WorkShift W
-		WHERE W.wsid = NEW.wsid;
-	SELECT (W.h8::int + W.h9::int + W.h10::int + W.h11::int + W.h12::int) INTO window8
-		FROM WorkShift W
-		WHERE W.wsid = NEW.wsid;
-	IF (window1 > 4 or window2 > 4 or window3 > 4 or window4 > 4 or window5 > 4 or window6  > 4 or window7 > 4 or window8 > 4) THEN
-		RAISE exception 'Invalid workshift';
-	END IF;
-	RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-DROP TRIGGER IF EXISTS workshift_check_trigger ON WorkShift CASCADE;
-CREATE TRIGGER workshift_check_trigger
-	AFTER UPDATE OR INSERT ON WorkShift
-	FOR EACH ROW
-	EXECUTE FUNCTION check_valid_workshift();
 
 create or replace function count_hours(id integer)
 	returns integer as $$
@@ -316,55 +263,6 @@ select
 			from WWS
 ;
 
-CREATE OR REPLACE FUNCTION check_valid_fulltime () RETURNS TRIGGER
-	AS $$
-DECLARE
-	total_work_day integer;
-	offWindow1	integer;
-	offWindow2	integer;
-	offWindow3	integer;
-	offWindow4	integer;
-	offWindow5	integer;
-	offWindow6	integer;
-	offWindow7	integer;
-BEGIN
-	SELECT Monday::int + Tuesday::int + Wednesday::int + Thursday::int + Friday::int + Saturday::int + Sunday::int INTO total_work_day
-		FROM workday_schedule
-		WHERE empid = NEW.empid;
-	SELECT Monday::int + Tuesday::int INTO offWindow1
-		FROM workday_schedule
-		WHERE empid = NEW.empid;
-	SELECT Tuesday::int + Wednesday::int INTO offWindow2
-		FROM workday_schedule
-		WHERE empid = NEW.empid;
-	SELECT Wednesday::int + Thursday::int INTO offWindow3
-		FROM workday_schedule
-		WHERE empid = NEW.empid;
-	SELECT Thursday::int + Friday::int INTO offWindow4
-		FROM workday_schedule
-		WHERE empid = NEW.empid;
-	SELECT Friday::int + Saturday::int INTO offWindow5
-		FROM workday_schedule
-		WHERE empid = NEW.empid;
-	SELECT Saturday::int + Sunday::int INTO offWindow6
-		FROM workday_schedule
-		WHERE empid = NEW.empid;
-	SELECT Sunday::int + Monday::int INTO offWindow7
-		FROM workday_schedule
-		WHERE empid = NEW.empid;
-	IF NOT (select isPartTime from Rider where empid = NEW.empid) and 
-		(total_work_day != 5 or NOT (offWindow1 = 0 or offWindow2 = 0 or offWindow3 = 0 or offWindow4 = 0 or offWindow5 = 0 or offWindow6 = 0 or offWindow7 = 0)) THEN
-		RAISE exception 'Invalid Full time WWS';
-	END IF;
-	RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-DROP TRIGGER IF EXISTS fulltime_wws_check_trigger ON WWS CASCADE;
-CREATE TRIGGER fulltime_wws_check_trigger
-	AFTER UPDATE OR INSERT ON WWS
-	FOR EACH ROW
-	EXECUTE FUNCTION check_valid_fulltime();
 
 create or replace function total_week_hours(id integer)
 	returns integer as $$
@@ -372,25 +270,6 @@ create or replace function total_week_hours(id integer)
 		FROM WWS W
 		WHERE W.empid = id;
 	$$ language sql;
-
-CREATE OR REPLACE FUNCTION check_valid_wws () RETURNS TRIGGER
-	AS $$
-DECLARE
-	total_work_hours integer;
-BEGIN
-	SELECT total_week_hours(NEW.empid) INTO total_work_hours;
-	IF (total_work_hours < 10 or total_work_hours > 48) THEN
-		RAISE exception 'Invalid WWS';
-	END IF;
-	RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-DROP TRIGGER IF EXISTS wws_check_trigger ON WWS CASCADE;
-CREATE TRIGGER wws_check_trigger
-	AFTER UPDATE OR INSERT ON WWS
-	FOR EACH ROW
-	EXECUTE FUNCTION check_valid_wws();
 
 create or replace function num_riders(wday text, wshift text)
 	returns integer as $$
@@ -401,273 +280,6 @@ create or replace function num_riders(wday text, wshift text)
 			RETURN x;
 	END;
 	$$ language plpgsql;
-
-
-CREATE OR REPLACE FUNCTION check_min_riders () RETURNS TRIGGER
-	AS $$
-BEGIN
-	IF (num_riders('monday', 'h1') < 5) THEN
-	RAISE exception 'Insufficient Riders on monday at time 10';
-	END IF;
-	IF (num_riders('monday', 'h2') < 5) THEN
-	RAISE exception 'Insufficient Riders on monday at time 11';
-	END IF;
-	IF (num_riders('monday', 'h3') < 5) THEN
-	RAISE exception 'Insufficient Riders on monday at time 12';
-	END IF;
-	IF (num_riders('monday', 'h4') < 5) THEN
-	RAISE exception 'Insufficient Riders on monday at time 13';
-	END IF;
-	IF (num_riders('monday', 'h5') < 5) THEN
-	RAISE exception 'Insufficient Riders on monday at time 14';
-	END IF;
-	IF (num_riders('monday', 'h6') < 5) THEN
-	RAISE exception 'Insufficient Riders on monday at time 15';
-	END IF;
-	IF (num_riders('monday', 'h7') < 5) THEN
-	RAISE exception 'Insufficient Riders on monday at time 16';
-	END IF;
-	IF (num_riders('monday', 'h8') < 5) THEN
-	RAISE exception 'Insufficient Riders on monday at time 17';
-	END IF;
-	IF (num_riders('monday', 'h9') < 5) THEN
-	RAISE exception 'Insufficient Riders on monday at time 18';
-	END IF;
-	IF (num_riders('monday', 'h10') < 5) THEN
-	RAISE exception 'Insufficient Riders on monday at time 19';
-	END IF;
-	IF (num_riders('monday', 'h11') < 5) THEN
-	RAISE exception 'Insufficient Riders on monday at time 20';
-	END IF;
-	IF (num_riders('monday', 'h12') < 5) THEN
-	RAISE exception 'Insufficient Riders on monday at time 21';
-	END IF;
-	IF (num_riders('tuesday', 'h1') < 5) THEN
-	RAISE exception 'Insufficient Riders on tuesday at time 10';
-	END IF;
-	IF (num_riders('tuesday', 'h2') < 5) THEN
-	RAISE exception 'Insufficient Riders on tuesday at time 11';
-	END IF;
-	IF (num_riders('tuesday', 'h3') < 5) THEN
-	RAISE exception 'Insufficient Riders on tuesday at time 12';
-	END IF;
-	IF (num_riders('tuesday', 'h4') < 5) THEN
-	RAISE exception 'Insufficient Riders on tuesday at time 13';
-	END IF;
-	IF (num_riders('tuesday', 'h5') < 5) THEN
-	RAISE exception 'Insufficient Riders on tuesday at time 14';
-	END IF;
-	IF (num_riders('tuesday', 'h6') < 5) THEN
-	RAISE exception 'Insufficient Riders on tuesday at time 15';
-	END IF;
-	IF (num_riders('tuesday', 'h7') < 5) THEN
-	RAISE exception 'Insufficient Riders on tuesday at time 16';
-	END IF;
-	IF (num_riders('tuesday', 'h8') < 5) THEN
-	RAISE exception 'Insufficient Riders on tuesday at time 17';
-	END IF;
-	IF (num_riders('tuesday', 'h9') < 5) THEN
-	RAISE exception 'Insufficient Riders on tuesday at time 18';
-	END IF;
-	IF (num_riders('tuesday', 'h10') < 5) THEN
-	RAISE exception 'Insufficient Riders on tuesday at time 19';
-	END IF;
-	IF (num_riders('tuesday', 'h11') < 5) THEN
-	RAISE exception 'Insufficient Riders on tuesday at time 20';
-	END IF;
-	IF (num_riders('tuesday', 'h12') < 5) THEN
-	RAISE exception 'Insufficient Riders on tuesday at time 21';
-	END IF;
-	IF (num_riders('wednesday', 'h1') < 5) THEN
-	RAISE exception 'Insufficient Riders on wednesday at time 10';
-	END IF;
-	IF (num_riders('wednesday', 'h2') < 5) THEN
-	RAISE exception 'Insufficient Riders on wednesday at time 11';
-	END IF;
-	IF (num_riders('wednesday', 'h3') < 5) THEN
-	RAISE exception 'Insufficient Riders on wednesday at time 12';
-	END IF;
-	IF (num_riders('wednesday', 'h4') < 5) THEN
-	RAISE exception 'Insufficient Riders on wednesday at time 13';
-	END IF;
-	IF (num_riders('wednesday', 'h5') < 5) THEN
-	RAISE exception 'Insufficient Riders on wednesday at time 14';
-	END IF;
-	IF (num_riders('wednesday', 'h6') < 5) THEN
-	RAISE exception 'Insufficient Riders on wednesday at time 15';
-	END IF;
-	IF (num_riders('wednesday', 'h7') < 5) THEN
-	RAISE exception 'Insufficient Riders on wednesday at time 16';
-	END IF;
-	IF (num_riders('wednesday', 'h8') < 5) THEN
-	RAISE exception 'Insufficient Riders on wednesday at time 17';
-	END IF;
-	IF (num_riders('wednesday', 'h9') < 5) THEN
-	RAISE exception 'Insufficient Riders on wednesday at time 18';
-	END IF;
-	IF (num_riders('wednesday', 'h10') < 5) THEN
-	RAISE exception 'Insufficient Riders on wednesday at time 19';
-	END IF;
-	IF (num_riders('wednesday', 'h11') < 5) THEN
-	RAISE exception 'Insufficient Riders on wednesday at time 20';
-	END IF;
-	IF (num_riders('wednesday', 'h12') < 5) THEN
-	RAISE exception 'Insufficient Riders on wednesday at time 21';
-	END IF;
-	IF (num_riders('thursday', 'h1') < 5) THEN
-	RAISE exception 'Insufficient Riders on thursday at time 10';
-	END IF;
-	IF (num_riders('thursday', 'h2') < 5) THEN
-	RAISE exception 'Insufficient Riders on thursday at time 11';
-	END IF;
-	IF (num_riders('thursday', 'h3') < 5) THEN
-	RAISE exception 'Insufficient Riders on thursday at time 12';
-	END IF;
-	IF (num_riders('thursday', 'h4') < 5) THEN
-	RAISE exception 'Insufficient Riders on thursday at time 13';
-	END IF;
-	IF (num_riders('thursday', 'h5') < 5) THEN
-	RAISE exception 'Insufficient Riders on thursday at time 14';
-	END IF;
-	IF (num_riders('thursday', 'h6') < 5) THEN
-	RAISE exception 'Insufficient Riders on thursday at time 15';
-	END IF;
-	IF (num_riders('thursday', 'h7') < 5) THEN
-	RAISE exception 'Insufficient Riders on thursday at time 16';
-	END IF;
-	IF (num_riders('thursday', 'h8') < 5) THEN
-	RAISE exception 'Insufficient Riders on thursday at time 17';
-	END IF;
-	IF (num_riders('thursday', 'h9') < 5) THEN
-	RAISE exception 'Insufficient Riders on thursday at time 18';
-	END IF;
-	IF (num_riders('thursday', 'h10') < 5) THEN
-	RAISE exception 'Insufficient Riders on thursday at time 19';
-	END IF;
-	IF (num_riders('thursday', 'h11') < 5) THEN
-	RAISE exception 'Insufficient Riders on thursday at time 20';
-	END IF;
-	IF (num_riders('thursday', 'h12') < 5) THEN
-	RAISE exception 'Insufficient Riders on thursday at time 21';
-	END IF;
-	IF (num_riders('friday', 'h1') < 5) THEN
-	RAISE exception 'Insufficient Riders on friday at time 10';
-	END IF;
-	IF (num_riders('friday', 'h2') < 5) THEN
-	RAISE exception 'Insufficient Riders on friday at time 11';
-	END IF;
-	IF (num_riders('friday', 'h3') < 5) THEN
-	RAISE exception 'Insufficient Riders on friday at time 12';
-	END IF;
-	IF (num_riders('friday', 'h4') < 5) THEN
-	RAISE exception 'Insufficient Riders on friday at time 13';
-	END IF;
-	IF (num_riders('friday', 'h5') < 5) THEN
-	RAISE exception 'Insufficient Riders on friday at time 14';
-	END IF;
-	IF (num_riders('friday', 'h6') < 5) THEN
-	RAISE exception 'Insufficient Riders on friday at time 15';
-	END IF;
-	IF (num_riders('friday', 'h7') < 5) THEN
-	RAISE exception 'Insufficient Riders on friday at time 16';
-	END IF;
-	IF (num_riders('friday', 'h8') < 5) THEN
-	RAISE exception 'Insufficient Riders on friday at time 17';
-	END IF;
-	IF (num_riders('friday', 'h9') < 5) THEN
-	RAISE exception 'Insufficient Riders on friday at time 18';
-	END IF;
-	IF (num_riders('friday', 'h10') < 5) THEN
-	RAISE exception 'Insufficient Riders on friday at time 19';
-	END IF;
-	IF (num_riders('friday', 'h11') < 5) THEN
-	RAISE exception 'Insufficient Riders on friday at time 20';
-	END IF;
-	IF (num_riders('friday', 'h12') < 5) THEN
-	RAISE exception 'Insufficient Riders on friday at time 21';
-	END IF;
-	IF (num_riders('saturday', 'h1') < 5) THEN
-	RAISE exception 'Insufficient Riders on saturday at time 10';
-	END IF;
-	IF (num_riders('saturday', 'h2') < 5) THEN
-	RAISE exception 'Insufficient Riders on saturday at time 11';
-	END IF;
-	IF (num_riders('saturday', 'h3') < 5) THEN
-	RAISE exception 'Insufficient Riders on saturday at time 12';
-	END IF;
-	IF (num_riders('saturday', 'h4') < 5) THEN
-	RAISE exception 'Insufficient Riders on saturday at time 13';
-	END IF;
-	IF (num_riders('saturday', 'h5') < 5) THEN
-	RAISE exception 'Insufficient Riders on saturday at time 14';
-	END IF;
-	IF (num_riders('saturday', 'h6') < 5) THEN
-	RAISE exception 'Insufficient Riders on saturday at time 15';
-	END IF;
-	IF (num_riders('saturday', 'h7') < 5) THEN
-	RAISE exception 'Insufficient Riders on saturday at time 16';
-	END IF;
-	IF (num_riders('saturday', 'h8') < 5) THEN
-	RAISE exception 'Insufficient Riders on saturday at time 17';
-	END IF;
-	IF (num_riders('saturday', 'h9') < 5) THEN
-	RAISE exception 'Insufficient Riders on saturday at time 18';
-	END IF;
-	IF (num_riders('saturday', 'h10') < 5) THEN
-	RAISE exception 'Insufficient Riders on saturday at time 19';
-	END IF;
-	IF (num_riders('saturday', 'h11') < 5) THEN
-	RAISE exception 'Insufficient Riders on saturday at time 20';
-	END IF;
-	IF (num_riders('saturday', 'h12') < 5) THEN
-	RAISE exception 'Insufficient Riders on saturday at time 21';
-	END IF;
-	IF (num_riders('sunday', 'h1') < 5) THEN
-	RAISE exception 'Insufficient Riders on sunday at time 10';
-	END IF;
-	IF (num_riders('sunday', 'h2') < 5) THEN
-	RAISE exception 'Insufficient Riders on sunday at time 11';
-	END IF;
-	IF (num_riders('sunday', 'h3') < 5) THEN
-	RAISE exception 'Insufficient Riders on sunday at time 12';
-	END IF;
-	IF (num_riders('sunday', 'h4') < 5) THEN
-	RAISE exception 'Insufficient Riders on sunday at time 13';
-	END IF;
-	IF (num_riders('sunday', 'h5') < 5) THEN
-	RAISE exception 'Insufficient Riders on sunday at time 14';
-	END IF;
-	IF (num_riders('sunday', 'h6') < 5) THEN
-	RAISE exception 'Insufficient Riders on sunday at time 15';
-	END IF;
-	IF (num_riders('sunday', 'h7') < 5) THEN
-	RAISE exception 'Insufficient Riders on sunday at time 16';
-	END IF;
-	IF (num_riders('sunday', 'h8') < 5) THEN
-	RAISE exception 'Insufficient Riders on sunday at time 17';
-	END IF;
-	IF (num_riders('sunday', 'h9') < 5) THEN
-	RAISE exception 'Insufficient Riders on sunday at time 18';
-	END IF;
-	IF (num_riders('sunday', 'h10') < 5) THEN
-	RAISE exception 'Insufficient Riders on sunday at time 19';
-	END IF;
-	IF (num_riders('sunday', 'h11') < 5) THEN
-	RAISE exception 'Insufficient Riders on sunday at time 20';
-	END IF;
-	IF (num_riders('sunday', 'h12') < 5) THEN
-	RAISE exception 'Insufficient Riders on sunday at time 21';
-	END IF;
-	RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-DROP TRIGGER IF EXISTS check_min_riders_trigger ON WWS CASCADE;
-CREATE TRIGGER check_min_riders_trigger
-	AFTER UPDATE ON WWS
-	FOR EACH ROW
-	EXECUTE FUNCTION check_min_riders();
-
 
 CREATE TABLE Manager (
 	empid INTEGER PRIMARY KEY,
@@ -686,13 +298,13 @@ CREATE TABLE Assigned (
 	FOREIGN KEY (empid) REFERENCES Rider (empid)
 );
 
-create or replace function count_commision(id integer, month TIMESTAMP)
+create or replace function count_commision(id integer, month TIMESTAMP, period text)
 	returns FLOAT as $$
 		select case
-			when (exists (select 1 from Assigned A where A.empid = id and DATE_TRUNC('month', A.arriveAtCustomerTime) = DATE_TRUNC('month', month))) then
+			when (exists (select 1 from Assigned A where A.empid = id and DATE_TRUNC(period, A.arriveAtCustomerTime) = DATE_TRUNC(period, month))) then
 				(select SUM (commission) AS total
 				FROM Assigned A
-				Where A.empid = id and DATE_TRUNC('month', A.arriveAtCustomerTime) = DATE_TRUNC('month', month))
+				Where A.empid = id and DATE_TRUNC(period, A.arriveAtCustomerTime) = DATE_TRUNC(period, month))
 			else 0
 		end;
 	$$ language sql;
@@ -708,11 +320,19 @@ CREATE TABLE Salary (
 create or replace procedure update_weekly_salary (id integer)
 	as $$
 		insert into Salary (empid, month, salary)
-		VALUES (id, DATE_TRUNC('month', current_timestamp), total_week_hours(id) * 20 + count_commision(id, NOW()::TIMESTAMP)) 
+		VALUES (id, DATE_TRUNC('month', current_timestamp), total_week_hours(id) * 20 + count_commision(id, NOW()::TIMESTAMP, 'week')) 
 		on conflict (empid, month)
 		DO
 		UPDATE
-		SET salary = Salary.salary + total_week_hours(id) * 20 + count_commision(id, NOW()::TIMESTAMP);
+		SET salary = Salary.salary + total_week_hours(id) * 20 + count_commision(id, NOW()::TIMESTAMP, 'week');
+	$$ language sql;
+
+create or replace procedure update_monthly_salary (id integer)
+	as $$
+		insert into Salary (empid, month, salary)
+		VALUES (id, DATE_TRUNC('month', current_timestamp), 5000 + count_commision(id, NOW()::TIMESTAMP, 'month')) 
+		on conflict (empid, month)
+		DO nothing;
 	$$ language sql;
 
 CREATE TABLE RiderReview (
@@ -734,7 +354,6 @@ CREATE TABLE ClockIn (
 	empid				INTEGER REFERENCES Rider (empid),
 	timeIn			TIMESTAMP DEFAULT NOW(),
 	timeOut			TIMESTAMP DEFAULT NULL,
-	hoursWorked	INTEGER DEFAULT 0,
 	onDelivery	BOOLEAN NOT NULL DEFAULT FALSE
 );
 
@@ -743,29 +362,6 @@ CREATE TABLE OrderWaitingList (
 	queueNum			SERIAL NOT NULL UNIQUE,
 	orderAssigned		BOOLEAN NOT NULL DEFAULT FALSE
 );
-
-CREATE OR REPLACE FUNCTION assign_order() RETURNS TRIGGER AS
-$$
-DECLARE
-	clockin_id INTEGER;
-BEGIN
-	IF (SELECT EXISTS(SELECT 1 FROM ClockIn WHERE timeOut IS NULL AND onDelivery = FALSE)) THEN
-		clockin_id := (SELECT id FROM ClockIn WHERE timeOut IS NULL AND onDelivery = FALSE ORDER BY RANDOM() LIMIT 1);
-		INSERT INTO Assigned (orderid, empid, commission)
-		VALUES (NEW.orderid, (SELECT empid FROM ClockIn WHERE id = clockin_id), 10);
-		UPDATE OrderWaitingList SET orderAssigned = TRUE WHERE orderid = NEW.orderid;
-		UPDATE ClockIn SET onDelivery = TRUE WHERE id = clockin_id;
-	END IF;
-	RETURN NEW;
-END;
-$$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER assign_order_trigger
-	AFTER INSERT
-	ON OrderWaitingList
-	FOR EACH ROW
-	EXECUTE FUNCTION assign_order();
 
 
 -- incomplete trigger
@@ -799,7 +395,7 @@ total_part_orderitem_wrt_place();
 INSERT INTO Restaurants (rid, rname, min_order_cost) VALUES (1, 'KFC', 3), (2, 'MacDonalds' , 2.50), (3, 'Deck', 2.10), (4, 'The Tea Party', 4.50), (5, 'Fong Seng Nasi Lemak', 1.00);
 INSERT INTO RestaurantStaff (rsid, rs_first_name, rs_last_name, email, rspassword, rid) VALUES (1, 'John','Doe', 'john@example.com', 'johndoe123', 1), (2, 'Dominic', 'Frank', 'domthed@gmail.com', 'benedict312', 3), (3, 'Dominic', 'Quek', 'quek@example.com', '65nf76', 5), (4, 'Peter', 'Pan', 'pan@ocbc.edu', '87ghf', 4);
 INSERT INTO Customers (cid, c_first_name, c_last_name, email, cpassword, credit_card_info, reward_pts, created_on) VALUES (1, 'Benedict', 'Quek', 'bene@hotmail.com', 'dictdict96', 'DBS 9821-2112', 10, current_timestamp), (2, 'Zachary', 'Tan', 'tanzack@nus.com', 'fhas7612', 'POSB 312321132', 0, current_timestamp), (3, 'Chen', 'Hua', 'chenhua@gmail.com', 'fdsf64324', 'DBS 1232', 50, current_timestamp), (4, 'Joyce', 'Tan', 'joyceytan@gmail.com', 'ashda6969', 'OCBC 321123', 61, current_timestamp), (5, 'John', 'Elijah Tan', 'elijah@dbs.email.co', 'dasni324', 'DBS 1213', 1, current_timestamp);
-INSERT INTO Orders (oid, use_credit_card, use_points, order_time, order_status, price, delivery_fee, address, gain_reward_pts, cid) VALUES (1, true, false, '2038-01-19 03:14:07' ,'WAITING', 10.50, 3.00, 'Clementi 96', 20, 1);
+INSERT INTO Orders (oid, use_credit_card, use_points, order_time, order_status, price, delivery_fee, address, gain_reward_pts, cid) VALUES (1, true, false, '2038-01-19 03:14:07' ,'WAITING', 10.50, 3.00, 'Clementi 96', 20, 1), (2, true, false, '2038-01-19 03:14:07' ,'WAITING', 10.50, 3.00, 'Clementi 96', 20, 1);
 INSERT INTO Menu (mid, mname, start_time, end_time) VALUES (1, 'All-time', '09:00:00', '18:00:00'), (2, 'Breakfast', '08:00:00', '12:00:00');
 INSERT INTO Category (catid, catname, description) VALUES (1, 'Western', 'This is western cuisine.'), (2, 'Asian', 'Delicious cooked by Singaporeans');
 INSERT INTO FoodItem (fid, fname, description, catid) VALUES (1, 'Black Pepper Steak', 'Steak topped with pepper sauce', 1), (2, 'Carrot Cake', 'Cake made of red carrot. Yummy!', 2);
@@ -821,4 +417,3 @@ INSERT INTO Eligible (cid, pcid) VALUES (2, 1), (3, 1), (4, 1);
 -- INSERT INTO WorkShift (all_work_hours, num_hours) VALUES (2286,7), (2287,8), (2288,5), (2289,6), (2290,6), (2291,7), (2292,6), (2293,7), (2294,7), (2295,8), (2304,2), (2305,3), (2306,3), (2307,4), (2308,3), (2309,4), (2310,4), (2311,5), (2312,3), (2313,4), (2314,4), (2315,5), (2316,4), (2317,5), (2318,5), (2319,6), (2320,3), (2321,4), (2322,4), (2323,5), (2324,4), (2325,5), (2326,5), (2327,6), (2328,4), (2329,5), (2330,5), (2331,6), (2332,5), (2333,6), (2334,6), (2336,3), (2337,4), (2338,4), (2339,5), (2340,4), (2341,5), (2342,5), (2343,6), (2344,4), (2345,5), (2346,5), (2347,6), (2348,5), (2349,6), (2350,6), (2351,7), (2352,4), (2353,5), (2354,5), (2355,6), (2356,5), (2357,6), (2358,6), (2359,7), (2360,5), (2361,6), (2362,6), (2363,7), (2364,6), (2365,7), (2368,3), (2369,4), (2370,4), (2371,5), (2372,4), (2373,5), (2374,5), (2375,6), (2376,4), (2377,5), (2378,5), (2379,6), (2380,5), (2381,6), (2382,6), (2383,7), (2384,4), (2385,5), (2386,5), (2387,6), (2388,5), (2389,6), (2390,6), (2391,7), (2392,5), (2393,6), (2394,6), (2395,7), (2396,6), (2397,7), (2398,7), (2400,4), (2401,5), (2402,5), (2403,6), (2404,5), (2405,6), (2406,6), (2407,7), (2408,5), (2409,6), (2410,6), (2411,7), (2412,6), (2413,7), (2414,7), (2415,8), (2416,5), (2417,6), (2418,6), (2419,7), (2420,6), (2421,7), (2422,7), (2423,8), (2424,6), (2425,7), (2426,7), (2427,8), (2432,3), (2433,4), (2434,4), (2435,5), (2436,4), (2437,5), (2438,5), (2439,6), (2440,4), (2441,5), (2442,5), (2443,6), (2444,5), (2445,6), (2446,6), (2447,7), (2448,4), (2449,5), (2450,5), (2451,6), (2452,5), (2453,6), (2454,6), (2455,7), (2456,5), (2457,6), (2458,6), (2459,7), (2460,6), (2461,7), (2462,7), (2464,4), (2465,5), (2466,5), (2467,6), (2468,5), (2469,6), (2470,6), (2471,7), (2472,5), (2473,6), (2474,6), (2475,7), (2476,6), (2477,7), (2478,7), (2479,8), (2480,5), (2481,6), (2482,6), (2483,7), (2484,6), (2485,7), (2486,7), (2487,8), (2488,6), (2489,7), (2490,7), (2491,8), (2492,7), (2493,8), (2496,4), (2497,5), (2498,5), (2499,6), (2500,5), (2501,6), (2502,6), (2503,7), (2504,5), (2505,6), (2506,6), (2507,7), (2508,6), (2509,7), (2510,7), (2511,8), (2512,5), (2513,6), (2514,6), (2515,7), (2516,6), (2517,7), (2518,7), (2519,8), (2520,6), (2521,7), (2522,7), (2523,8), (2524,7), (2525,8), (2526,8), (2528,5), (2529,6), (2530,6), (2531,7), (2532,6), (2533,7), (2534,7), (2535,8), (2536,6), (2537,7), (2538,7), (2539,8), (2540,7), (2541,8), (2542,8), (2543,9), (2560,2), (2561,3), (2562,3), (2563,4), (2564,3), (2565,4), (2566,4), (2567,5), (2568,3), (2569,4), (2570,4), (2571,5), (2572,4), (2573,5), (2574,5), (2575,6), (2576,3), (2577,4), (2578,4), (2579,5), (2580,4), (2581,5), (2582,5), (2583,6), (2584,4), (2585,5), (2586,5), (2587,6), (2588,5), (2589,6), (2590,6), (2592,3), (2593,4), (2594,4), (2595,5), (2596,4), (2597,5), (2598,5), (2599,6), (2600,4), (2601,5), (2602,5), (2603,6), (2604,5), (2605,6), (2606,6), (2607,7), (2608,4), (2609,5), (2610,5), (2611,6), (2612,5), (2613,6), (2614,6), (2615,7), (2616,5), (2617,6), (2618,6), (2619,7), (2620,6), (2621,7), (2624,3), (2625,4), (2626,4), (2627,5), (2628,4), (2629,5), (2630,5), (2631,6), (2632,4), (2633,5), (2634,5), (2635,6), (2636,5), (2637,6), (2638,6), (2639,7), (2640,4), (2641,5), (2642,5), (2643,6), (2644,5), (2645,6), (2646,6), (2647,7), (2648,5), (2649,6), (2650,6), (2651,7), (2652,6), (2653,7), (2654,7), (2656,4), (2657,5), (2658,5), (2659,6), (2660,5), (2661,6), (2662,6), (2663,7), (2664,5), (2665,6), (2666,6), (2667,7), (2668,6), (2669,7), (2670,7), (2671,8), (2672,5), (2673,6), (2674,6), (2675,7), (2676,6), (2677,7), (2678,7), (2679,8), (2680,6), (2681,7), (2682,7), (2683,8), (2688,3), (2689,4), (2690,4), (2691,5), (2692,4), (2693,5), (2694,5), (2695,6), (2696,4), (2697,5), (2698,5), (2699,6), (2700,5), (2701,6), (2702,6), (2703,7), (2704,4), (2705,5), (2706,5), (2707,6), (2708,5), (2709,6), (2710,6), (2711,7), (2712,5), (2713,6), (2714,6), (2715,7), (2716,6), (2717,7), (2718,7), (2720,4), (2721,5), (2722,5), (2723,6), (2724,5), (2725,6), (2726,6), (2727,7), (2728,5), (2729,6), (2730,6), (2731,7), (2732,6), (2733,7), (2734,7), (2735,8), (2736,5), (2737,6), (2738,6), (2739,7), (2740,6), (2741,7), (2742,7), (2743,8), (2744,6), (2745,7), (2746,7), (2747,8), (2748,7), (2749,8), (2752,4), (2753,5), (2754,5), (2755,6), (2756,5), (2757,6), (2758,6), (2759,7), (2760,5), (2761,6), (2762,6), (2763,7), (2764,6), (2765,7), (2766,7), (2767,8), (2768,5), (2769,6), (2770,6), (2771,7), (2772,6), (2773,7), (2774,7), (2775,8), (2776,6), (2777,7), (2778,7), (2779,8), (2780,7), (2781,8), (2782,8), (2784,5), (2785,6), (2786,6), (2787,7), (2788,6), (2789,7), (2790,7), (2791,8), (2792,6), (2793,7), (2794,7), (2795,8), (2796,7), (2797,8), (2798,8), (2799,9), (2800,6), (2801,7), (2802,7), (2803,8), (2804,7), (2805,8), (2806,8), (2807,9), (2816,3), (2817,4), (2818,4), (2819,5), (2820,4), (2821,5), (2822,5), (2823,6), (2824,4), (2825,5), (2826,5), (2827,6), (2828,5), (2829,6), (2830,6), (2831,7), (2832,4), (2833,5), (2834,5), (2835,6), (2836,5), (2837,6), (2838,6), (2839,7), (2840,5), (2841,6), (2842,6), (2843,7), (2844,6), (2845,7), (2846,7), (2848,4), (2849,5), (2850,5), (2851,6), (2852,5), (2853,6), (2854,6), (2855,7), (2856,5), (2857,6), (2858,6), (2859,7), (2860,6), (2861,7), (2862,7), (2863,8), (2864,5), (2865,6), (2866,6), (2867,7), (2868,6), (2869,7), (2870,7), (2871,8), (2872,6), (2873,7), (2874,7), (2875,8), (2876,7), (2877,8), (2880,4), (2881,5), (2882,5), (2883,6), (2884,5), (2885,6), (2886,6), (2887,7), (2888,5), (2889,6), (2890,6), (2891,7), (2892,6), (2893,7), (2894,7), (2895,8), (2896,5), (2897,6), (2898,6), (2899,7), (2900,6), (2901,7), (2902,7), (2903,8), (2904,6), (2905,7), (2906,7), (2907,8), (2908,7), (2909,8), (2910,8), (2912,5), (2913,6), (2914,6), (2915,7), (2916,6), (2917,7), (2918,7), (2919,8), (2920,6), (2921,7), (2922,7), (2923,8), (2924,7), (2925,8), (2926,8), (2927,9), (2928,6), (2929,7), (2930,7), (2931,8), (2932,7), (2933,8), (2934,8), (2935,9), (2936,7), (2937,8), (2938,8), (2939,9), (2944,4), (2945,5), (2946,5), (2947,6), (2948,5), (2949,6), (2950,6), (2951,7), (2952,5), (2953,6), (2954,6), (2955,7), (2956,6), (2957,7), (2958,7), (2959,8), (2960,5), (2961,6), (2962,6), (2963,7), (2964,6), (2965,7), (2966,7), (2967,8), (2968,6), (2969,7), (2970,7), (2971,8), (2972,7), (2973,8), (2974,8), (2976,5), (2977,6), (2978,6), (2979,7), (2980,6), (2981,7), (2982,7), (2983,8), (2984,6), (2985,7), (2986,7), (2987,8), (2988,7), (2989,8), (2990,8), (2991,9), (2992,6), (2993,7), (2994,7), (2995,8), (2996,7), (2997,8), (2998,8), (2999,9), (3000,7), (3001,8), (3002,8), (3003,9), (3004,8), (3005,9), (3008,5), (3009,6), (3010,6), (3011,7), (3012,6), (3013,7), (3014,7), (3015,8), (3016,6), (3017,7), (3018,7), (3019,8), (3020,7), (3021,8), (3022,8), (3023,9), (3024,6), (3025,7), (3026,7), (3027,8), (3028,7), (3029,8), (3030,8), (3031,9), (3032,7);
 -- INSERT INTO WorkShift (all_work_hours, num_hours) VALUES (3033,8), (3034,8), (3035,9), (3036,8), (3037,9), (3038,9), (3072,2), (3073,3), (3074,3), (3075,4), (3076,3), (3077,4), (3078,4), (3079,5), (3080,3), (3081,4), (3082,4), (3083,5), (3084,4), (3085,5), (3086,5), (3087,6), (3088,3), (3089,4), (3090,4), (3091,5), (3092,4), (3093,5), (3094,5), (3095,6), (3096,4), (3097,5), (3098,5), (3099,6), (3100,5), (3101,6), (3102,6), (3104,3), (3105,4), (3106,4), (3107,5), (3108,4), (3109,5), (3110,5), (3111,6), (3112,4), (3113,5), (3114,5), (3115,6), (3116,5), (3117,6), (3118,6), (3119,7), (3120,4), (3121,5), (3122,5), (3123,6), (3124,5), (3125,6), (3126,6), (3127,7), (3128,5), (3129,6), (3130,6), (3131,7), (3132,6), (3133,7), (3136,3), (3137,4), (3138,4), (3139,5), (3140,4), (3141,5), (3142,5), (3143,6), (3144,4), (3145,5), (3146,5), (3147,6), (3148,5), (3149,6), (3150,6), (3151,7), (3152,4), (3153,5), (3154,5), (3155,6), (3156,5), (3157,6), (3158,6), (3159,7), (3160,5), (3161,6), (3162,6), (3163,7), (3164,6), (3165,7), (3166,7), (3168,4), (3169,5), (3170,5), (3171,6), (3172,5), (3173,6), (3174,6), (3175,7), (3176,5), (3177,6), (3178,6), (3179,7), (3180,6), (3181,7), (3182,7), (3183,8), (3184,5), (3185,6), (3186,6), (3187,7), (3188,6), (3189,7), (3190,7), (3191,8), (3192,6), (3193,7), (3194,7), (3195,8), (3200,3), (3201,4), (3202,4), (3203,5), (3204,4), (3205,5), (3206,5), (3207,6), (3208,4), (3209,5), (3210,5), (3211,6), (3212,5), (3213,6), (3214,6), (3215,7), (3216,4), (3217,5), (3218,5), (3219,6), (3220,5), (3221,6), (3222,6), (3223,7), (3224,5), (3225,6), (3226,6), (3227,7), (3228,6), (3229,7), (3230,7), (3232,4), (3233,5), (3234,5), (3235,6), (3236,5), (3237,6), (3238,6), (3239,7), (3240,5), (3241,6), (3242,6), (3243,7), (3244,6), (3245,7), (3246,7), (3247,8), (3248,5), (3249,6), (3250,6), (3251,7), (3252,6), (3253,7), (3254,7), (3255,8), (3256,6), (3257,7), (3258,7), (3259,8), (3260,7), (3261,8), (3264,4), (3265,5), (3266,5), (3267,6), (3268,5), (3269,6), (3270,6), (3271,7), (3272,5), (3273,6), (3274,6), (3275,7), (3276,6), (3277,7), (3278,7), (3279,8), (3280,5), (3281,6), (3282,6), (3283,7), (3284,6), (3285,7), (3286,7), (3287,8), (3288,6), (3289,7), (3290,7), (3291,8), (3292,7), (3293,8), (3294,8), (3296,5), (3297,6), (3298,6), (3299,7), (3300,6), (3301,7), (3302,7), (3303,8), (3304,6), (3305,7), (3306,7), (3307,8), (3308,7), (3309,8), (3310,8), (3311,9), (3312,6), (3313,7), (3314,7), (3315,8), (3316,7), (3317,8), (3318,8), (3319,9), (3328,3), (3329,4), (3330,4), (3331,5), (3332,4), (3333,5), (3334,5), (3335,6), (3336,4), (3337,5), (3338,5), (3339,6), (3340,5), (3341,6), (3342,6), (3343,7), (3344,4), (3345,5), (3346,5), (3347,6), (3348,5), (3349,6), (3350,6), (3351,7), (3352,5), (3353,6), (3354,6), (3355,7), (3356,6), (3357,7), (3358,7), (3360,4), (3361,5), (3362,5), (3363,6), (3364,5), (3365,6), (3366,6), (3367,7), (3368,5), (3369,6), (3370,6), (3371,7), (3372,6), (3373,7), (3374,7), (3375,8), (3376,5), (3377,6), (3378,6), (3379,7), (3380,6), (3381,7), (3382,7), (3383,8), (3384,6), (3385,7), (3386,7), (3387,8), (3388,7), (3389,8), (3392,4), (3393,5), (3394,5), (3395,6), (3396,5), (3397,6), (3398,6), (3399,7), (3400,5), (3401,6), (3402,6), (3403,7), (3404,6), (3405,7), (3406,7), (3407,8), (3408,5), (3409,6), (3410,6), (3411,7), (3412,6), (3413,7), (3414,7), (3415,8), (3416,6), (3417,7), (3418,7), (3419,8), (3420,7), (3421,8), (3422,8), (3424,5), (3425,6), (3426,6), (3427,7), (3428,6), (3429,7), (3430,7), (3431,8), (3432,6), (3433,7), (3434,7), (3435,8), (3436,7), (3437,8), (3438,8), (3439,9), (3440,6), (3441,7), (3442,7), (3443,8), (3444,7), (3445,8), (3446,8), (3447,9), (3448,7), (3449,8), (3450,8), (3451,9), (3456,4), (3457,5), (3458,5), (3459,6), (3460,5), (3461,6), (3462,6), (3463,7), (3464,5), (3465,6), (3466,6), (3467,7), (3468,6), (3469,7), (3470,7), (3471,8), (3472,5), (3473,6), (3474,6), (3475,7), (3476,6), (3477,7), (3478,7), (3479,8), (3480,6), (3481,7), (3482,7), (3483,8), (3484,7), (3485,8), (3486,8), (3488,5), (3489,6), (3490,6), (3491,7), (3492,6), (3493,7), (3494,7), (3495,8), (3496,6), (3497,7), (3498,7), (3499,8), (3500,7), (3501,8), (3502,8), (3503,9), (3504,6), (3505,7), (3506,7), (3507,8), (3508,7), (3509,8), (3510,8), (3511,9), (3512,7), (3513,8), (3514,8), (3515,9), (3516,8), (3517,9), (3520,5), (3521,6), (3522,6), (3523,7), (3524,6), (3525,7), (3526,7), (3527,8), (3528,6), (3529,7), (3530,7), (3531,8), (3532,7), (3533,8), (3534,8), (3535,9), (3536,6), (3537,7), (3538,7), (3539,8), (3540,7), (3541,8), (3542,8), (3543,9), (3544,7), (3545,8), (3546,8), (3547,9), (3548,8), (3549,9), (3550,9), (3552,6), (3553,7), (3554,7), (3555,8), (3556,7), (3557,8), (3558,8), (3559,9), (3560,7), (3561,8), (3562,8), (3563,9), (3564,8), (3565,9), (3566,9), (3567,10), (3584,3), (3585,4), (3586,4), (3587,5), (3588,4), (3589,5), (3590,5), (3591,6), (3592,4), (3593,5), (3594,5), (3595,6), (3596,5), (3597,6), (3598,6), (3599,7), (3600,4), (3601,5), (3602,5), (3603,6), (3604,5), (3605,6), (3606,6), (3607,7), (3608,5), (3609,6), (3610,6), (3611,7), (3612,6), (3613,7), (3614,7), (3616,4), (3617,5), (3618,5), (3619,6), (3620,5), (3621,6), (3622,6), (3623,7), (3624,5), (3625,6), (3626,6), (3627,7), (3628,6), (3629,7), (3630,7), (3631,8), (3632,5), (3633,6), (3634,6), (3635,7), (3636,6), (3637,7), (3638,7), (3639,8), (3640,6), (3641,7), (3642,7), (3643,8), (3644,7), (3645,8), (3648,4), (3649,5), (3650,5), (3651,6), (3652,5), (3653,6), (3654,6), (3655,7), (3656,5), (3657,6), (3658,6), (3659,7), (3660,6), (3661,7), (3662,7), (3663,8), (3664,5), (3665,6), (3666,6), (3667,7), (3668,6), (3669,7), (3670,7), (3671,8), (3672,6), (3673,7), (3674,7), (3675,8), (3676,7), (3677,8), (3678,8), (3680,5), (3681,6), (3682,6), (3683,7), (3684,6), (3685,7), (3686,7), (3687,8), (3688,6), (3689,7), (3690,7), (3691,8), (3692,7), (3693,8), (3694,8), (3695,9), (3696,6), (3697,7), (3698,7), (3699,8), (3700,7), (3701,8), (3702,8), (3703,9), (3704,7), (3705,8), (3706,8), (3707,9), (3712,4), (3713,5), (3714,5), (3715,6), (3716,5), (3717,6), (3718,6), (3719,7), (3720,5), (3721,6), (3722,6), (3723,7), (3724,6), (3725,7), (3726,7), (3727,8), (3728,5), (3729,6), (3730,6), (3731,7), (3732,6), (3733,7), (3734,7), (3735,8), (3736,6), (3737,7), (3738,7), (3739,8), (3740,7), (3741,8), (3742,8), (3744,5), (3745,6), (3746,6), (3747,7), (3748,6), (3749,7), (3750,7), (3751,8), (3752,6), (3753,7), (3754,7), (3755,8), (3756,7), (3757,8), (3758,8), (3759,9), (3760,6), (3761,7), (3762,7), (3763,8), (3764,7), (3765,8), (3766,8), (3767,9), (3768,7), (3769,8), (3770,8), (3771,9), (3772,8), (3773,9), (3776,5), (3777,6), (3778,6), (3779,7), (3780,6), (3781,7), (3782,7), (3783,8), (3784,6), (3785,7), (3786,7), (3787,8), (3788,7), (3789,8), (3790,8), (3791,9), (3792,6), (3793,7), (3794,7), (3795,8), (3796,7), (3797,8), (3798,8), (3799,9), (3800,7), (3801,8), (3802,8), (3803,9), (3804,8);
 -- INSERT INTO WorkShift (all_work_hours, num_hours) VALUES (3805,9), (3806,9), (3808,6), (3809,7), (3810,7), (3811,8), (3812,7), (3813,8), (3814,8), (3815,9), (3816,7), (3817,8), (3818,8), (3819,9), (3820,8), (3821,9), (3822,9), (3823,10), (3824,7), (3825,8), (3826,8), (3827,9), (3828,8), (3829,9), (3830,9), (3831,10), (3840,4), (3841,5), (3842,5), (3843,6), (3844,5), (3845,6), (3846,6), (3847,7), (3848,5), (3849,6), (3850,6), (3851,7), (3852,6), (3853,7), (3854,7), (3855,8), (3856,5), (3857,6), (3858,6), (3859,7), (3860,6), (3861,7), (3862,7), (3863,8), (3864,6), (3865,7), (3866,7), (3867,8), (3868,7), (3869,8), (3870,8), (3872,5), (3873,6), (3874,6), (3875,7), (3876,6), (3877,7), (3878,7), (3879,8), (3880,6), (3881,7), (3882,7), (3883,8), (3884,7), (3885,8), (3886,8), (3887,9), (3888,6), (3889,7), (3890,7), (3891,8), (3892,7), (3893,8), (3894,8), (3895,9), (3896,7), (3897,8), (3898,8), (3899,9), (3900,8), (3901,9), (3904,5), (3905,6), (3906,6), (3907,7), (3908,6), (3909,7), (3910,7), (3911,8), (3912,6), (3913,7), (3914,7), (3915,8), (3916,7), (3917,8), (3918,8), (3919,9), (3920,6), (3921,7), (3922,7), (3923,8), (3924,7), (3925,8), (3926,8), (3927,9), (3928,7), (3929,8), (3930,8), (3931,9), (3932,8), (3933,9), (3934,9), (3936,6), (3937,7), (3938,7), (3939,8), (3940,7), (3941,8), (3942,8), (3943,9), (3944,7), (3945,8), (3946,8), (3947,9), (3948,8), (3949,9), (3950,9), (3951,10), (3952,7), (3953,8), (3954,8), (3955,9), (3956,8), (3957,9), (3958,9), (3959,10), (3960,8), (3961,9), (3962,9), (3963,10), (3968,5), (3969,6), (3970,6), (3971,7), (3972,6), (3973,7), (3974,7), (3975,8), (3976,6), (3977,7), (3978,7), (3979,8), (3980,7), (3981,8), (3982,8), (3983,9), (3984,6), (3985,7), (3986,7), (3987,8), (3988,7), (3989,8), (3990,8), (3991,9), (3992,7), (3993,8), (3994,8), (3995,9), (3996,8), (3997,9), (3998,9), (4000,6), (4001,7), (4002,7), (4003,8), (4004,7), (4005,8), (4006,8), (4007,9), (4008,7), (4009,8), (4010,8), (4011,9), (4012,8), (4013,9), (4014,9), (4015,10), (4016,7), (4017,8), (4018,8), (4019,9), (4020,8), (4021,9), (4022,9), (4023,10), (4024,8), (4025,9), (4026,9), (4027,10), (4028,9), (4029,10), (4032,6), (4033,7), (4034,7), (4035,8), (4036,7), (4037,8), (4038,8), (4039,9), (4040,7), (4041,8), (4042,8), (4043,9), (4044,8), (4045,9), (4046,9), (4047,10), (4048,7), (4049,8), (4050,8), (4051,9), (4052,8), (4053,9), (4054,9), (4055,10), (4056,8), (4057,9), (4058,9), (4059,10), (4060,9), (4061,10), (4062,10), (4064,7), (4065,8), (4066,8), (4067,9), (4068,8), (4069,9), (4070,9), (4071,10), (4072,8), (4073,9), (4074,9), (4075,10), (4076,9), (4077,10), (4078,10), (4079,11), (4080,8), (4081,9), (4082,9), (4083,10), (4084,9), (4085,10), (4086,10), (4087,11), (4088,9), (4089,10), (4090,10), (4091,11), (4092,10), (4093,11), (4094,11), (4095,12);
-INSERT INTO OrderWaitingList (oid, queueNum, orderAssigned) VALUES (1, 1, true);

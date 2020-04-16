@@ -8,7 +8,8 @@ select distinct cid, email, cpassword, 'c' from customers
 union
 select distinct rsid, email, rspassword, 'r' from restaurantstaff
 union
-select distinct empid, email, emppassword, 'f' from fdsemployee
+select distinct empid, email, emppassword, 'm' from Manager natural join FDSEmployee
+union
+select distinct empid, email, emppassword, 'ri' from Rider natural join FDSEmployee
 ;
-
 

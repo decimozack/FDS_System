@@ -62,7 +62,7 @@ BEGIN
     IF NEW.emptype = 'Manager' THEN
         INSERT INTO MANAGER VALUES (NEW.empid);
     ELSE
-        INSERT INTO RIDER(empid, isPartTime, wid) VALUES (NEW.empid, true, 1);
+        INSERT INTO RIDER(empid, isPartTime) VALUES (NEW.empid, true);
     END IF;
     
     RETURN NULL;

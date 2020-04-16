@@ -2,6 +2,14 @@ import React, { Component } from "react";
 import auth from "../auth";
 
 class About extends Component {
+	constructor(props) {
+    super(props);
+
+    let user = auth.getUser();
+    console.log(user)
+    console.log(user["userid"])
+  }
+
   render() {
     return (
       <div>

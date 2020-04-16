@@ -5,7 +5,7 @@ var router = express.Router();
 router.get("/getUserList", (req, res, next) => {
   var db = req.app.locals.db;
 
-  db.query("SELECT * FROM customers")
+  db.query("SELECT * FROM workshift")
     .then(function (rows) {
       if (rows) {
         res.status(200).send(rows);

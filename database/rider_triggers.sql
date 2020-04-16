@@ -393,9 +393,9 @@ DECLARE
 BEGIN
 	IF (SELECT EXISTS(SELECT 1 FROM ClockIn WHERE timeOut IS NULL AND onDelivery = FALSE)) THEN
 		clockin_id := (SELECT id FROM ClockIn WHERE timeOut IS NULL AND onDelivery = FALSE ORDER BY RANDOM() LIMIT 1);
-		INSERT INTO Assigned (orderid, empid, commission)
-		VALUES (NEW.orderid, (SELECT empid FROM ClockIn WHERE id = clockin_id), 10);
-		UPDATE OrderWaitingList SET orderAssigned = TRUE WHERE orderid = NEW.orderid;
+		INSERT INTO Assigned (oid, empid, commission)
+		VALUES (NEW.oid, (SELECT empid FROM ClockIn WHERE id = clockin_id), 10);
+		UPDATE OrderWaitingList SET orderAssigned = TRUE WHERE oid = NEW.oid;
 		UPDATE ClockIn SET onDelivery = TRUE WHERE id = clockin_id;
 	END IF;
 	RETURN NEW;
@@ -403,8 +403,94 @@ END;
 $$
 LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS assign_order_trigger ON OrderWaitingList CASCADE;
 CREATE TRIGGER assign_order_trigger
 	AFTER INSERT
 	ON OrderWaitingList
 	FOR EACH ROW
 	EXECUTE FUNCTION assign_order();
+
+CREATE OR REPLACE FUNCTION check_clockin() RETURNS TRIGGER AS
+$$
+DECLARE
+	isclockin BOOLEAN;
+BEGIN
+	SELECT exists (select 1 from ClockIn where NEW.empid = empid and timeOut is null and NEW.id != id) into isclockin;
+	IF isclockin THEN
+	RAISE exception 'Is already clocked in';
+	END IF;
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS check_clockin_trigger ON ClockIn CASCADE;
+CREATE TRIGGER check_clockin_trigger
+	AFTER INSERT
+	ON ClockIn
+	FOR EACH ROW
+	EXECUTE FUNCTION check_clockin();
+
+
+CREATE OR REPLACE FUNCTION check_assigned_timing() RETURNS TRIGGER AS
+$$
+DECLARE
+	next_order_id INTEGER;
+BEGIN
+	IF (select restaurantToCustomerTime from Assigned where NEW.oid = oid) is null and (select arriveAtCustomerTime from Assigned where NEW.oid = oid) is not null THEN
+	RAISE exception 'Invalid time update';
+	END IF;
+	IF (select arriveAtRestaurantTime from Assigned where NEW.oid = oid) is null and 
+		((select arriveAtCustomerTime from Assigned where NEW.oid = oid) is not null or 
+		 (select restaurantToCustomerTime from Assigned where NEW.oid = oid) is not null) THEN
+	RAISE exception 'Invalid time update';
+	END IF;
+	IF (select toRestaurantTime from Assigned where NEW.oid = oid) is null and 
+		((select arriveAtCustomerTime from Assigned where NEW.oid = oid) is not null or 
+		 (select restaurantToCustomerTime from Assigned where NEW.oid = oid) is not null or 
+		 (select arriveAtRestaurantTime from Assigned where NEW.oid = oid) is not null) THEN
+	RAISE exception 'Invalid time update';
+	END IF;
+	IF (select arriveAtCustomerTime from Assigned where NEW.oid = oid) is not null THEN
+		IF (SELECT EXISTS (select 1 from OrderWaitingList where orderAssigned=false)) THEN
+			next_order_id := (SELECT oid from OrderWaitingList where orderAssigned=false order by queueNum asc limit 1);
+			INSERT INTO Assigned (oid, empid, commission)
+			VALUES (next_order_id, NEW.empid, 10);
+			UPDATE OrderWaitingList SET orderAssigned = TRUE WHERE oid = next_order_id;
+			UPDATE ClockIn SET onDelivery = TRUE WHERE empid=NEW.empid and timeOut is null;
+		ELSE
+			UPDATE ClockIn SET onDelivery=false where empid=NEW.empid and timeout is null;
+		END IF;
+	END IF;
+	RETURN NULL;
+END;
+$$ LANGUAGE	plpgsql;
+
+DROP TRIGGER IF EXISTS check_assigned_timing_trigger ON Assigned CASCADE;
+CREATE TRIGGER check_assigned_timing_trigger
+	AFTER UPDATE OR INSERT
+	ON Assigned
+	FOR EACH ROW
+	EXECUTE FUNCTION check_assigned_timing();
+
+CREATE OR REPLACE FUNCTION assign_order_clockin() RETURNS TRIGGER AS
+$$
+DECLARE
+	next_order_id INTEGER;
+BEGIN
+	IF (SELECT EXISTS (select 1 from OrderWaitingList where orderAssigned=false)) THEN
+		next_order_id := (SELECT oid from OrderWaitingList where orderAssigned=false order by queueNum asc limit 1);
+		INSERT INTO Assigned (oid, empid, commission)
+		VALUES (next_order_id, NEW.empid, 10);
+		UPDATE OrderWaitingList SET orderAssigned = TRUE WHERE oid = next_order_id;
+		UPDATE ClockIn SET onDelivery = TRUE WHERE empid=NEW.empid and timeOut is null;
+	END IF;
+	RETURN NULL;
+END;
+$$ LANGUAGE	plpgsql;
+
+DROP TRIGGER IF EXISTS assign_order_clockin_trigger ON ClockIn CASCADE;
+CREATE TRIGGER assign_order_clockin_trigger
+	AFTER INSERT
+	ON ClockIn
+	FOR EACH ROW
+	EXECUTE FUNCTION assign_order_clockin();

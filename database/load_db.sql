@@ -86,6 +86,8 @@ insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, e
 insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (79, 'Rider', 'Lynnea', 'Audiss', 'laudisss@slashdot.org', 'znXYcFrKD');
 insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (80, 'Rider', 'Vaughn', 'Sermin', 'vsermint@flavors.me', 'eR7RdYE9');
 
+alter sequence FDSEmployee_empid_seq restart with 81;
+
 INSERT INTO Manager VALUES (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12),(13),(14),(15),(16),(17),(18),(19),(20),(21),(22),(23),(24),(25),(26),(27),(28),(29),(30),(31),(32),(33),(34),(35),(36),(37),(38),(39),(40),(41),(42),(43),(44),(45),(46),(47),(48),(49),(50);
 
 INSERT INTO Rider VALUES (51,false),(52,false),(53,false),(54,false),(55,false),(56,false),(57,false),(58,false),(59,false),(60,false),(61,false),(62,false),(63,false),(64,false),(65,false),(66,false),(67,false),(68,false),(69,false),(70,false);
@@ -107,6 +109,8 @@ insert into WorkShift (wsid, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12) 
 insert into WorkShift (wsid, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12) values (12, true, true, false, false, false, false, true, false, false, true, true, true);
 insert into WorkShift (wsid, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12) values (13, false, false, true, false, true, false, false, false, false, false, true, false);
 insert into WorkShift (wsid, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12) values (14, true, false, false, true, true, false, true, true, false, false, false, true);
+
+ALTER SEQUENCE workshift_wsid_seq RESTART WITH 15;
 
 INSERT INTO WWS VALUES (51,1,1,1,1,1,0,0),(52,1,1,1,1,1,0,0),(53,1,1,1,1,1,0,0),(54,1,1,1,1,1,0,0),(55,1,1,1,1,1,0,0);
 INSERT INTO WWS VALUES (56,0,0,1,1,1,1,1),(57,0,0,1,1,1,1,1),(58,0,0,1,1,1,1,1),(59,0,0,1,1,1,1,1),(60,0,0,1,1,1,1,1);

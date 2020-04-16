@@ -14,7 +14,12 @@ import UpdateCustomer from "./components/Customer/UpdateCustomer";
 import EmployeeSignUp from "./components/Employee/Signup";
 import { ProtectedRoute } from "./protected.route";
 import { CustomerProtectedRoute } from "./customer_protected.route";
+import { RiderProtectedRoute } from "./rider_protected.route";
 import auth from "./auth";
+import WorkSchedule from "./components/Riders/workshift.js";
+import WorkHistory from "./components/Riders/workhistory.js";
+import WorkDetails from "./components/Riders/workdetails.js";
+import RiderSalary from "./components/Riders/salary.js";
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
@@ -34,6 +39,13 @@ const managerSections = [
   { title: "Employee Management", url: "/about" },
   { title: "Restaurant Management", url: "/about" },
   { title: "Dashboard", url: "/about" },
+];
+
+const riderSections = [
+  { title: "Work Schedule", url: "/riders/workschedule" },
+  { title: "Work Details", url: "/riders/workdetails" },
+  { title: "Work History", url: "/riders/workhistory" },
+  { title: "Salary", url: "/riders/salary" },
 ];
 
 class App extends Component {
@@ -57,6 +69,7 @@ class App extends Component {
             title="FDS System"
             sections={sections}
             managerSections={managerSections}
+            riderSections={riderSections}
             onIsLoginValue={this.handleIsLoginValue}
             isLogin={this.state.isLogin}
           />
@@ -73,6 +86,10 @@ class App extends Component {
                   <Route path="/contact" component={Contact} />
                   <Route path="/signup" component={CustomerSignUp} />
                   <Route path="/empsignup" component={EmployeeSignUp} />
+                  <RiderProtectedRoute path="/riders/workschedule" component={WorkSchedule} />
+                  <RiderProtectedRoute path="/riders/workhistory" component={WorkHistory} />
+                  <RiderProtectedRoute path="/riders/workdetails" component={WorkDetails} />
+                  <RiderProtectedRoute path="/riders/salary" component={RiderSalary} />
                   <Route
                     path="/signin"
                     render={(routeProps) => (
