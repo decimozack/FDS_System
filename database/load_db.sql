@@ -85,26 +85,6 @@ insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, e
 insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (78, 'Rider', 'Vladimir', 'Weaving', 'vweavingr@nytimes.com', '69hHCEboLazR');
 insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (79, 'Rider', 'Lynnea', 'Audiss', 'laudisss@slashdot.org', 'znXYcFrKD');
 insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (80, 'Rider', 'Vaughn', 'Sermin', 'vsermint@flavors.me', 'eR7RdYE9');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (81, 'Rider', 'Cori', 'L''Episcopi', 'clepiscopiu@cam.ac.uk', '36fqSf9NISZg');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (82, 'Rider', 'Arther', 'Anmore', 'aanmorev@opera.com', 'LE3NqFlNQ7Rr');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (83, 'Rider', 'Dulcia', 'Uebel', 'duebelw@marketwatch.com', 'zU7CgPHEA');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (84, 'Rider', 'Yanaton', 'Kupis', 'ykupisx@smugmug.com', 'zrn5ep9zUSN');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (85, 'Rider', 'Sayre', 'West', 'swesty@wix.com', 'RsuPNwe4l2I');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (86, 'Rider', 'Vinson', 'Aikman', 'vaikmanz@scientificamerican.com', 'MJT3VYaOrjeU');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (87, 'Rider', 'Katinka', 'Washtell', 'kwashtell10@nih.gov', '3BAaQfUJfIAi');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (88, 'Rider', 'Delano', 'Tocknell', 'dtocknell11@g.co', 'bzbI8m');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (89, 'Rider', 'Barris', 'Ossipenko', 'bossipenko12@elpais.com', 'ZGyuIkBc0Lxc');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (90, 'Rider', 'Grange', 'Dignan', 'gdignan13@goo.ne.jp', 'CZRgdFtX');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (91, 'Rider', 'Joni', 'Poluzzi', 'jpoluzzi14@altervista.org', 'MzTdvCjcj');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (92, 'Rider', 'Grata', 'Bendixen', 'gbendixen15@exblog.jp', '7kFg2wzGziA');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (93, 'Rider', 'Marlee', 'Roma', 'mroma16@sakura.ne.jp', 'YoOjyyfUq');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (94, 'Rider', 'Rancell', 'Gutman', 'rgutman17@intel.com', '9VJUFnM');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (95, 'Rider', 'Raina', 'Moylane', 'rmoylane18@sogou.com', 'c9gAy2EW');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (96, 'Rider', 'Reinald', 'Demke', 'rdemke19@tripod.com', 'yc0a5oWBai');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (97, 'Rider', 'Joyann', 'Sweeten', 'jsweeten1a@gravatar.com', '3aqfIS6L1tdH');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (98, 'Rider', 'Arlana', 'Muslim', 'amuslim1b@army.mil', 'YiOuCGhRhf');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (99, 'Rider', 'Petrina', 'Czadla', 'pczadla1c@hostgator.com', 'CPxkzcioDud');
-insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (100, 'Rider', 'Sonnie', 'Hulland', 'shulland1d@bizjournals.com', '9nHFwko92a3D');
 
 INSERT INTO Manager VALUES (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12),(13),(14),(15),(16),(17),(18),(19),(20),(21),(22),(23),(24),(25),(26),(27),(28),(29),(30),(31),(32),(33),(34),(35),(36),(37),(38),(39),(40),(41),(42),(43),(44),(45),(46),(47),(48),(49),(50);
 
