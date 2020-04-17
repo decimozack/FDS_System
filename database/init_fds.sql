@@ -88,13 +88,35 @@ CREATE TABLE FoodItem (
 	FOREIGN KEY (catid) references Category
 );
 
+CREATE TYPE campaignEnum as ENUM('DiscountPromo');
 CREATE TABLE PromoCampaign (
 	pcid SERIAL PRIMARY KEY,
-	campaign_type VARCHAR(20) NOT NULL,
-	from_restaurant VARCHAR(50) NOT NULL, -- ? --
+	campaign_type campaignEnum NOT NULL,
 	start_time TIMESTAMP NOT NULL,
-	end_time TIMESTAMP NOT NULL	
+	end_time TIMESTAMP NOT NULL,
+	FOREIGN KEY (rid) REFERENCES Restaurants
 );
+
+CREATE TABLE PromoByRestaurant (
+	pcid INTEGER PRIMARY KEY,
+	rid 	INTEGER NOT NULL,
+	FOREIGN KEY (rid) REFERENCES Restaurants,
+	FOREIGN KEY (pcid) REFERENCES PromoCampaign
+);
+
+CREATE TABLE PromoBFDS (
+	pcid INTEGER PRIMARY KEY,
+	FOREIGN KEY (pcid) REFERENCES PromoCampaign
+);
+
+CREATE TABLE DiscountPromo (
+	pcid INTEGER PRIMARY KEY,
+	min_spend	INTEGER,
+	max_spend INTEGER,
+	discount 	INTEGER,
+	FOREIGN KEY	 (pcid) REFERENCES PromoCampaign
+);
+
 
 CREATE TABLE Uses (
 	oid INTEGER NOT NULL,
@@ -102,13 +124,6 @@ CREATE TABLE Uses (
 	PRIMARY KEY(oid, pcid)
 );
 
-CREATE TABLE Offers (
-	rid INTEGER,
-	pcid INTEGER,
-	PRIMARY KEY (rid, pcid),
-	FOREIGN KEY (rid) REFERENCES Restaurants,
-	FOREIGN KEY (pcid) REFERENCES PromoCampaign
-);
 
 CREATE TABLE OrderItem (  -- full part from OrderItem to Place not enforced
 	ooid SERIAL UNIQUE, -- have to add UNIQUE, but i thot SERIAL ensures uniqueness?
