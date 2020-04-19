@@ -116,3 +116,17 @@ AFTER UPDATE OF empid, emptype
 ON FDSEmployee
 FOR EACH ROW
 EXECUTE FUNCTION update_child_emp();
+
+
+-- update rider
+CREATE OR REPLACE FUNCTION updateRider(inEmail text, inFirstName text, inLastName text, inPassword text, inEmpId integer, inIsPartTime boolean)
+RETURNS void as $$
+BEGIN
+    UPDATE FDSEmployee 
+    SET email=inEmail, emp_first_name=inFirstName, emp_last_name=inLastName, emppassword=inPassword
+    WHERE empid = inEmpId;
+    UPDATE Rider
+    SET isPartTime = inIsPartTime
+    WHERE empid = inEmpId;
+END;
+$$ LANGUAGE plpgsql;

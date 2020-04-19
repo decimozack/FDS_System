@@ -37,6 +37,46 @@ router.post("/retrieveCustomer", (req, res, next) => {
     });
 });
 
+router.post("/retrieveManager", (req, res, next) => {
+  var { id } = req.body;
+  var db = req.app.locals.db;
+
+  db.query("SELECT * FROM Manager NATURAL JOIN FDSEmployee WHERE (empid=$1)", [
+    id,
+  ])
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find user information");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/retrieveRider", (req, res, next) => {
+  var { id } = req.body;
+  var db = req.app.locals.db;
+
+  db.query("SELECT * FROM Rider NATURAL JOIN FDSEmployee WHERE (empid=$1)", [
+    id,
+  ])
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find user information");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
 router.post("/verifyLogin", (req, res, next) => {
   var { email, password } = req.body;
   var db = req.app.locals.db;
@@ -107,6 +147,40 @@ router.post("/updateCustomer", (req, res, next) => {
   ])
     .then(function (results) {
       res.status(201).send(`Customer updated`);
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/updateRider", (req, res, next) => {
+  var { empid, email, firstName, lastName, isPartTime, password } = req.body;
+  var db = req.app.locals.db;
+
+  var queryStr = "select updateRider($1,$2,$3,$4,$5,$6)";
+
+  db.query(queryStr, [email, firstName, lastName, password, empid, isPartTime])
+    .then(function (results) {
+      res.status(201).send(`Rider updated`);
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/updateManager", (req, res, next) => {
+  var { empid, email, firstName, lastName, password } = req.body;
+  var db = req.app.locals.db;
+
+  var queryStr =
+    "UPDATE FDSEmployee SET emp_first_name=$1, emp_last_name=$2, email=$3, emppassword=$4 " +
+    "WHERE empid=$5";
+
+  db.query(queryStr, [firstName, lastName, email, password, empid])
+    .then(function (results) {
+      res.status(201).send(`Manager updated`);
     })
     .catch(function (err) {
       console.error(err);

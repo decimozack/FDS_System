@@ -11,9 +11,11 @@ import SignIn from "./components/Signin";
 import Header from "./components/Header";
 import CustomerSignUp from "./components/Customer/Signup";
 import UpdateCustomer from "./components/Customer/UpdateCustomer";
+import UpdateEmployee from "./components/Employee/UpdateEmployee";
 import EmployeeSignUp from "./components/Employee/Signup";
 import { ProtectedRoute } from "./protected.route";
 import { CustomerProtectedRoute } from "./customer_protected.route";
+import { ManagerProtectedRoute } from "./manager_protected.route";
 import { RiderProtectedRoute } from "./rider_protected.route";
 import auth from "./auth";
 import WorkSchedule from "./components/Riders/workshift.js";
@@ -99,6 +101,15 @@ class App extends Component {
                     path="/empsignup"
                     render={(routeProps) => (
                       <EmployeeSignUp
+                        {...routeProps}
+                        isLogin={this.state.isLogin}
+                      />
+                    )}
+                  />
+                  <Route
+                    path="/updateEmployee"
+                    render={(routeProps) => (
+                      <UpdateEmployee
                         {...routeProps}
                         isLogin={this.state.isLogin}
                       />
