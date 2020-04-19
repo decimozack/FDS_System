@@ -13,6 +13,9 @@ DROP TABLE IF EXISTS Orders CASCADE;
 DROP TABLE IF EXISTS Salary CASCADE;
 DROP TABLE IF EXISTS Belongs CASCADE;
 DROP TABLE IF EXISTS PromoCampaign CASCADE;
+DROP TABLE IF EXISTS PromoByRestaurant CASCADE;
+DROP TABLE IF EXISTS PromoBFDS CASCADE;
+DROP TABLE IF EXISTS DiscountPromo CASCADE;
 DROP TABLE IF EXISTS Uses CASCADE;
 DROP TABLE IF EXISTS Eligible CASCADE;
 DROP TABLE IF EXISTS FDSEmployee CASCADE;
@@ -25,6 +28,7 @@ DROP TABLE IF EXISTS Assigned CASCADE;
 DROP TABLE IF EXISTS ClockIn CASCADE;
 DROP TABLE IF EXISTS Manager CASCADE;
 DROP TYPE IF EXISTS ostatus CASCADE;
+DROP TYPE IF EXISTS campaignEnum CASCADE;
 DROP TYPE IF EXISTS emp_type CASCADE;
 
 CREATE TABLE Restaurants (
@@ -64,6 +68,7 @@ CREATE TABLE Orders ( -- total part from Order to Contains not enforced
 	price DECIMAL(5, 2) NOT NULL,
 	delivery_fee DECIMAL(5, 2) NOT NULL,
 	address VARCHAR(100) NOT NULL,
+	location_area varchar(200) NOT NULL,
 	cid INTEGER NOT NULL,
 	gain_reward_pts INTEGER NOT NULL,
 	FOREIGN KEY (cid) REFERENCES Customers
@@ -93,8 +98,7 @@ CREATE TABLE PromoCampaign (
 	pcid SERIAL PRIMARY KEY,
 	campaign_type campaignEnum NOT NULL,
 	start_time TIMESTAMP NOT NULL,
-	end_time TIMESTAMP NOT NULL,
-	FOREIGN KEY (rid) REFERENCES Restaurants
+	end_time TIMESTAMP NOT NULL
 );
 
 CREATE TABLE PromoByRestaurant (
@@ -307,7 +311,8 @@ create or replace function count_commision(id integer, month TIMESTAMP, period t
 CREATE TABLE Salary (
 	empid	INTEGER,
 	month	DATE,
-	salary	INTEGER NOT NULL DEFAULT 0,
+	salary	DECIMAL(10,2) NOT NULL DEFAULT 0,
+	total_hours INTEGER NOT NULL DEFAULT 0,
 	PRIMARY KEY (empid, month),
 	FOREIGN KEY (empid) REFERENCES Rider (empid)
 );

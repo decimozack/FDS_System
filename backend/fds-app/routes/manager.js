@@ -19,11 +19,221 @@ router.get("/getCustomerList", (req, res, next) => {
     });
 });
 
+router.get("/getRiderSummaryOverall", (req, res, next) => {
+  var db = req.app.locals.db;
+
+  db.query("SELECT * FROM RiderSummary")
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find RiderOverallSummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/getRiderSummary", (req, res, next) => {
+  var { id, year, month } = req.body;
+  var db = req.app.locals.db;
+
+  db.query(
+    "SELECT * FROM RiderSummary WHERE empid=$1 and t_year=$2 and t_month=$3",
+    [id, year, month]
+  )
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find RiderOverallSummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.get("/getDeliveryLocationSummaryOverall", (req, res, next) => {
+  var db = req.app.locals.db;
+
+  db.query("SELECT * FROM DeliveryLocationSummary")
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find DeliveryLocationSummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/getDeliveryLocationSummary", (req, res, next) => {
+  var { year, month, day, hour, area } = req.body;
+  var db = req.app.locals.db;
+
+  db.query(
+    "SELECT * FROM DeliveryLocationSummary WHERE t_year=$1 and t_month=$2 and t_month=$3 and t_day=$3 and t_hour=$4 and location_area=$5",
+    [year, month, day, hour, area]
+  )
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find DeliveryLocationSummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.get("/getCustomerOrderSummaryOverall", (req, res, next) => {
+  var db = req.app.locals.db;
+
+  db.query("SELECT * FROM CustomerOrderSummary")
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find CustomerOrderSummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/getCustomerOrderSummary", (req, res, next) => {
+  var { id, year, month } = req.body;
+  var db = req.app.locals.db;
+
+  db.query(
+    "SELECT * FROM CustomerOrderSummary WHERE t_year=$1 and t_month=$2 and cid=$3",
+    [year, month, id]
+  )
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find CustomerOrderSummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.get("/getCustomerOrderSummaryOverall", (req, res, next) => {
+  var db = req.app.locals.db;
+
+  db.query("SELECT * FROM CustomerOrderSummary")
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find CustomerOrderSummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/getCustomerOrderSummary", (req, res, next) => {
+  var { id, year, month } = req.body;
+  var db = req.app.locals.db;
+
+  db.query(
+    "SELECT * FROM CustomerOrderSummary WHERE t_year=$1 and t_month=$2 and cid=$3",
+    [year, month, id]
+  )
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find CustomerOrderSummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/getMonthlySummary", (req, res, next) => {
+  var { year, month } = req.body;
+  var db = req.app.locals.db;
+
+  db.query("SELECT getmonthsummary($1,$2)", [year, month])
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find MonthlySummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
 router.post("/retrieveCustomer", (req, res, next) => {
   var { id } = req.body;
   var db = req.app.locals.db;
 
   db.query("SELECT * FROM Customers WHERE (cid=$1)", [id])
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find user information");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/retrieveManager", (req, res, next) => {
+  var { id } = req.body;
+  var db = req.app.locals.db;
+
+  db.query("SELECT * FROM Manager NATURAL JOIN FDSEmployee WHERE (empid=$1)", [
+    id,
+  ])
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find user information");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/retrieveRider", (req, res, next) => {
+  var { id } = req.body;
+  var db = req.app.locals.db;
+
+  db.query("SELECT * FROM Rider NATURAL JOIN FDSEmployee WHERE (empid=$1)", [
+    id,
+  ])
     .then(function (rows) {
       if (rows) {
         res.status(200).send(rows);
@@ -107,6 +317,40 @@ router.post("/updateCustomer", (req, res, next) => {
   ])
     .then(function (results) {
       res.status(201).send(`Customer updated`);
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/updateRider", (req, res, next) => {
+  var { empid, email, firstName, lastName, isPartTime, password } = req.body;
+  var db = req.app.locals.db;
+
+  var queryStr = "select updateRider($1,$2,$3,$4,$5,$6)";
+
+  db.query(queryStr, [email, firstName, lastName, password, empid, isPartTime])
+    .then(function (results) {
+      res.status(201).send(`Rider updated`);
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/updateManager", (req, res, next) => {
+  var { empid, email, firstName, lastName, password } = req.body;
+  var db = req.app.locals.db;
+
+  var queryStr =
+    "UPDATE FDSEmployee SET emp_first_name=$1, emp_last_name=$2, email=$3, emppassword=$4 " +
+    "WHERE empid=$5";
+
+  db.query(queryStr, [firstName, lastName, email, password, empid])
+    .then(function (results) {
+      res.status(201).send(`Manager updated`);
     })
     .catch(function (err) {
       console.error(err);

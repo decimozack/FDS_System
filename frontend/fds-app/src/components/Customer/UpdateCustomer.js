@@ -216,7 +216,7 @@ class UpdateCustomer extends React.Component {
               color="primary"
               className={classes.submit}
             >
-              Sign Up
+              Update Info
             </Button>
           </form>
         </div>

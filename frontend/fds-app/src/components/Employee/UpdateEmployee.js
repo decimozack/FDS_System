@@ -16,6 +16,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { withStyles } from "@material-ui/core/styles";
 import ManagerDataService from "../../services/manager.service";
+import auth from "../../auth";
 
 function Copyright() {
   return (
@@ -61,6 +62,17 @@ const workRoles = [
   },
 ];
 
+const isPartTimes = [
+  {
+    value: false,
+    label: "Full-Time",
+  },
+  {
+    value: true,
+    label: "Part-Time",
+  },
+];
+
 class UpdateEmployee extends React.Component {
   constructor(props) {
     super(props);
@@ -71,15 +83,49 @@ class UpdateEmployee extends React.Component {
       firstName: "",
       lastName: "",
       workRole: "",
+      isPartTime: false,
       errorMsg: "",
+      successMsg: "",
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.retrieveEmployee = this.retrieveEmployee.bind(this);
+
+    const user = auth.getUser();
+
+    if (!this.props.isLogin) {
+      this.props.history.push("/signin");
+    } else if (user.usertype !== "ri" && user.usertype !== "m") {
+      this.props.history.push("/");
+    }
+  }
+
+  retrieveEmployee() {
+    const user = auth.getUser();
+    if (user.usertype === "ri") {
+      this.setState({ workRole: "Rider" });
+    } else {
+      this.setState({ workRole: "Manager" });
+    }
+    ManagerDataService.retrieveEmployee(user.userid, user.usertype)
+      .then((response) => {
+        console.log(response.data.rows[0]);
+        this.setState({
+          email: response.data.rows[0].email,
+          password: response.data.rows[0].emppassword,
+          firstName: response.data.rows[0].emp_first_name,
+          lastName: response.data.rows[0].emp_last_name,
+          isPartTime: response.data.rows[0].isparttime,
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }
 
   componentDidMount() {
-    this.retrieveTutorials();
+    this.retrieveEmployee();
   }
 
   handleChange(event) {
@@ -101,11 +147,12 @@ class UpdateEmployee extends React.Component {
       }
       return object;
     }, {});
-
-    ManagerDataService.employeeSignUp(userObj)
+    userObj.empid = auth.getUser().userid;
+    ManagerDataService.updateEmployee(userObj)
       .then((response) => {
         console.log(response);
-        this.props.history.push("/signin");
+        this.setState({ successMsg: "Information updated" });
+        this.retrieveEmployee();
       })
       .catch((e) => {
         console.log(e);
@@ -123,32 +170,37 @@ class UpdateEmployee extends React.Component {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Employee Sign Up
+            Update Information
           </Typography>
           {this.state.errorMsg.length > 0 && (
             <Alert severity="error">{this.state.errorMsg}</Alert>
+          )}
+          {this.state.successMsg.length > 0 && (
+            <Alert severity="success">{this.state.successMsg}</Alert>
           )}
           <form
             className={classes.form}
             onSubmit={this.handleSubmit}
             noValidate
           >
-            <TextField
-              id="workRole"
-              select
-              fullWidth
-              label="Select"
-              value={this.state.workRole}
-              onChange={this.handleChange}
-              helperText="Please select your role"
-              name="workRole"
-            >
-              {workRoles.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
+            {this.state.workRole === "Rider" && (
+              <TextField
+                id="isPartTime"
+                select
+                fullWidth
+                label="Select"
+                value={this.state.isPartTime}
+                onChange={this.handleChange}
+                helperText="Please select your emptype"
+                name="isPartTime"
+              >
+                {isPartTimes.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
             <TextField
               variant="outlined"
               margin="normal"
@@ -157,6 +209,7 @@ class UpdateEmployee extends React.Component {
               id="email"
               label="Email Address"
               name="email"
+              value={this.state.email}
               autoComplete="email"
               onChange={this.handleChange}
               autoFocus
@@ -167,6 +220,7 @@ class UpdateEmployee extends React.Component {
               required
               fullWidth
               name="firstName"
+              value={this.state.firstName}
               label="First Name"
               id="firstName"
               onChange={this.handleChange}
@@ -178,6 +232,7 @@ class UpdateEmployee extends React.Component {
               required
               fullWidth
               name="lastName"
+              value={this.state.lastName}
               label="Last Name"
               id="lastName"
               onChange={this.handleChange}
@@ -189,6 +244,7 @@ class UpdateEmployee extends React.Component {
               required
               fullWidth
               name="password"
+              value={this.state.password}
               label="Password"
               type="password"
               id="password"
@@ -202,7 +258,7 @@ class UpdateEmployee extends React.Component {
               color="primary"
               className={classes.submit}
             >
-              Sign Up
+              Update Info
             </Button>
           </form>
         </div>

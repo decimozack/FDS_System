@@ -8,7 +8,7 @@ export const ManagerProtectedRoute = ({ component: Component, ...rest }) => {
       {...rest}
       render={(props) => {
         const user = auth.getUser();
-        return auth.isAuthenticated() && user.usertype === "f" ? (
+        return auth.isAuthenticated() && user.usertype === "m" ? (
           <Component {...props} />
         ) : (
           <Redirect
