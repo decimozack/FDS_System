@@ -68,6 +68,7 @@ CREATE TABLE Orders ( -- total part from Order to Contains not enforced
 	price DECIMAL(5, 2) NOT NULL,
 	delivery_fee DECIMAL(5, 2) NOT NULL,
 	address VARCHAR(100) NOT NULL,
+	location_area varchar(200) NOT NULL,
 	cid INTEGER NOT NULL,
 	gain_reward_pts INTEGER NOT NULL,
 	FOREIGN KEY (cid) REFERENCES Customers
@@ -310,7 +311,8 @@ create or replace function count_commision(id integer, month TIMESTAMP, period t
 CREATE TABLE Salary (
 	empid	INTEGER,
 	month	DATE,
-	salary	INTEGER NOT NULL DEFAULT 0,
+	salary	DECIMAL(10,2) NOT NULL DEFAULT 0,
+	total_hours INTEGER NOT NULL DEFAULT 0,
 	PRIMARY KEY (empid, month),
 	FOREIGN KEY (empid) REFERENCES Rider (empid)
 );

@@ -130,3 +130,22 @@ BEGIN
     WHERE empid = inEmpId;
 END;
 $$ LANGUAGE plpgsql;
+
+ DROP FUNCTION IF EXISTS getmonthsummary(integer,integer);
+-- get month summary
+CREATE OR REPLACE FUNCTION getMonthSummary(inYear integer,inMonth integer)
+RETURNS TABLE (
+    t_year double precision,
+    t_month double precision,
+    customerCount bigint,
+    orderCount bigint,
+    totalPrice DECIMAL(10,2)
+) AS $$
+BEGIN
+    RETURN QUERY 
+    SELECT TC.t_year, TC.t_month, TC.customerCount, TOM.orderCount, TOM.totalPrice 
+    FROM TotalNewCustomerMonth TC join TotalOrderMonth TOM 
+    on TC.t_year = TOM.t_year and TC.t_month = TOM.t_month
+    WHERE TC.t_year = inYear and TC.t_month = inMonth;
+END;
+$$ LANGUAGE plpgsql;

@@ -19,6 +19,176 @@ router.get("/getCustomerList", (req, res, next) => {
     });
 });
 
+router.get("/getRiderSummaryOverall", (req, res, next) => {
+  var db = req.app.locals.db;
+
+  db.query("SELECT * FROM RiderSummary")
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find RiderOverallSummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/getRiderSummary", (req, res, next) => {
+  var { id, year, month } = req.body;
+  var db = req.app.locals.db;
+
+  db.query(
+    "SELECT * FROM RiderSummary WHERE empid=$1 and t_year=$2 and t_month=$3",
+    [id, year, month]
+  )
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find RiderOverallSummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.get("/getDeliveryLocationSummaryOverall", (req, res, next) => {
+  var db = req.app.locals.db;
+
+  db.query("SELECT * FROM DeliveryLocationSummary")
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find DeliveryLocationSummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/getDeliveryLocationSummary", (req, res, next) => {
+  var { year, month, day, hour, area } = req.body;
+  var db = req.app.locals.db;
+
+  db.query(
+    "SELECT * FROM DeliveryLocationSummary WHERE t_year=$1 and t_month=$2 and t_month=$3 and t_day=$3 and t_hour=$4 and location_area=$5",
+    [year, month, day, hour, area]
+  )
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find DeliveryLocationSummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.get("/getCustomerOrderSummaryOverall", (req, res, next) => {
+  var db = req.app.locals.db;
+
+  db.query("SELECT * FROM CustomerOrderSummary")
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find CustomerOrderSummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/getCustomerOrderSummary", (req, res, next) => {
+  var { id, year, month } = req.body;
+  var db = req.app.locals.db;
+
+  db.query(
+    "SELECT * FROM CustomerOrderSummary WHERE t_year=$1 and t_month=$2 and cid=$3",
+    [year, month, id]
+  )
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find CustomerOrderSummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.get("/getCustomerOrderSummaryOverall", (req, res, next) => {
+  var db = req.app.locals.db;
+
+  db.query("SELECT * FROM CustomerOrderSummary")
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find CustomerOrderSummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/getCustomerOrderSummary", (req, res, next) => {
+  var { id, year, month } = req.body;
+  var db = req.app.locals.db;
+
+  db.query(
+    "SELECT * FROM CustomerOrderSummary WHERE t_year=$1 and t_month=$2 and cid=$3",
+    [year, month, id]
+  )
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find CustomerOrderSummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/getMonthlySummary", (req, res, next) => {
+  var { year, month } = req.body;
+  var db = req.app.locals.db;
+
+  db.query("SELECT getmonthsummary($1,$2)", [year, month])
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error find MonthlySummary");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
 router.post("/retrieveCustomer", (req, res, next) => {
   var { id } = req.body;
   var db = req.app.locals.db;
