@@ -38,6 +38,7 @@ const sections = [
 
 const managerSections = [
   { title: "Sign Up", url: "/empsignup" },
+  { title: "Update Info", url: "/updateEmployee" },
   { title: "Customer Management", url: "/contact" },
   { title: "Employee Management", url: "/about" },
   { title: "Restaurant Management", url: "/about" },
@@ -50,6 +51,7 @@ const riderSections = [
   { title: "Work History", url: "/riders/workhistory" },
   { title: "Salary", url: "/riders/salary" },
   { title: "Ratings", url: "/riders/ratings" },
+  { title: "Update Info", url: "/updateEmployee" },
 ];
 
 class App extends Component {
