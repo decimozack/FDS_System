@@ -47,7 +47,7 @@ const riderSections = [
   { title: "Work Details", url: "/riders/workdetails" },
   { title: "Work History", url: "/riders/workhistory" },
   { title: "Salary", url: "/riders/salary" },
-  { title: "Ratings", url: "/riders/ratings"}
+  { title: "Ratings", url: "/riders/ratings" },
 ];
 
 class App extends Component {
@@ -86,13 +86,44 @@ class App extends Component {
                     component={UpdateCustomer}
                   />
                   <Route path="/contact" component={Contact} />
-                  <Route path="/signup" component={CustomerSignUp} />
-                  <Route path="/empsignup" component={EmployeeSignUp} />
-                  <RiderProtectedRoute path="/riders/workschedule" component={WorkSchedule} />
-                  <RiderProtectedRoute path="/riders/workhistory" component={WorkHistory} />
-                  <RiderProtectedRoute path="/riders/workdetails" component={WorkDetails} />
-                  <RiderProtectedRoute path="/riders/salary" component={RiderSalary} />
-                  <RiderProtectedRoute path="/riders/ratings" component={RiderRatings} />
+                  <Route
+                    path="/signup"
+                    render={(routeProps) => (
+                      <CustomerSignUp
+                        {...routeProps}
+                        isLogin={this.state.isLogin}
+                      />
+                    )}
+                  />
+                  <Route
+                    path="/empsignup"
+                    render={(routeProps) => (
+                      <EmployeeSignUp
+                        {...routeProps}
+                        isLogin={this.state.isLogin}
+                      />
+                    )}
+                  />
+                  <RiderProtectedRoute
+                    path="/riders/workschedule"
+                    component={WorkSchedule}
+                  />
+                  <RiderProtectedRoute
+                    path="/riders/workhistory"
+                    component={WorkHistory}
+                  />
+                  <RiderProtectedRoute
+                    path="/riders/workdetails"
+                    component={WorkDetails}
+                  />
+                  <RiderProtectedRoute
+                    path="/riders/salary"
+                    component={RiderSalary}
+                  />
+                  <RiderProtectedRoute
+                    path="/riders/ratings"
+                    component={RiderRatings}
+                  />
                   <Route
                     path="/signin"
                     render={(routeProps) => (

@@ -76,6 +76,10 @@ class EmployeeSignUp extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+
+    if (this.props.isLogin) {
+      this.props.history.push("/");
+    }
   }
 
   handleChange(event) {
