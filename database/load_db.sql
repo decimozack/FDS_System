@@ -14,7 +14,7 @@ DELETE FROM PromoCampaign;
 DELETE FROM PromoByRestaurant;
 DELETE FROM PromoBFDS;
 DELETE FROM DiscountPromo;
-DELETE FROM Uses;
+DELETE FROM OrderPromoCampaignUsage;
 DELETE FROM OrderItem;
 DELETE FROM Place;
 DELETE FROM RestaurantReview;
@@ -157,6 +157,8 @@ insert into Restaurants (rid, rname, min_order_cost) values (7, 'Pouros LLC', 40
 insert into Restaurants (rid, rname, min_order_cost) values (8, 'Stroman-Ledner', 11);
 insert into Restaurants (rid, rname, min_order_cost) values (9, 'Schmidt Group', 54);
 insert into Restaurants (rid, rname, min_order_cost) values (10, 'Parisian, Raynor and Kuhn', 29);
+
+alter sequence Restaurants_rid_seq restart with 11;
 
 insert into RestaurantStaff (rsid, rs_first_name, rs_last_name, email, rspassword, rid) values (1, 'Jarvis', 'Cady', 'jcady0@themeforest.net', 'Psroh0', 10);
 insert into RestaurantStaff (rsid, rs_first_name, rs_last_name, email, rspassword, rid) values (2, 'Lorinda', 'Grise', 'lgrise1@rediff.com', 'i3ncjeB3DO', 4);
@@ -359,12 +361,17 @@ insert into RestaurantStaff (rsid, rs_first_name, rs_last_name, email, rspasswor
 insert into RestaurantStaff (rsid, rs_first_name, rs_last_name, email, rspassword, rid) values (199, 'Letizia', 'MacGuffog', 'lmacguffog5i@census.gov', 'B5AAKNOb', 1);
 insert into RestaurantStaff (rsid, rs_first_name, rs_last_name, email, rspassword, rid) values (200, 'Bryana', 'Croyden', 'bcroyden5j@geocities.jp', 'YDzjL4o9', 1);
 
+alter sequence RestaurantStaff_rsid_seq restart with 201;
+
 insert into Category (catid, catname, description) values (1, 'Beverage', 'nice cool drinks');
 insert into Category (catid, catname, description) values (2, 'Chinese', 'Chinese food');
 insert into Category (catid, catname, description) values (3, 'Western', 'Western food');
 insert into Category (catid, catname, description) values (4, 'Japanese', 'Japanese food');
 insert into Category (catid, catname, description) values (5, 'Korean', 'Korean food');
 insert into Category (catid, catname, description) values (6, 'Malay', 'Malay food');
+
+alter sequence Category_catid_seq restart with 7;
+
 
 insert into FoodItem (fid, rid, fname, description, catid, food_limit, current_qty, price) values (1, 6, 'Oreamnos americanus', 'Disp fx of ant pro of r calcaneus, subs for fx w malunion', 2, 124, 16, 16);
 insert into FoodItem (fid, rid, fname, description, catid, food_limit, current_qty, price) values (2, 3, 'Lemur catta', 'Corrosion of unspecified degree of right foot, init encntr', 3, 363, 11, 40);
@@ -867,11 +874,32 @@ insert into FoodItem (fid, rid, fname, description, catid, food_limit, current_q
 insert into FoodItem (fid, rid, fname, description, catid, food_limit, current_qty, price) values (499, 5, 'Ictonyx striatus', 'Abnormal immunolog findings in specimens from oth org/tiss', 3, 484, 12, 19);
 insert into FoodItem (fid, rid, fname, description, catid, food_limit, current_qty, price) values (500, 1, 'Varanus sp.', 'Poisoning by cocaine, intentional self-harm, subs encntr', 5, 312, 2, 49);
 
+alter sequence FoodItem_fid_seq restart with 501;
+
 insert into PromoCampaign (pcid, campaign_type, start_time, end_time) values (1, 'DiscountPromo', '2020-04-01', '2020-07-01');
 insert into PromoCampaign (pcid, campaign_type, start_time, end_time) values (2, 'DiscountPromo', '2020-05-01', '2020-07-01');
+
+alter sequence PromoCampaign_pcid_seq restart with 3;
 
 insert into PromoByRestaurant (pcid, rid) values (1, 1);
 insert into PromoByRestaurant (pcid, rid) values (2, 2);
 
 insert into DiscountPromo (pcid, min_spend, max_spend, discount) values (1, 10, null, 10);
 insert into DiscountPromo (pcid, min_spend, max_spend, discount) values (2, 50, null, 10);
+
+-- Customer and Manager Mock Data
+
+INSERT INTO Customers (cid, c_first_name, c_last_name, email, cpassword, credit_card_info, reward_pts, created_on) VALUES (1, 'Benedict', 'Quek', 'bene@hotmail.com', 'dictdict96', 'DBS 9821-2112', 10, current_timestamp), (2, 'Zachary', 'Tan', 'tanzack@nus.com', 'fhas7612', 'POSB 312321132', 0, current_timestamp), (3, 'Chen', 'Hua', 'chenhua@gmail.com', 'fdsf64324', 'DBS 1232', 50, current_timestamp), (4, 'Joyce', 'Tan', 'joyceytan@gmail.com', 'ashda6969', 'OCBC 321123', 61, current_timestamp), (5, 'John', 'Elijah Tan', 'elijah@dbs.email.co', 'dasni324', 'DBS 1213', 1, current_timestamp);
+alter sequence Customers_cid_seq restart with 6;
+
+INSERT INTO Orders (oid, use_credit_card, use_points, order_time, order_status, price, delivery_fee, address, location_area, gain_reward_pts, cid)
+VALUES (1, true, false, '2038-01-19 03:14:07' ,'WAITING', 10.50, 3.00, 'Clementi 96', 'Clementi', 20, 1),
+(2, true, false, '2038-01-19 03:14:07' ,'WAITING', 10.50, 3.00, 'Clementi 96','Clementi', 20, 1);
+alter sequence Orders_oid_seq restart with 3;
+
+INSERT INTO OrderPromoCampaignUsage (oid, pcid) VALUES (1, 1), (2, 1);
+
+INSERT INTO OrderItem (ooid, oid) VALUES (1, 1), (2, 1), (3, 1);
+alter sequence OrderItem_ooid_seq restart with 4;
+
+INSERT INTO Belongs (oid, rid) VALUES (1, 1); 
