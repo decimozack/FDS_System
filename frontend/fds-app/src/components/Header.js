@@ -39,9 +39,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Header(props) {
   const classes = useStyles();
-  const { sections, managerSections, riderSections, title } = props;
+  const { sections, managerSections, riderSections, title, restaurantSections } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorE2, setAnchorE2] = React.useState(null);
+  const [anchorE3, setAnchorE3] = React.useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -51,9 +52,14 @@ export default function Header(props) {
     setAnchorE2(event.currentTarget);
   };
 
+  const handleClickRestaurant = (event) => {
+    setAnchorE3(event.currentTarget);
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
     setAnchorE2(null);
+    setAnchorE3(null);
   };
 
   const handleSignIn = (event) => {
@@ -161,6 +167,36 @@ export default function Header(props) {
             onClose={handleClose}
           >
             {riderSections.map((section) => (
+              <MenuItem onClick={handleClose}>
+                <Link
+                  className={classes.linkcolor}
+                  noWrap
+                  key={section.title}
+                  href={section.url}
+                >
+                  {section.title}
+                </Link>
+              </MenuItem>
+            ))}
+          </Menu>
+
+          <Button
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            onClick={handleClickRestaurant}
+            color="white"
+            className={classes.overrides}
+          >
+            Restaurant
+          </Button>
+          <Menu
+            id="simple-menu"
+            anchorE2={anchorE3}
+            keepMounted
+            open={Boolean(anchorE3)}
+            onClose={handleClose}
+          >
+            {restaurantSections.map((section) => (
               <MenuItem onClick={handleClose}>
                 <Link
                   className={classes.linkcolor}
