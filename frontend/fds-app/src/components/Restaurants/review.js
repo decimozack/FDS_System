@@ -53,7 +53,7 @@ class RestaurantReview extends Component {
       <div>
         <h3>Review</h3>
         <h4>ID: {this.state.rid}</h4>
-        <h4>Name: {this.state.rname}</h4>
+        <h4>Restaurant Name: {this.state.rname}</h4>
         <h4>{"Message: " + this.state.message}</h4>
         <Table id="tableID">
       <thead>

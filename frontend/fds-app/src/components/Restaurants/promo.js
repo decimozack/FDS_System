@@ -60,7 +60,7 @@ class Promo extends Component {
       <div>
         <h3>Promotion Campaign</h3>
         <h4>ID: {this.state.rid}</h4>
-        <h4>Name: {this.state.rname}</h4>
+        <h4>Restaurant Name: {this.state.rname}</h4>
         <div>
         <h4>{"Message: " + this.state.message}</h4>
         </div>

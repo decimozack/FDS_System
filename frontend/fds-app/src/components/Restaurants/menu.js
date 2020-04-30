@@ -140,7 +140,7 @@ class RestaurantMenu extends Component {
       <div>
         <h3>Menu</h3>
         <h4>ID: {this.state.rid}</h4>
-        <h4>Name: {this.state.rname}</h4>
+        <h4>Restaurant Name: {this.state.rname}</h4>
         <h4><label>
             Min Order Cost:
             <input type="text" pattern="[0-9]*" value={this.state.min_order_cost} onChange={(e) => this.handleChangeOrderCost(e)} />
