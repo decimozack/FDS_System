@@ -20,6 +20,7 @@ DELETE FROM Place;
 DELETE FROM RestaurantReview;
 DELETE FROM Belongs;
 DELETE FROM Eligible;
+DELETE FROM LocationArea;
 
 insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (1, 'Manager', 'Norine', 'Baglow', 'nbaglow0@hp.com', 'UYqkoIyltQoA');
 insert into FDSEmployee (empid, emptype, emp_first_name, emp_last_name, email, emppassword) values (2, 'Manager', 'Baxie', 'Cannon', 'bcannon1@bing.com', 'Hv8Ea4');
@@ -888,6 +889,24 @@ insert into DiscountPromo (pcid, min_spend, max_spend, discount) values (1, 10, 
 insert into DiscountPromo (pcid, min_spend, max_spend, discount) values (2, 50, null, 10);
 
 -- Customer and Manager Mock Data
+INSERT INTO LocationArea VALUES
+(1,'Clementi'),
+(2,'Sengkang'),
+(3,'Hougang'),
+(4,'Punggol'),
+(5,'Holland Village'),
+(6,'Bukit Batok'),
+(7,'Toa Payoh'),
+(8,'Boon Lay'),
+(9,'Geylang'),
+(10,'Yishun'),
+(11,'Kent Ridge'),
+(12,'One-North'),
+(13,'Tampines'),
+(14,'Pasir Ris'),
+(15,'Serangoon');
+
+alter sequence LocationArea_area_id_seq restart with 16;
 
 INSERT INTO Customers (cid, c_first_name, c_last_name, email, cpassword, credit_card_info, reward_pts, created_on) VALUES (1, 'Benedict', 'Quek', 'bene@hotmail.com', 'dictdict96', 'DBS 9821-2112', 10, current_timestamp), (2, 'Zachary', 'Tan', 'tanzack@nus.com', 'fhas7612', 'POSB 312321132', 0, current_timestamp), (3, 'Chen', 'Hua', 'chenhua@gmail.com', 'fdsf64324', 'DBS 1232', 50, current_timestamp), (4, 'Joyce', 'Tan', 'joyceytan@gmail.com', 'ashda6969', 'OCBC 321123', 61, current_timestamp), (5, 'John', 'Elijah Tan', 'elijah@dbs.email.co', 'dasni324', 'DBS 1213', 1, current_timestamp);
 alter sequence Customers_cid_seq restart with 6;
@@ -903,3 +922,4 @@ INSERT INTO OrderItem (ooid, oid) VALUES (1, 1), (2, 1), (3, 1);
 alter sequence OrderItem_ooid_seq restart with 4;
 
 INSERT INTO Belongs (oid, rid) VALUES (1, 1); 
+

@@ -27,6 +27,7 @@ DROP TABLE IF EXISTS RiderRatings CASCADE;
 DROP TABLE IF EXISTS Assigned CASCADE;
 DROP TABLE IF EXISTS ClockIn CASCADE;
 DROP TABLE IF EXISTS Manager CASCADE;
+DROP TABLE IF EXISTS LocationArea CASCADE;
 DROP TYPE IF EXISTS ostatus CASCADE;
 DROP TYPE IF EXISTS campaignEnum CASCADE;
 DROP TYPE IF EXISTS emp_type CASCADE;
@@ -76,7 +77,7 @@ CREATE TABLE Orders ( -- total part from Order to Contains not enforced
 	location_area varchar(200) NOT NULL,
 	cid INTEGER NOT NULL,
 	gain_reward_pts INTEGER NOT NULL,
-	FOREIGN KEY (cid) REFERENCES Customers
+	FOREIGN KEY (cid) REFERENCES Customers,
 	FOREIGN KEY (location_area) REFERENCES LocationArea
 );
 
