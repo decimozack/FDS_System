@@ -20,12 +20,18 @@ import { RiderProtectedRoute } from "./rider_protected.route";
 import OverallFDSDashboard from "./components/Employee/Dashboard/OverallFDSDashboard";
 import CustomerOrderDashboard from "./components/Employee/Dashboard/CustomerOrderDashboard";
 import DeliveryLocationDashboard from "./components/Employee/Dashboard/DeliveryLocationDashboard";
+import { RestaurantProtectedRoute } from "./restaurant_protected.route";
 import auth from "./auth";
 import WorkSchedule from "./components/Riders/workshift.js";
 import WorkHistory from "./components/Riders/workhistory.js";
 import WorkDetails from "./components/Riders/workdetails.js";
 import RiderSalary from "./components/Riders/salary.js";
 import RiderRatings from "./components/Riders/ratings.js";
+import RestaurantMenu from "./components/Restaurants/menu.js";
+import RestaurantNewFoodItem from "./components/Restaurants/newFoodItem.js";
+import RestaurantPromo from "./components/Restaurants/promo.js";
+import RestaurantNewPromo from "./components/Restaurants/newPromo.js";
+import RestaurantReview from "./components/Restaurants/review.js";
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
@@ -66,6 +72,14 @@ const riderSections = [
   { title: "Update Info", url: "/updateEmployee" },
 ];
 
+const restaurantSections = [
+  { title: "Menu", url: "/restaurant/menu" },
+  { title: "New Food Item", url: "/restaurant/newFoodItem" },
+  { title: "Promotions", url: "/restaurant/promoCampaign" },
+  { title: "New Promotions", url: "/restaurant/newPromo" },
+  { title: "Review", url: "/restaurant/review" },
+];
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -88,6 +102,7 @@ class App extends Component {
             sections={sections}
             managerSections={managerSections}
             riderSections={riderSections}
+            restaurantSections={restaurantSections}
             onIsLoginValue={this.handleIsLoginValue}
             isLogin={this.state.isLogin}
           />
@@ -160,6 +175,26 @@ class App extends Component {
                   <RiderProtectedRoute
                     path="/riders/ratings"
                     component={RiderRatings}
+                  />
+                  <RestaurantProtectedRoute
+                    path="/restaurant/menu"
+                    component={RestaurantMenu}
+                  />
+                  <RestaurantProtectedRoute
+                    path="/restaurant/newFoodItem"
+                    component={RestaurantNewFoodItem}
+                  />
+                  <RestaurantProtectedRoute
+                    path="/restaurant/promoCampaign"
+                    component={RestaurantPromo}
+                  />
+                  <RestaurantProtectedRoute
+                    path="/restaurant/newPromo"
+                    component={RestaurantNewPromo}
+                  />
+                  <RestaurantProtectedRoute
+                    path="/restaurant/review"
+                    component={RestaurantReview}
                   />
                   <Route
                     path="/signin"

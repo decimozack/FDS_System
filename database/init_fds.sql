@@ -93,7 +93,7 @@ CREATE TABLE FoodItem (
 	description TEXT,
 	catid INTEGER NOT NULL,
 	food_limit INTEGER NOT NULL,
-	current_qty INTEGER NOT NULL,
+	current_qty INTEGER NOT NULL DEFAULT 0,
 	price DECIMAL(5, 2) NOT NULL,
 	FOREIGN KEY (rid) references Restaurants,
 	FOREIGN KEY (catid) references Category

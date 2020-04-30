@@ -2,13 +2,13 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import auth from "./auth";
 
-export const RiderProtectedRoute = ({ component: Component, ...rest }) => {
+export const RestaurantProtectedRoute = ({ component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
       render={(props) => {
         const user = auth.getUser();
-        return auth.isAuthenticated() && user.usertype === "ri" ? (
+        return auth.isAuthenticated() && user.usertype === "r" ? (
           <Component {...props} />
         ) : (
           <Redirect

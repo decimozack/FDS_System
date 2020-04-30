@@ -6,6 +6,7 @@ import logger from "morgan";
 import sample from "./routes/sample";
 import rider from "./routes/rider";
 import manager from "./routes/manager";
+import restaurant from "./routes/restaurant";
 
 import config from "./config";
 import cors from "cors";
@@ -31,6 +32,7 @@ app.locals.db = pool;
 app.use("/sample", sample); //This means that all page directed to localhost:3001/sample/........ is redirected to sample.js
 app.use("/rider", rider);
 app.use("/manager", manager);
+app.use("/restaurant", restaurant);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
