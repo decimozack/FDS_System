@@ -132,7 +132,7 @@ class OverallFDSDashboard extends React.Component {
               <DatePicker
                 views={["year", "month"]}
                 label="Select a valid Year and Month"
-                helperText="With min and max"
+                helperText="Select the month that you are interested in"
                 minDate={new Date("1990-01-01")}
                 maxDate={new Date()}
                 value={this.state.selectedDate}

@@ -167,7 +167,7 @@ class CustomerOrderDashboard extends React.Component {
                   <DatePicker
                     views={["year", "month"]}
                     label="Select a valid Year and Month"
-                    helperText="With min and max"
+                    helperText="Select the month that you are interested in"
                     minDate={new Date("1990-01-01")}
                     maxDate={new Date()}
                     value={this.state.selectedDate}
@@ -208,20 +208,33 @@ class CustomerOrderDashboard extends React.Component {
               </Grid>
             </form>
           </Grid>
-          <Grid item xs={6}>
-            <DashboardCard
-              valueTitle="Customer Orders"
-              valueDisplay={totalOrderProp}
-              iconType="order"
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <DashboardCard
-              valueTitle="Customer Total Spending"
-              valueDisplay={totalSpendingProp}
-              iconType="cost"
-            />
-          </Grid>
+          {this.state.value !== null && (
+            <React.Fragment>
+              <Grid item xs={12}>
+                <Typography variant="h5" color="textSecondary" align="left">
+                  {this.state.value.c_first_name +
+                    " " +
+                    this.state.value.c_last_name}{" "}
+                  {months[this.state.selectedDate.getMonth()]}&nbsp;
+                  {this.state.selectedDate.getFullYear()}&nbsp;Summary
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <DashboardCard
+                  valueTitle="Customer Orders"
+                  valueDisplay={totalOrderProp}
+                  iconType="order"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <DashboardCard
+                  valueTitle="Customer Total Spending"
+                  valueDisplay={totalSpendingProp}
+                  iconType="cost"
+                />
+              </Grid>
+            </React.Fragment>
+          )}
         </Grid>
       </div>
     );
