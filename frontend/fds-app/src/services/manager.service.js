@@ -79,6 +79,11 @@ class ManagerDataService {
   updateRider(empData) {
     return http.post(`/manager/updateRider/`, empData);
   }
+
+  getMonthlySummary(year, month) {
+    const data = { year: year, month: month };
+    return http.post(`/manager/getMonthlySummary/`, data);
+  }
 }
 
 export default new ManagerDataService();

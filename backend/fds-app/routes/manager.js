@@ -112,26 +112,26 @@ router.get("/getCustomerOrderSummaryOverall", (req, res, next) => {
     });
 });
 
-router.post("/getCustomerOrderSummary", (req, res, next) => {
-  var { id, year, month } = req.body;
-  var db = req.app.locals.db;
+// router.post("/getCustomerOrderSummary", (req, res, next) => {
+//   var { id, year, month } = req.body;
+//   var db = req.app.locals.db;
 
-  db.query(
-    "SELECT * FROM CustomerOrderSummary WHERE t_year=$1 and t_month=$2 and cid=$3",
-    [year, month, id]
-  )
-    .then(function (rows) {
-      if (rows) {
-        res.status(200).send(rows);
-      } else {
-        res.status(404).send("Error find CustomerOrderSummary");
-      }
-    })
-    .catch(function (err) {
-      console.error(err);
-      res.status(500).send(err);
-    });
-});
+//   db.query(
+//     "SELECT * FROM CustomerOrderSummary WHERE t_year=$1 and t_month=$2 and cid=$3",
+//     [year, month, id]
+//   )
+//     .then(function (rows) {
+//       if (rows) {
+//         res.status(200).send(rows);
+//       } else {
+//         res.status(404).send("Error find CustomerOrderSummary");
+//       }
+//     })
+//     .catch(function (err) {
+//       console.error(err);
+//       res.status(500).send(err);
+//     });
+// });
 
 router.get("/getCustomerOrderSummaryOverall", (req, res, next) => {
   var db = req.app.locals.db;
@@ -175,7 +175,7 @@ router.post("/getMonthlySummary", (req, res, next) => {
   var { year, month } = req.body;
   var db = req.app.locals.db;
 
-  db.query("SELECT getmonthsummary($1,$2)", [year, month])
+  db.query("SELECT * FROM getmonthsummary($1,$2)", [year, month])
     .then(function (rows) {
       if (rows) {
         res.status(200).send(rows);
