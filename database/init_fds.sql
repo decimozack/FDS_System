@@ -58,6 +58,11 @@ CREATE TABLE Customers (
 	created_on TIMESTAMP NOT NULL 
 ); 
 
+CREATE TABLE LocationArea (
+	area_id SERIAL UNIQUE NOT NULL,
+	area_name varchar(200) PRIMARY KEY
+);
+
 CREATE TYPE ostatus as ENUM('WAITING', 'DELIVERING', 'COMPLETED');
 CREATE TABLE Orders ( -- total part from Order to Contains not enforced
 	oid SERIAL PRIMARY KEY,
@@ -72,6 +77,7 @@ CREATE TABLE Orders ( -- total part from Order to Contains not enforced
 	cid INTEGER NOT NULL,
 	gain_reward_pts INTEGER NOT NULL,
 	FOREIGN KEY (cid) REFERENCES Customers
+	FOREIGN KEY (location_area) REFERENCES LocationArea
 );
 
 CREATE TABLE Category (

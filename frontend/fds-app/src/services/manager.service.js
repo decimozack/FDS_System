@@ -86,6 +86,11 @@ class ManagerDataService {
     const data = { year: year, month: month, id: cid };
     return http.post(`/manager/getCustomerOrderSummary/`, data);
   }
+
+  getDeliveryLocationSummary(year, month, day, hour, area) {
+    const data = { year: year, month: month, day: day, hour: hour, area: area };
+    return http.post(`/manager/getDeliveryLocationSummary/`, data);
+  }
 }
 
 export default new ManagerDataService();
