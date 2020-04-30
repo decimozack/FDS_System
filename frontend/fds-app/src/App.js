@@ -18,6 +18,7 @@ import { CustomerProtectedRoute } from "./customer_protected.route";
 import { ManagerProtectedRoute } from "./manager_protected.route";
 import { RiderProtectedRoute } from "./rider_protected.route";
 import OverallFDSDashboard from "./components/Employee/Dashboard/OverallFDSDashboard";
+import CustomerOrderDashboard from "./components/Employee/Dashboard/CustomerOrderDashboard";
 import auth from "./auth";
 import WorkSchedule from "./components/Riders/workshift.js";
 import WorkHistory from "./components/Riders/workhistory.js";
@@ -44,7 +45,10 @@ const managerSections = [
   { title: "Employee Management", url: "/about" },
   { title: "Restaurant Management", url: "/about" },
   { title: "Overall FDS Dashboard", url: "/dashboard/fds" },
-  { title: "Customer Order Summary Dashboard", url: "/about" },
+  {
+    title: "Customer Order Summary Dashboard",
+    url: "/dashboard/customerorder",
+  },
   { title: "Delivery Location Summary Dashboard", url: "/about" },
   { title: "Rider Summary Dashboard", url: "/about" },
 ];
@@ -125,7 +129,10 @@ class App extends Component {
                     path="/dashboard/fds"
                     component={OverallFDSDashboard}
                   />
-
+                  <ManagerProtectedRoute
+                    path="/dashboard/customerorder"
+                    component={CustomerOrderDashboard}
+                  />
                   <RiderProtectedRoute
                     path="/riders/workschedule"
                     component={WorkSchedule}

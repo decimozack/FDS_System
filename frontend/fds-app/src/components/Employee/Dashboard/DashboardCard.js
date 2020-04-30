@@ -5,6 +5,7 @@ import { Card, CardContent, Grid, Typography, Avatar } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import PeopleIcon from "@material-ui/icons/PeopleOutlined";
 import AddShoppingCart from "@material-ui/icons/AddShoppingCart";
+import MonetizationOn from "@material-ui/icons/MonetizationOn";
 
 const styles = (theme) => ({
   root: {
@@ -35,6 +36,7 @@ const styles = (theme) => ({
 const components = {
   people: PeopleIcon,
   order: AddShoppingCart,
+  cost: MonetizationOn,
 };
 class DashboardCard extends React.Component {
   render() {
@@ -62,7 +64,7 @@ class DashboardCard extends React.Component {
                     {section.label}
                   </Typography>
                   <Typography variant="h6" component="p">
-                    + {section.value}
+                    <span style={{ color: "green" }}>+</span> {section.value}
                   </Typography>
                 </div>
               ))}

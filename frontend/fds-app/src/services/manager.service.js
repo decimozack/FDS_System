@@ -24,11 +24,8 @@ class ManagerDataService {
     return http.post(`/manager/EmpSignup/`, emprData);
   }
 
-  retrieveCustomer(cid) {
-    const data = {
-      id: cid,
-    };
-    return http.post(`/manager/retrieveCustomer/`, data);
+  retrieveCustomers() {
+    return http.get("/manager/getCustomerList");
   }
 
   retrieveCustomer(cid, usertype) {
@@ -83,6 +80,11 @@ class ManagerDataService {
   getMonthlySummary(year, month) {
     const data = { year: year, month: month };
     return http.post(`/manager/getMonthlySummary/`, data);
+  }
+
+  getCustomerOrderSummary(year, month, cid) {
+    const data = { year: year, month: month, id: cid };
+    return http.post(`/manager/getCustomerOrderSummary/`, data);
   }
 }
 
