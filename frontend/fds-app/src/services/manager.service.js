@@ -41,10 +41,8 @@ class ManagerDataService {
   retrieveEmployee(id, usertype) {
     if (usertype === "m") {
       return this.retrieveManager(id);
-    } else if (usertype === "ri") {
-      return this.retrieveRider(id);
     } else {
-      return null;
+      return this.retrieveRider(id);
     }
   }
 
