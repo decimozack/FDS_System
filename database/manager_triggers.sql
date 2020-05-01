@@ -143,9 +143,16 @@ RETURNS TABLE (
 ) AS $$
 BEGIN
     RETURN QUERY 
-    SELECT TC.t_year, TC.t_month, TC.customerCount, TOM.orderCount, TOM.totalPrice 
-    FROM TotalNewCustomerMonth TC join TotalOrderMonth TOM 
+    SELECT case
+    WHEN TC.t_year IS NOT NULL THEN TC.t_year
+    ELSE TOM.t_year
+    end as t_year, case 
+    WHEN TC.t_month IS NOT NULL THEN TC.t_month
+    ELSE TOM.t_month
+    end as t_month, coalesce(TC.customerCount, 0), coalesce(TOM.orderCount,0), coalesce(TOM.totalPrice,0) 
+    FROM TotalNewCustomerMonth TC full join TotalOrderMonth TOM 
     on TC.t_year = TOM.t_year and TC.t_month = TOM.t_month
-    WHERE TC.t_year = inYear and TC.t_month = inMonth;
+    WHERE (TC.t_year = inYear and TC.t_month = inMonth) or
+    (TOM.t_year = inYear and TOM.t_month = inMonth);
 END;
 $$ LANGUAGE plpgsql;
