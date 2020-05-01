@@ -17,6 +17,7 @@ import { ProtectedRoute } from "./protected.route";
 import { CustomerProtectedRoute } from "./customer_protected.route";
 import { ManagerProtectedRoute } from "./manager_protected.route";
 import { RiderProtectedRoute } from "./rider_protected.route";
+import ViewRestaurants from "./components/Customer/ViewRestaurants";
 import OverallFDSDashboard from "./components/Employee/Dashboard/OverallFDSDashboard";
 import CustomerOrderDashboard from "./components/Employee/Dashboard/CustomerOrderDashboard";
 import DeliveryLocationDashboard from "./components/Employee/Dashboard/DeliveryLocationDashboard";
@@ -46,7 +47,7 @@ const sections = [
   { title: "About", url: "/about" },
 ];
 const customerSections = [
-  { title: "View Restaurants", url: "/customer/" },
+  { title: "View Restaurants", url: "/customer/restaurants" },
   { title: "View Food Items Of Restaurant", url: "/customer/" },
   { title: "Shopping Cart", url: "/customer/" },
   { title: "Checkout", url: "/customer/" },

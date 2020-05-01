@@ -53,10 +53,13 @@ class Home extends Component {
     const { tutorials, currentTutorial, currentIndex } = this.state;
     return (
       <div>
-        <h4>Home</h4>
-        <p>This is Home page.</p>
+        <h4 align="center" style={{ "margin-top": "30px" }}>
+          Home
+        </h4>
 
-        <div className="col-md-6">
+        <p align="center">Welcome to FDS Food Delivery.</p>
+
+        {/* <div className="col-md-6">
           <h4>User List</h4>
 
           <ul className="list-group">
@@ -73,7 +76,7 @@ class Home extends Component {
                 </li>
               ))}
           </ul>
-        </div>
+        </div> */}
       </div>
     );
   }
