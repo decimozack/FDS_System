@@ -24,6 +24,10 @@ class ManagerDataService {
     return http.post(`/manager/EmpSignup/`, emprData);
   }
 
+  retrieveLocationAreaList() {
+    return http.get("/manager/getLocationAreaList");
+  }
+
   retrieveCustomers() {
     return http.get("/manager/getCustomerList");
   }

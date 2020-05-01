@@ -60,7 +60,7 @@ const managerSections = [
     title: "Delivery Location Summary Dashboard",
     url: "/dashboard/deliverylocation",
   },
-  { title: "Rider Summary Dashboard", url: "/about" },
+  { title: "Rider Summary Dashboard", url: "/dashboard/rider" },
 ];
 
 const riderSections = [

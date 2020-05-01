@@ -19,6 +19,23 @@ router.get("/getCustomerList", (req, res, next) => {
     });
 });
 
+router.get("/getLocationAreaList", (req, res, next) => {
+  var db = req.app.locals.db;
+
+  db.query("SELECT * FROM LocationArea")
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find area list");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
 router.get("/getRiderSummaryOverall", (req, res, next) => {
   var db = req.app.locals.db;
 
@@ -79,7 +96,7 @@ router.post("/getDeliveryLocationSummary", (req, res, next) => {
   var db = req.app.locals.db;
 
   db.query(
-    "SELECT * FROM DeliveryLocationSummary WHERE t_year=$1 and t_month=$2 and t_month=$3 and t_day=$3 and t_hour=$4 and location_area=$5",
+    "SELECT * FROM DeliveryLocationSummary WHERE t_year=$1 and t_month=$2 and t_day=$3 and t_hour=$4 and location_area=$5",
     [year, month, day, hour, area]
   )
     .then(function (rows) {

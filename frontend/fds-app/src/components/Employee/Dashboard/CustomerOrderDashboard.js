@@ -60,6 +60,7 @@ class CustomerOrderDashboard extends React.Component {
       totalOrderCost: 0,
       customerList: [],
       value: null,
+      showResult: false,
     };
 
     this.handleDateChange = this.handleDateChange.bind(this);
@@ -68,6 +69,7 @@ class CustomerOrderDashboard extends React.Component {
       this
     );
     this.onValueChange = this.onValueChange.bind(this);
+    this.retrieveCustomers = this.retrieveCustomers.bind(this);
   }
 
   componentDidMount() {
@@ -78,12 +80,13 @@ class CustomerOrderDashboard extends React.Component {
 
   onValueChange(event, newValue) {
     console.log(newValue);
-    this.setState({ value: newValue });
+    this.setState({ value: newValue, showResult: false });
   }
 
   handleDateChange(value) {
     this.setState({
       selectedDate: value,
+      showResult: false,
     });
   }
 
@@ -94,6 +97,7 @@ class CustomerOrderDashboard extends React.Component {
         this.setState({
           totalOrder: response.data.rows[0].ordercount,
           totalOrderCost: response.data.rows[0].totalprice,
+          showResult: true,
         });
       })
       .catch((e) => {
@@ -101,6 +105,7 @@ class CustomerOrderDashboard extends React.Component {
         this.setState({
           totalOrder: 0,
           totalOrderCost: 0,
+          showResult: true,
         });
       });
   }
@@ -208,7 +213,7 @@ class CustomerOrderDashboard extends React.Component {
               </Grid>
             </form>
           </Grid>
-          {this.state.value !== null && (
+          {this.state.value !== null && this.state.showResult !== false && (
             <React.Fragment>
               <Grid item xs={12}>
                 <Typography variant="h5" color="textSecondary" align="left">
