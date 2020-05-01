@@ -20,6 +20,7 @@ import { RiderProtectedRoute } from "./rider_protected.route";
 import OverallFDSDashboard from "./components/Employee/Dashboard/OverallFDSDashboard";
 import CustomerOrderDashboard from "./components/Employee/Dashboard/CustomerOrderDashboard";
 import DeliveryLocationDashboard from "./components/Employee/Dashboard/DeliveryLocationDashboard";
+import RiderDashboard from "./components/Employee/Dashboard/RiderDashboard";
 import { RestaurantProtectedRoute } from "./restaurant_protected.route";
 import auth from "./auth";
 import WorkSchedule from "./components/Riders/workshift.js";
@@ -152,9 +153,13 @@ class App extends Component {
                     path="/dashboard/customerorder"
                     component={CustomerOrderDashboard}
                   />
-                  <DeliveryLocationDashboard
+                  <ManagerProtectedRoute
                     path="/dashboard/deliverylocation"
                     component={DeliveryLocationDashboard}
+                  />
+                  <ManagerProtectedRoute
+                    path="/dashboard/rider"
+                    component={RiderDashboard}
                   />
                   <RiderProtectedRoute
                     path="/riders/workschedule"

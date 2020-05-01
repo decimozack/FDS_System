@@ -6,6 +6,8 @@ import { withStyles } from "@material-ui/core/styles";
 import PeopleIcon from "@material-ui/icons/PeopleOutlined";
 import AddShoppingCart from "@material-ui/icons/AddShoppingCart";
 import MonetizationOn from "@material-ui/icons/MonetizationOn";
+import SentimentSatisfiedAltIcon from "@material-ui/icons/SentimentSatisfiedAlt";
+import TimerIcon from "@material-ui/icons/Timer";
 
 const styles = (theme) => ({
   root: {
@@ -37,6 +39,8 @@ const components = {
   people: PeopleIcon,
   order: AddShoppingCart,
   cost: MonetizationOn,
+  time: TimerIcon,
+  rating: SentimentSatisfiedAltIcon,
 };
 class DashboardCard extends React.Component {
   render() {

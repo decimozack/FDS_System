@@ -244,6 +244,23 @@ router.post("/retrieveManager", (req, res, next) => {
     });
 });
 
+router.get("/retrieveRiders", (req, res, next) => {
+  var db = req.app.locals.db;
+
+  db.query("SELECT * FROM Rider NATURAL JOIN FDSEmployee")
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find user information");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
 router.post("/retrieveRider", (req, res, next) => {
   var { id } = req.body;
   var db = req.app.locals.db;

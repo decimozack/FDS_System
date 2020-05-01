@@ -28,6 +28,10 @@ class ManagerDataService {
     return http.get("/manager/getLocationAreaList");
   }
 
+  retrieveRiderList() {
+    return http.get("/manager/retrieveRiders");
+  }
+
   retrieveCustomers() {
     return http.get("/manager/getCustomerList");
   }
@@ -94,6 +98,10 @@ class ManagerDataService {
   getDeliveryLocationSummary(year, month, day, hour, area) {
     const data = { year: year, month: month, day: day, hour: hour, area: area };
     return http.post(`/manager/getDeliveryLocationSummary/`, data);
+  }
+  getRiderSummary(year, month, emp_id) {
+    const data = { year: year, month: month, id: emp_id };
+    return http.post(`/manager/getRiderSummary/`, data);
   }
 }
 

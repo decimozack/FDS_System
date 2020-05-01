@@ -68,9 +68,9 @@ A1.empid,
 count(A1.oid) as deliveryOrderCount,
 avg(A1.arriveAtCustomerTime - A1.toRestaurantTime) as avgDeliveryTime,
 count(RR.rating) as ratingCount,
-avg(RR.rating) as avgRating
+coalesce(avg(RR.rating),0) as avgRating
 FROM Assigned A1
-join RiderRatings RR on RR.oid = A1.oid
+left join RiderRatings RR on RR.oid = A1.oid
 group by date_part('year', A1.toRestaurantTime),
 date_part('month', A1.toRestaurantTime),
 A1.empid; 
