@@ -61,40 +61,40 @@ class NewFoodItem extends Component {
       <div>
         <h3>New Food Item</h3>
         <h4>ID: {this.state.rid}</h4>
-        <h4>Name: {this.state.rname}</h4>
+        <h4>Restaurant Name: {this.state.rname}</h4>
         <div>
         <h4>{"Message: " + this.state.message}</h4>
+        <br/>
+        <h3>Please input new food item's information</h3>
         </div>
         <form>
           <div>
-          <label>
-            Name:
-            <input type="text" value={this.state.fname} onChange={(e) => this.handleChange(e, 'fname')} />
-          </label>
+          <label style={{width:"100px", fontSize: "large"}}>Name:</label>
+          <input type="text" value={this.state.fname} onChange={(e) => this.handleChange(e, 'fname')} />
           </div>
           <div>
-          <label>
-            Description:
+          <label style={{width:"100px", fontSize: "large"}}>
+            Description:</label>
             <input type="text" value={this.state.fdesc} onChange={(e) => this.handleChange(e, 'fdesc')} />
-          </label>
+          
           </div>
           <div>
-          <label>
-            Category:
+          <label style={{width:"100px", fontSize: "large"}}>
+            Category:</label>
             <input type="text" value={this.state.catname} onChange={(e) => this.handleChange(e, 'catname')} />
-          </label>
+          
           </div>
           <div>
-          <label>
-            Food Limit:
+          <label style={{width:"100px", fontSize: "large"}}>
+            Food Limit:</label>
             <input type="text" pattern="[0-9]*" value={this.state.food_limit} onChange={(e) => this.handleChange(e, 'food_limit')} />
-          </label>
+          
           </div>
           <div>
-          <label>
-            Price:
+          <label style={{width:"100px", fontSize: "large"}}>
+            Price:</label>
             <input type="text" pattern="[0-9]*.[0.9]*" value={this.state.price} onChange={(e) => this.handleChange(e, 'price')} />
-          </label>
+          
           </div>
         </form>
         <Button onClick={this.handleSubmit}>Submit</Button>

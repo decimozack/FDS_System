@@ -60,42 +60,42 @@ class NewPromo extends Component {
       <div>
         <h3>New Promotion Campaign</h3>
         <h4>ID: {this.state.rid}</h4>
-        <h4>Name: {this.state.rname}</h4>
+        <h4>Restaurant Name: {this.state.rname}</h4>
         <div>
         <h4>{"Message: " + this.state.message}</h4>
         <br/>
-        <h3>Discount Promotion</h3>
+        <h3>Information for New Discount Promotion</h3>
         </div>
         <form>
           <div>
-          <label>
-            Start Time:
+          <label style={{width:"300px", fontSize: "large"}}>
+            Start Time:</label>
             <input type="text" value={this.state.start_time} onChange={(e) => this.handleChange(e, 'start_time')} />
-          </label>
+          
           </div>
           <div>
-          <label>
-            End Time:
+          <label style={{width:"300px", fontSize: "large"}}>
+            End Time:</label>
             <input type="text" value={this.state.end_time} onChange={(e) => this.handleChange(e, 'end_time')} />
-          </label>
+          
           </div>
           <div>
-          <label>
-            Min Amount Spend to be Eligible:
+          <label style={{width:"300px", fontSize: "large"}}>
+            Min Amount Spend to be Eligible:</label>
             <input type="text" pattern="[0-9]*.[0.9]*" value={this.state.min_spend} onChange={(e) => this.handleChange(e, 'min_spend')} />
-          </label>
+          
           </div>
           <div>
-          <label>
-            Max Amount Spend to be Eligible:
+          <label style={{width:"300px", fontSize: "large"}}>
+            Max Amount Spend to be Eligible:</label>
             <input type="text" pattern="[0-9]*.[0.9]*" value={this.state.max_spend} onChange={(e) => this.handleChange(e, 'max_spend')} />
-          </label>
+          
           </div>
           <div>
-          <label>
-            Discount Percentage:
+          <label style={{width:"300px", fontSize: "large"}}>
+            Discount Percentage:</label>
             <input type="text" pattern="[0-9]*.[0.9]*" value={this.state.discount} onChange={(e) => this.handleChange(e, 'discount')} />
-          </label>
+          
           </div>
         </form>
         <Button onClick={this.handleSubmit}>Submit</Button>
