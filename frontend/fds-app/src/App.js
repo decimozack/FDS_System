@@ -45,6 +45,14 @@ const sections = [
   { title: "Update Info", url: "/updateCustomer" },
   { title: "About", url: "/about" },
 ];
+const customerSections = [
+  { title: "View Restaurants", url: "/customer/" },
+  { title: "View Food Items Of Restaurant", url: "/customer/" },
+  { title: "Shopping Cart", url: "/customer/" },
+  { title: "Checkout", url: "/customer/" },
+  { title: "View All Orders", url: "/customer/" },
+  { title: "Rating Form", url: "/customer/" },
+];
 
 const managerSections = [
   { title: "Sign Up", url: "/empsignup" },
@@ -101,6 +109,7 @@ class App extends Component {
           <Header
             title="FDS System"
             sections={sections}
+            customerSections={customerSections}
             managerSections={managerSections}
             riderSections={riderSections}
             restaurantSections={restaurantSections}
