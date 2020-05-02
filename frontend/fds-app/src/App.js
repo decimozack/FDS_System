@@ -36,6 +36,7 @@ import RestaurantPromo from "./components/Restaurants/promo.js";
 import RestaurantNewPromo from "./components/Restaurants/newPromo.js";
 import RestaurantReview from "./components/Restaurants/review.js";
 import Checkout from "./components/Customer/Checkout";
+import OrdersTable from "./components/Customer/OrdersTable";
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
@@ -168,6 +169,10 @@ class App extends Component {
                   <CustomerProtectedRoute
                     path="/customer/checkout"
                     component={Checkout}
+                  />
+                  <CustomerProtectedRoute
+                    path="/customer/orders/"
+                    component={OrdersTable}
                   />
                   <CustomerProtectedRoute
                     path="/customer/*"

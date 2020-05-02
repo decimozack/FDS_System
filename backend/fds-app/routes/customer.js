@@ -75,4 +75,42 @@ router.get("/getFoodItems/:id", (req, res, next) => {
     });
 });
 
+router.post("/getOrders", (req, res, next) => {
+  var db = req.app.locals.db;
+  var { cid } = req.body;
+
+  db.query("SELECT * FROM Orders WHERE cid=$1", [cid])
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find orders");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+// router.post("/retrieveManager", (req, res, next) => {
+//   var { id } = req.body;
+//   var db = req.app.locals.db;
+
+//   db.query("SELECT * FROM Manager NATURAL JOIN FDSEmployee WHERE (empid=$1)", [
+//     id,
+//   ])
+//     .then(function (rows) {
+//       if (rows) {
+//         res.status(200).send(rows);
+//       } else {
+//         res.status(404).send("Error cannot find user information");
+//       }
+//     })
+//     .catch(function (err) {
+//       console.error(err);
+//       res.status(500).send(err);
+//     });
+// });
+
 module.exports = router;

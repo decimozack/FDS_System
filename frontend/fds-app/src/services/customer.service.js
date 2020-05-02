@@ -15,8 +15,13 @@ class CustomerDataService {
   getFoodItems(id) {
     return http.get(baseUrl + "/getFoodItems/" + id);
   }
-  submitOrder(user, restaurant, orderItems) {
-    return http.get(baseUrl + "/getFoodItems/");
+  submitOrder(data) {
+    return http.post(baseUrl + "/getFoodItems/");
+  }
+
+  getOrders(cid) {
+    const data = { cid: cid};
+    return http.post(baseUrl + "/getOrders/",data);
   }
 }
 

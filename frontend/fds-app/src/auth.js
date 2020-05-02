@@ -30,6 +30,7 @@ class auth {
 
   logout() {
     localStorage.removeItem("user");
+    localStorage.removeItem("orderItems");
   }
 
   getUser() {
