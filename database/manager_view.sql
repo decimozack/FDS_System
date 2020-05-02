@@ -5,6 +5,7 @@ DROP VIEW IF EXISTS CustomerOrderSummary CASCADE;
 DROP VIEW IF EXISTS DeliveryLocationSummary CASCADE;
 DROP VIEW IF EXISTS RiderPartSummary CASCADE;
 DROP VIEW IF EXISTS RiderSummary CASCADE;
+DROP VIEW IF EXISTS RestaurantFoodItem CASCADE;
 
 /* 
 Login Table with all the information from all the tables
@@ -88,3 +89,8 @@ RPS.avgRating
 FROM RiderPartSummary RPS left join Salary S1 on RPS.empid = S1.empid and 
 RPS.t_month = extract(MONTH FROM S1.month) and
 RPS.t_year = extract(YEAR FROM S1.month);
+
+
+---- Customer Views ----
+create view RestaurantFoodItem as
+select * from Restaurants R join FoodItem FI using(rid);

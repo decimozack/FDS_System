@@ -138,20 +138,31 @@ CREATE TABLE OrderPromoCampaignUsage (
 );
 
 
-CREATE TABLE OrderItem (  -- full part from OrderItem to Place not enforced
-	ooid SERIAL UNIQUE, -- have to add UNIQUE, but i thot SERIAL ensures uniqueness?
+-- CREATE TABLE OrderItem (  -- full part from OrderItem to Place not enforced
+-- 	ooid SERIAL UNIQUE, -- have to add UNIQUE, but i thot SERIAL ensures uniqueness?
+-- 	oid INTEGER,
+-- 	qty INTEGER NOT NULL,
+-- 	PRIMARY KEY (ooid, oid),
+-- 	FOREIGN KEY (oid) REFERENCES Orders ON DELETE CASCADE	
+-- );
+CREATE TABLE OrderItem (  
+	oiid INTEGER, -- order item number that is depending on Order. eg orderItem 1 for Order 1
 	oid INTEGER,
-	PRIMARY KEY (ooid, oid),
-	FOREIGN KEY (oid) REFERENCES Orders ON DELETE CASCADE	
+	qty INTEGER NOT NULL,
+	fid INTEGER NOT NULL,
+	notes_to_restaurant varchar(500),
+	PRIMARY KEY (oiid, oid),
+	FOREIGN KEY (oid) REFERENCES Orders ON DELETE CASCADE,
+	FOREIGN KEY (fid) REFERENCES FoodItem ON DELETE CASCADE	
 );
 
-CREATE TABLE Place (
-	ooid INTEGER REFERENCES OrderItem(ooid) on DELETE CASCADE,
-	fid INTEGER,
-	qty INTEGER NOT NULL,
-	PRIMARY KEY (ooid, fid),
-	FOREIGN KEY (fid) REFERENCES FoodItem(fid) ON DELETE CASCADE
-);
+-- CREATE TABLE Place (
+-- 	ooid INTEGER REFERENCES OrderItem(ooid) on DELETE CASCADE,
+-- 	fid INTEGER,
+-- 	qty INTEGER NOT NULL,
+-- 	PRIMARY KEY (ooid, fid),
+-- 	FOREIGN KEY (fid) REFERENCES FoodItem(fid) ON DELETE CASCADE
+-- );
 
 CREATE TABLE RestaurantReview (
 	oid INTEGER Primary key,
@@ -365,30 +376,30 @@ CREATE TABLE OrderWaitingList (
 );
 
 
--- incomplete trigger
-CREATE OR REPLACE FUNCTION total_part_orderitem_wrt_place () RETURNS TRIGGER AS
-$$ 
-DECLARE
-	orderitem_id INTEGER;
-	ok boolean;
-BEGIN
-	IF (TG_TABLE_NAME = 'Place') THEN
-		orderitem_id = NEW.ooid;
-	ELSE
-		orderitem_id = OLD.ooid;
-	END IF;
-END;
-$$ 
-LANGUAGE plpgsql;
+-- -- incomplete trigger
+-- CREATE OR REPLACE FUNCTION total_part_orderitem_wrt_place () RETURNS TRIGGER AS
+-- $$ 
+-- DECLARE
+-- 	orderitem_id INTEGER;
+-- 	ok boolean;
+-- BEGIN
+-- 	IF (TG_TABLE_NAME = 'Place') THEN
+-- 		orderitem_id = NEW.ooid;
+-- 	ELSE
+-- 		orderitem_id = OLD.ooid;
+-- 	END IF;
+-- END;
+-- $$ 
+-- LANGUAGE plpgsql;
 
-/* Trigger for insert/update on OrderItem */
---DROP TRIGGER IF EXISTS
---total_part_orderitem_place_trigger_on_place on Place CASCADE;
-CREATE constraint TRIGGER
-total_part_orderitem_place_trigger_on_place
-AFTER INSERT OR UPDATE of ooid ON Place
-deferrable initially deferred
-FOR EACH ROW 
-EXECUTE FUNCTION
-total_part_orderitem_wrt_place();
+-- /* Trigger for insert/update on OrderItem */
+-- --DROP TRIGGER IF EXISTS
+-- --total_part_orderitem_place_trigger_on_place on Place CASCADE;
+-- CREATE constraint TRIGGER
+-- total_part_orderitem_place_trigger_on_place
+-- AFTER INSERT OR UPDATE of ooid ON Place
+-- deferrable initially deferred
+-- FOR EACH ROW 
+-- EXECUTE FUNCTION
+-- total_part_orderitem_wrt_place();
 

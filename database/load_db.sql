@@ -16,7 +16,7 @@ DELETE FROM PromoBFDS;
 DELETE FROM DiscountPromo;
 DELETE FROM OrderPromoCampaignUsage;
 DELETE FROM OrderItem;
-DELETE FROM Place;
+-- DELETE FROM Place;
 DELETE FROM RestaurantReview;
 DELETE FROM Belongs;
 DELETE FROM Eligible;
@@ -918,8 +918,10 @@ alter sequence Orders_oid_seq restart with 3;
 
 INSERT INTO OrderPromoCampaignUsage (oid, pcid) VALUES (1, 1), (2, 1);
 
-INSERT INTO OrderItem (ooid, oid) VALUES (1, 1), (2, 1), (3, 1);
-alter sequence OrderItem_ooid_seq restart with 4;
+INSERT INTO OrderItem (oiid, oid, qty, fid, notes_to_restaurant)
+VALUES
+(1, 1, 5, 5, 'order 1'), (2, 1, 2, 13, 'more chilli'), (3, 1, 1, 20, 'more pepper');
+
 
 INSERT INTO Belongs (oid, rid) VALUES (1, 1); 
 

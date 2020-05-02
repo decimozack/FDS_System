@@ -18,6 +18,7 @@ import { CustomerProtectedRoute } from "./customer_protected.route";
 import { ManagerProtectedRoute } from "./manager_protected.route";
 import { RiderProtectedRoute } from "./rider_protected.route";
 import ViewRestaurants from "./components/Customer/ViewRestaurants";
+import ViewRestaurant from "./components/Customer/ViewRestaurant";
 import OverallFDSDashboard from "./components/Employee/Dashboard/OverallFDSDashboard";
 import CustomerOrderDashboard from "./components/Employee/Dashboard/CustomerOrderDashboard";
 import DeliveryLocationDashboard from "./components/Employee/Dashboard/DeliveryLocationDashboard";
@@ -43,16 +44,16 @@ const useStyles = makeStyles((theme) => ({
 
 const sections = [
   { title: "Home", url: "/" },
-  { title: "Update Info", url: "/updateCustomer" },
   { title: "About", url: "/about" },
 ];
 const customerSections = [
+  { title: "Update Info", url: "/updateCustomer" },
   { title: "View Restaurants", url: "/customer/restaurants" },
-  { title: "View Food Items Of Restaurant", url: "/customer/" },
-  { title: "Shopping Cart", url: "/customer/" },
-  { title: "Checkout", url: "/customer/" },
-  { title: "View All Orders", url: "/customer/" },
-  { title: "Rating Form", url: "/customer/" },
+  { title: "View Food Items Of Restaurant", url: "/customer/restaurant/:id" },
+  { title: "Shopping Cart", url: "/customer/cart" },
+  { title: "Checkout", url: "/customer/checkout" },
+  { title: "View All Orders", url: "/customer/orders/" },
+  { title: "Rating Form", url: "/customer/rating" },
 ];
 
 const managerSections = [
@@ -154,6 +155,18 @@ class App extends Component {
                         isLogin={this.state.isLogin}
                       />
                     )}
+                  />
+                  <CustomerProtectedRoute
+                    path="/customer/restaurants"
+                    component={ViewRestaurants}
+                  />
+                  <CustomerProtectedRoute
+                    path="/customer/restaurant/:id"
+                    component={ViewRestaurant}
+                  />
+                  <CustomerProtectedRoute
+                    path="/customer/*"
+                    component={ViewRestaurants}
                   />
                   <ManagerProtectedRoute
                     path="/dashboard/fds"
