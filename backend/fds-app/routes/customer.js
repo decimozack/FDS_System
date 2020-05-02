@@ -59,7 +59,7 @@ router.get("/getFoodItems/:id", (req, res, next) => {
   const id = req.params.id;
 
   db.query(
-    "SELECT catname, FI.description, fname, price, food_limit, current_qty FROM FoodItem FI join Category C on FI.catid = C.catid where rid=$1",
+    "SELECT fid, rid, FI.catid, catname, FI.description, fname, price, food_limit, current_qty FROM FoodItem FI join Category C on FI.catid = C.catid where rid=$1",
     [id]
   )
     .then(function (rows) {

@@ -15,6 +15,9 @@ class CustomerDataService {
   getFoodItems(id) {
     return http.get(baseUrl + "/getFoodItems/" + id);
   }
+  submitOrder(user, restaurant, orderItems) {
+    return http.get(baseUrl + "/getFoodItems/");
+  }
 }
 
 export default new CustomerDataService();
