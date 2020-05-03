@@ -12,7 +12,7 @@ import React from "react";
 // import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 // import Typography from "@material-ui/core/Typography";
 // import { makeStyles } from "@material-ui/core/styles";
-
+import Alert from "@material-ui/lab/Alert";
 import MaterialTable from "material-table";
 import Container from "@material-ui/core/Container";
 import { withStyles } from "@material-ui/core/styles";
@@ -34,10 +34,13 @@ const useStyles = (theme) => ({
   },
   table: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(5),
+    marginTop: theme.spacing(3),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  spacing: {
+    marginTop: theme.spacing(3),
   },
 });
 
@@ -47,8 +50,12 @@ class ViewRestaurants extends React.Component {
 
     this.state = {
       restaurants: [],
+      successMsg: this.props.location.state
+        ? this.props.location.state.successMsg
+        : "",
     };
 
+    console.log(this.props.location.state);
     this.retrieveRestaurants = this.retrieveRestaurants.bind(this);
   }
 
@@ -71,6 +78,11 @@ class ViewRestaurants extends React.Component {
     const { classes } = this.props;
     return (
       <Container>
+        {this.state.successMsg !== null && this.state.successMsg.length > 0 && (
+          <Alert severity="success" className={classes.spacing}>
+            {this.state.successMsg}
+          </Alert>
+        )}
         <div className={classes.table}>
           <MaterialTable
             title="Restaurant Listing"

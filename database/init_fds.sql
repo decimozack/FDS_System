@@ -27,6 +27,7 @@ DROP TABLE IF EXISTS RiderRatings CASCADE;
 DROP TABLE IF EXISTS Assigned CASCADE;
 DROP TABLE IF EXISTS ClockIn CASCADE;
 DROP TABLE IF EXISTS Manager CASCADE;
+DROP TABLE IF EXISTS PointUsage CASCADE;
 DROP TABLE IF EXISTS LocationArea CASCADE;
 DROP TYPE IF EXISTS ostatus CASCADE;
 DROP TYPE IF EXISTS campaignEnum CASCADE;
@@ -59,6 +60,13 @@ CREATE TABLE Customers (
 	created_on TIMESTAMP NOT NULL 
 ); 
 
+CREATE TABLE PointUsage (
+	cid INTEGER PRIMARY KEY,
+	point_used INTEGER NOT NULL,
+	used_on TIMESTAMP NOT NULL,
+	FOREIGN KEY (cid) REFERENCES Customers
+); 
+
 CREATE TABLE LocationArea (
 	area_id SERIAL UNIQUE NOT NULL,
 	area_name varchar(200) PRIMARY KEY
@@ -71,7 +79,7 @@ CREATE TABLE Orders ( -- total part from Order to Contains not enforced
 	use_points BOOL NOT NULL,
 	order_time TIMESTAMP NOT NULL,
 	order_status ostatus NOT NULL, -- this ok?
-	price DECIMAL(5, 2) NOT NULL,
+	price DECIMAL(10, 2) NOT NULL,
 	delivery_fee DECIMAL(5, 2) NOT NULL,
 	address VARCHAR(100) NOT NULL,
 	location_area varchar(200) NOT NULL,

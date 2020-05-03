@@ -16,7 +16,20 @@ class CustomerDataService {
     return http.get(baseUrl + "/getFoodItems/" + id);
   }
   submitOrder(data) {
-    return http.post(baseUrl + "/test/");
+    const sendData = {
+      userId: data.user.userid,
+      restaurantId: data.restaurant.rid,
+      min_order_cost: data.restaurant.min_order_cost,
+      orderItems: data.orderItems,
+      use_credit_card: data.use_credit_card,
+      use_points: data.use_points,
+      price: data.price,
+      delivery_fee: data.delivery_fee,
+      address: data.address,
+      location_area: data.location_area,
+      gain_reward_pts: data.gain_reward_pts,
+    };
+    return http.post(baseUrl + "/submitOrder/", sendData);
   }
 
   getOrders(cid) {

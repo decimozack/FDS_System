@@ -27,6 +27,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
+import PointUsage from "../../utils/PointUsage";
 
 const useStyles = (theme) => ({
   root: {
@@ -98,6 +99,7 @@ class Checkout extends React.Component {
       errorMsg: "",
       successMsg: "",
       areaList: [],
+      customer: null,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -109,10 +111,24 @@ class Checkout extends React.Component {
     this.onValueChange = this.onValueChange.bind(this);
     this.calRewardPoints = this.calRewardPoints.bind(this);
     this.onCancel = this.onCancel.bind(this);
+    this.retrieveCustomer = this.retrieveCustomer.bind(this);
   }
 
   componentDidMount() {
     this.retrieveAreas();
+    this.retrieveCustomer();
+  }
+  retrieveCustomer() {
+    const user = auth.getUser();
+    ManagerDataService.retrieveCustomer(user.userid)
+      .then((response) => {
+        this.setState({
+          customer: response.data.rows[0],
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }
 
   createOrder() {
@@ -130,31 +146,21 @@ class Checkout extends React.Component {
       location_area: this.state.location_area.area_name,
       gain_reward_pts: this.calRewardPoints(),
     };
-
     console.log(data);
     CustomerDataService.submitOrder(data)
       .then((response) => {
         console.log(response);
+        this.props.history.push("customer/orders/", {
+          successMsg: "Order successful. Delivery Coming to you soon",
+        });
       })
       .catch((e) => {
-        // console.log(e.response);
         console.log(e);
         if (e.response) {
           console.log(e.response.data);
+          this.setState({ errorMsg: e.response.data });
         }
       });
-    // CustomerDataService.submitOrder(
-    //   user,
-    //   this.state.restaurant,
-    //   this.state.orderItems,
-    //   this.state.use_credit_card,
-    //   this.state.use_points,
-    //   this.state.price,
-    //   this.state.delivery_fee,
-    //   this.state.address,
-    //   this.location_area,
-    //   this.gain_reward_pts
-    // );
   }
   onValueChange(event, newValue) {
     this.setState({ location_area: newValue });
@@ -190,7 +196,7 @@ class Checkout extends React.Component {
 
   calRewardPoints = () => {
     const totalPrice = this.calTotalPrice() + this.state.delivery_fee;
-    const rewardPts = Math.floor(totalPrice / 5);
+    const rewardPts = PointUsage.convertMoneyToPoint(totalPrice);
     return rewardPts;
   };
 
@@ -399,14 +405,33 @@ class Checkout extends React.Component {
                     <Typography variant="body2" color="textSecondary">
                       Delivery Fee: ${formatMoney(this.state.delivery_fee)}
                     </Typography>
+                    {this.state.use_points === "true" && (
+                      <Typography variant="body2" color="textSecondary">
+                        Discount from point: - $
+                        {formatMoney(
+                          PointUsage.convertPointToMoney(
+                            this.state.customer.reward_pts
+                          )
+                        )}
+                      </Typography>
+                    )}
                   </Grid>
                 </Grid>
                 <Grid item>
                   <Typography variant="subtitle1">
                     $
-                    {formatMoney(
-                      this.calTotalPrice() + this.state.delivery_fee
-                    )}
+                    {this.state.use_points === "true" &&
+                      formatMoney(
+                        this.calTotalPrice() +
+                          this.state.delivery_fee -
+                          PointUsage.convertPointToMoney(
+                            this.state.customer.reward_pts
+                          )
+                      )}
+                    {this.state.use_points === "false" &&
+                      formatMoney(
+                        this.calTotalPrice() + this.state.delivery_fee
+                      )}
                   </Typography>
                 </Grid>
               </Grid>

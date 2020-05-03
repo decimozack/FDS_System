@@ -98,10 +98,58 @@ router.post("/test", (req, res, next) => {
   // var { cid } = req.body;
 
   var orderItems = [
-    { cannot: 1, b: 2 },
-    { cannot: 3, b: 4 },
+    { a: "1", b: 2 },
+    { a: "3", b: 4 },
   ];
   db.query("select * from testing($1)", [JSON.stringify(orderItems)])
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find orders");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err.message);
+    });
+});
+
+router.post("/submitOrder", (req, res, next) => {
+  var db = req.app.locals.db;
+  var {
+    userId,
+    restaurantId,
+    min_order_cost,
+    orderItems,
+    use_credit_card,
+    use_points,
+    price,
+    delivery_fee,
+    address,
+    location_area,
+    gain_reward_pts,
+  } = req.body;
+
+  price = parseFloat(price);
+  min_order_cost = parseFloat(min_order_cost);
+  use_credit_card = use_credit_card === "true";
+  use_points = use_points === "true";
+  var orderItemsString = JSON.stringify(orderItems);
+
+  db.query("select submitOrder($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)", [
+    userId,
+    restaurantId,
+    min_order_cost,
+    use_credit_card,
+    use_points,
+    price,
+    delivery_fee,
+    address,
+    location_area,
+    gain_reward_pts,
+    orderItemsString,
+  ])
     .then(function (rows) {
       if (rows) {
         res.status(200).send(rows);
