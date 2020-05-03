@@ -6,6 +6,7 @@ import auth from "../../auth";
 import CustomerDataService from "../../services/customer.service";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import CancelIcon from "@material-ui/icons/Cancel";
+import Alert from "@material-ui/lab/Alert";
 
 const useStyles = (theme) => ({
   paper: {
@@ -20,13 +21,16 @@ const useStyles = (theme) => ({
   },
   table: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(5),
+    marginTop: theme.spacing(3),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
   actions: {
     color: "blue",
+  },
+  spacing: {
+    marginTop: theme.spacing(3),
   },
 });
 
@@ -37,6 +41,9 @@ class OrdersTable extends React.Component {
     this.state = {
       orders: [],
       user: auth.getUser(),
+      successMsg: this.props.location.state
+        ? this.props.location.state.successMsg
+        : "",
     };
   }
 
@@ -56,6 +63,11 @@ class OrdersTable extends React.Component {
 
     return (
       <Container>
+        {this.state.successMsg !== null && this.state.successMsg.length > 0 && (
+          <Alert severity="success" className={classes.spacing}>
+            {this.state.successMsg}
+          </Alert>
+        )}
         <div className={classes.table}>
           <MaterialTable
             title={"Past Orders"}
@@ -118,7 +130,7 @@ class OrdersTable extends React.Component {
                 icon: "rate_review",
                 tooltip: "Give Review",
                 onClick: (event, rowData) => {
-                  alert("clicked");
+                  this.props.history.push("/customer/rating/", rowData);
                 },
               },
             ]}

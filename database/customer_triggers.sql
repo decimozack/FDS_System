@@ -25,9 +25,10 @@ BEGIN
     END IF;
 
     INSERT INTO Orders(use_credit_card, use_points, order_time,
-    order_status, price, delivery_fee, address, location_area, cid, gain_reward_pts)
+    order_status, price, delivery_fee, address, location_area, cid, gain_reward_pts, rid)
     VALUES (in_use_credit_card, in_use_points, now(),
-    'WAITING', inPrice, in_delivery_fee, inAddress, in_location_area, inUserId, in_gain_reward_pts)
+    'WAITING', inPrice, in_delivery_fee, inAddress, in_location_area, inUserId, in_gain_reward_pts,
+    inRid)
     RETURNING oid INTO order_id;
 
     INSERT INTO OrderWaitingList(oid)

@@ -79,7 +79,25 @@ router.post("/getOrders", (req, res, next) => {
   var db = req.app.locals.db;
   var { cid } = req.body;
 
-  db.query("SELECT * FROM Orders WHERE cid=$1", [cid])
+  db.query("SELECT * FROM Orders WHERE cid=$1 order by order_time desc", [cid])
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find orders");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+outer.post("/submitReview", (req, res, next) => {
+  var db = req.app.locals.db;
+  var { oid, rating, comments } = req.body;
+
+  db.query("SELECT * FROM Orders WHERE cid=$1 order by order_time desc", [cid])
     .then(function (rows) {
       if (rows) {
         res.status(200).send(rows);

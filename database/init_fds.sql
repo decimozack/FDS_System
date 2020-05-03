@@ -85,8 +85,10 @@ CREATE TABLE Orders ( -- total part from Order to Contains not enforced
 	location_area varchar(200) NOT NULL,
 	cid INTEGER NOT NULL,
 	gain_reward_pts INTEGER NOT NULL,
+	rid INTEGER NOT NULL,
 	FOREIGN KEY (cid) REFERENCES Customers,
-	FOREIGN KEY (location_area) REFERENCES LocationArea
+	FOREIGN KEY (location_area) REFERENCES LocationArea,
+	FOREIGN KEY (rid) REFERENCES Restaurants
 );
 
 CREATE TABLE Category (
@@ -178,13 +180,13 @@ CREATE TABLE RestaurantReview (
 	FOREIGN key (oid) REFERENCES Orders
 );
 
-CREATE TABLE Belongs (
-	oid INTEGER, 
-	rid INTEGER,
-	PRIMARY KEY (oid, rid),
-	FOREIGN KEY (oid) REFERENCES Orders,
-	FOREIGN KEY (rid) REFERENCES Restaurants
-);
+-- CREATE TABLE Belongs (
+-- 	oid INTEGER, 
+-- 	rid INTEGER,
+-- 	PRIMARY KEY (oid, rid),
+-- 	FOREIGN KEY (oid) REFERENCES Orders,
+-- 	FOREIGN KEY (rid) REFERENCES Restaurants
+-- );
 
 CREATE TABLE Eligible (
 	cid INTEGER,

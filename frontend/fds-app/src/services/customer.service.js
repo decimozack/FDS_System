@@ -36,6 +36,11 @@ class CustomerDataService {
     const data = { cid: cid };
     return http.post(baseUrl + "/getOrders/", data);
   }
+
+  submitReview(oid, rating, comments) {
+    const data = { oid: oid, rating: rating, comments: comments };
+    return http.post(baseUrl + "/submitReview/", data);
+  }
 }
 
 export default new CustomerDataService();

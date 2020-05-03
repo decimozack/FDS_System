@@ -150,7 +150,7 @@ class Checkout extends React.Component {
     CustomerDataService.submitOrder(data)
       .then((response) => {
         console.log(response);
-        this.props.history.push("customer/orders/", {
+        this.props.history.push("/customer/orders/", {
           successMsg: "Order successful. Delivery Coming to you soon",
         });
       })
@@ -360,7 +360,7 @@ class Checkout extends React.Component {
                 </Typography>
               </Grid>
             </Grid>
-            {this.state.orderItems.map((orderItem) => (
+            {this.state.orderItems.map((orderItem, index) => (
               <React.Fragment>
                 <Box className={classes.spacing3}></Box>
                 <Grid container spacing={2}>
@@ -368,7 +368,7 @@ class Checkout extends React.Component {
                     <Grid item xs container direction="column" spacing={2}>
                       <Grid item xs>
                         <Typography gutterBottom variant="subtitle1">
-                          {orderItem.fname}
+                          {index + 1 + ". " + orderItem.fname}
                         </Typography>
                         <Typography variant="body2" gutterBottom>
                           Price : ${formatMoney(orderItem.price)}

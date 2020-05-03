@@ -18,7 +18,7 @@ DELETE FROM OrderPromoCampaignUsage;
 DELETE FROM OrderItem;
 -- DELETE FROM Place;
 DELETE FROM RestaurantReview;
-DELETE FROM Belongs;
+-- DELETE FROM Belongs;
 DELETE FROM Eligible;
 DELETE FROM LocationArea;
 
@@ -911,9 +911,9 @@ alter sequence LocationArea_area_id_seq restart with 16;
 INSERT INTO Customers (cid, c_first_name, c_last_name, email, cpassword, credit_card_info, reward_pts, created_on) VALUES (1, 'Benedict', 'Quek', 'bene@hotmail.com', 'dictdict96', 'DBS 9821-2112', 10, current_timestamp), (2, 'Zachary', 'Tan', 'tanzack@nus.com', 'fhas7612', 'POSB 312321132', 0, current_timestamp), (3, 'Chen', 'Hua', 'chenhua@gmail.com', 'fdsf64324', 'DBS 1232', 50, current_timestamp), (4, 'Joyce', 'Tan', 'joyceytan@gmail.com', 'ashda6969', 'OCBC 321123', 61, current_timestamp), (5, 'John', 'Elijah Tan', 'elijah@dbs.email.co', 'dasni324', 'DBS 1213', 1, current_timestamp);
 alter sequence Customers_cid_seq restart with 6;
 
-INSERT INTO Orders (oid, use_credit_card, use_points, order_time, order_status, price, delivery_fee, address, location_area, gain_reward_pts, cid)
-VALUES (1, true, false, '2038-01-19 03:14:07' ,'WAITING', 10.50, 3.00, 'Clementi 96', 'Clementi', 20, 1),
-(2, true, false, '2038-01-19 03:14:07' ,'WAITING', 10.50, 3.00, 'Clementi 96','Clementi', 20, 1);
+INSERT INTO Orders (oid, use_credit_card, use_points, order_time, order_status, price, delivery_fee, address, location_area, gain_reward_pts, cid, rid)
+VALUES (1, true, false, '2020-06-19 03:14:07' ,'WAITING', 10.50, 3.00, 'Clementi 96', 'Clementi', 20, 1, 1),
+(2, true, false, '2020-06-19 03:14:07' ,'WAITING', 10.50, 3.00, 'Clementi 96','Clementi', 20, 1, 2);
 alter sequence Orders_oid_seq restart with 3;
 
 INSERT INTO OrderPromoCampaignUsage (oid, pcid) VALUES (1, 1), (2, 1);
@@ -923,5 +923,5 @@ VALUES
 (1, 1, 5, 5, 'order 1'), (2, 1, 2, 13, 'more chilli'), (3, 1, 1, 20, 'more pepper');
 
 
-INSERT INTO Belongs (oid, rid) VALUES (1, 1); 
+-- INSERT INTO Belongs (oid, rid) VALUES (1, 1); 
 
