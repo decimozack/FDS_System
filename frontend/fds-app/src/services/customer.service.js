@@ -15,6 +15,15 @@ class CustomerDataService {
   getFoodItems(id) {
     return http.get(baseUrl + "/getFoodItems/" + id);
   }
+
+  getReviews() {
+    return http.get(baseUrl + "/getReviews/");
+  }
+
+  getReview(id) {
+    return http.get(baseUrl + "/getReview/" + id);
+  }
+
   submitOrder(data) {
     const sendData = {
       userId: data.user.userid,

@@ -112,5 +112,36 @@ FOR EACH ROW
 EXECUTE FUNCTION create_orderitem_task();
 
 
+-- submit review
+
+CREATE OR REPLACE FUNCTION submitReview(inOid integer, inDescription text, inRating smallint)
+RETURNS void as $$
+DECLARE
+    found_oid integer;
+    found_rating integer;
+BEGIN
+    
+    SELECT oid into found_oid FROM RestaurantReview where oid=inOid;
+    IF FOUND THEN
+        UPDATE RestaurantReview
+        SET description = inDescription;
+    ELSE
+        INSERT INTO RestaurantReview
+        VALUES (inOid, inDescription);
+    END IF;
+
+    SELECT oid into found_rating FROM RiderRatings where oid=inOid;
+    IF FOUND THEN
+        UPDATE RiderRatings
+        SET rating = inRating;
+    ELSE
+        INSERT INTO RiderRatings
+        VALUES (inOid, inRating);
+    END IF;
+    
+END;
+$$ LANGUAGE plpgsql;
+
+
 
 

@@ -912,9 +912,21 @@ INSERT INTO Customers (cid, c_first_name, c_last_name, email, cpassword, credit_
 alter sequence Customers_cid_seq restart with 6;
 
 INSERT INTO Orders (oid, use_credit_card, use_points, order_time, order_status, price, delivery_fee, address, location_area, gain_reward_pts, cid, rid)
-VALUES (1, true, false, '2020-06-19 03:14:07' ,'WAITING', 10.50, 3.00, 'Clementi 96', 'Clementi', 20, 1, 1),
-(2, true, false, '2020-06-19 03:14:07' ,'WAITING', 10.50, 3.00, 'Clementi 96','Clementi', 20, 1, 2);
+VALUES (1, true, false, now() - INTERVAL '1 HOUR 20 minute' ,'COMPLETED', 10.50, 3.00, 'Clementi 96', 'Clementi', 20, 1, 1),
+(2, true, false, now() - INTERVAL '1 HOUR 5 minute' ,'COMPLETED', 10.50, 3.00, 'Clementi 96','Clementi', 20, 1, 2);
 alter sequence Orders_oid_seq restart with 3;
+
+INSERT INTO OrderWaitingList(oid, orderAssigned)
+VALUES(1, true);
+INSERT INTO OrderWaitingList(oid, orderAssigned)
+VALUES(2, true);
+
+INSERT INTO Assigned
+VALUES (1, 51, now() - INTERVAL '1 HOUR', 
+now() - INTERVAL '40 minute', now() - INTERVAL '30 minute',
+now() - INTERVAL '10 minute'),(2, 71, now() - INTERVAL '1 HOUR', 
+now() - INTERVAL '40 minute', now() - INTERVAL '30 minute',
+now() - INTERVAL '10 minute');
 
 INSERT INTO OrderPromoCampaignUsage (oid, pcid) VALUES (1, 1), (2, 1);
 

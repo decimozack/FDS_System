@@ -47,6 +47,7 @@ class RatingForm extends React.Component {
     this.state = {
       order: this.props.location.state,
       rating: 0,
+      review: null,
       comments: "",
       errorMsg: "",
       successMsg: "",
@@ -56,9 +57,12 @@ class RatingForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.retrieveReview = this.retrieveReview.bind(this);
     this.submitReview = this.submitReview.bind(this);
+    this.retrieveReview = this.retrieveReview.bind(this);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.retrieveReview(this.state.order.oid);
+  }
 
   handleChange(event) {
     const target = event.target;
@@ -70,7 +74,19 @@ class RatingForm extends React.Component {
     });
   }
 
-  retrieveReview() {}
+  retrieveReview(oid) {
+    CustomerDataService.getReview(oid)
+      .then((response) => {
+        this.setState({
+          review: response.data.rows[0],
+          comments: response.data.rows[0].description,
+          rating: response.data.rows[0].rating,
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
   submitReview() {
     CustomerDataService.submitReview(
       this.state.order.oid,
@@ -90,6 +106,8 @@ class RatingForm extends React.Component {
   }
   handleSubmit(event) {
     event.preventDefault();
+    this.setState({ errorMsg: "" });
+    this.submitReview();
   }
 
   render() {
@@ -104,6 +122,13 @@ class RatingForm extends React.Component {
           <Typography component="h1" variant="h5">
             Order Review
           </Typography>
+
+          {this.state.review !== null && (
+            <Typography component="h4" variant="h6">
+              {this.state.review.rname}
+            </Typography>
+          )}
+
           {this.state.errorMsg.length > 0 && (
             <Alert severity="error">{this.state.errorMsg}</Alert>
           )}

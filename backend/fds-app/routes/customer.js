@@ -93,21 +93,56 @@ router.post("/getOrders", (req, res, next) => {
     });
 });
 
-outer.post("/submitReview", (req, res, next) => {
+router.get("/getReviews", (req, res, next) => {
   var db = req.app.locals.db;
-  var { oid, rating, comments } = req.body;
 
-  db.query("SELECT * FROM Orders WHERE cid=$1 order by order_time desc", [cid])
+  db.query(
+    "SELECT * FROM (Restaurants join Orders O using(rid)) left join RestaurantReview R using(oid) left join RiderRatings using(oid)"
+  )
     .then(function (rows) {
       if (rows) {
         res.status(200).send(rows);
       } else {
-        res.status(404).send("Error cannot find orders");
+        res.status(404).send("Error cannot find review");
       }
     })
     .catch(function (err) {
       console.error(err);
       res.status(500).send(err);
+    });
+});
+
+router.get("/getReview/:id", (req, res, next) => {
+  var db = req.app.locals.db;
+  const id = req.params.id;
+  db.query(
+    "SELECT * FROM (Restaurants join Orders O using(rid)) left join RestaurantReview R using(oid) left join RiderRatings using(oid) where O.oid=$1",
+    [id]
+  )
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find review");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err.message);
+    });
+});
+
+router.post("/submitReview", (req, res, next) => {
+  var db = req.app.locals.db;
+  var { oid, rating, comments } = req.body;
+
+  db.query("SELECT * FROM submitReview($1,$2,$3)", [oid, comments, rating])
+    .then(function (rows) {
+      res.status(200).send(rows);
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err.message);
     });
 });
 
