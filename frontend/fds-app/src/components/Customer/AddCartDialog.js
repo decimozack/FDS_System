@@ -60,7 +60,7 @@ class ViewRestaurant extends React.Component {
   }
 
   onSubmit = (event) => {
-    this.props.onSubmit(event, this.state.qty, this.state.notes);
+    this.props.onSubmit(event, parseInt(this.state.qty), this.state.notes);
     this.setState({ qty: 0, notes: "" });
   };
 

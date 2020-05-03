@@ -16,12 +16,12 @@ class CustomerDataService {
     return http.get(baseUrl + "/getFoodItems/" + id);
   }
   submitOrder(data) {
-    return http.post(baseUrl + "/getFoodItems/");
+    return http.post(baseUrl + "/test/");
   }
 
   getOrders(cid) {
-    const data = { cid: cid};
-    return http.post(baseUrl + "/getOrders/",data);
+    const data = { cid: cid };
+    return http.post(baseUrl + "/getOrders/", data);
   }
 }
 

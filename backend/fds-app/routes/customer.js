@@ -93,6 +93,28 @@ router.post("/getOrders", (req, res, next) => {
     });
 });
 
+router.post("/test", (req, res, next) => {
+  var db = req.app.locals.db;
+  // var { cid } = req.body;
+
+  var orderItems = [
+    { cannot: 1, b: 2 },
+    { cannot: 3, b: 4 },
+  ];
+  db.query("select * from testing($1)", [JSON.stringify(orderItems)])
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find orders");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err.message);
+    });
+});
+
 // router.post("/retrieveManager", (req, res, next) => {
 //   var { id } = req.body;
 //   var db = req.app.locals.db;

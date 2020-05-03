@@ -18,6 +18,8 @@ import Container from "@material-ui/core/Container";
 import { withStyles } from "@material-ui/core/styles";
 import CustomerDataService from "../../services/customer.service";
 import auth from "../../auth";
+import ShoppingCart from "../../utils/shoppingCart";
+import shoppingCart from "../../utils/shoppingCart";
 
 const useStyles = (theme) => ({
   paper: {
@@ -92,10 +94,12 @@ class ViewRestaurants extends React.Component {
               {
                 icon: "arrow_forward_ios",
                 tooltip: "View Restaurant",
-                onClick: (event, rowData) =>
+                onClick: (event, rowData) => {
+                  shoppingCart.deleteOrderItems();
                   this.props.history.push(
                     "/customer/restaurant/" + rowData.rid
-                  ),
+                  );
+                },
               },
             ]}
             options={{ actionsColumnIndex: -1 }}
