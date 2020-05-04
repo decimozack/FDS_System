@@ -879,14 +879,21 @@ alter sequence FoodItem_fid_seq restart with 501;
 
 insert into PromoCampaign (pcid, campaign_type, start_time, end_time) values (1, 'DiscountPromo', '2020-04-01', '2020-07-01');
 insert into PromoCampaign (pcid, campaign_type, start_time, end_time) values (2, 'DiscountPromo', '2020-05-01', '2020-07-01');
+insert into PromoCampaign (pcid, campaign_type, start_time, end_time) values (3, 'DiscountPromo', '2020-05-01', '2020-08-01');
+insert into PromoCampaign (pcid, campaign_type, start_time, end_time) values (4, 'DiscountPromo', '2020-05-01', '2020-09-01');
 
-alter sequence PromoCampaign_pcid_seq restart with 3;
+alter sequence PromoCampaign_pcid_seq restart with 5;
 
 insert into PromoByRestaurant (pcid, rid) values (1, 1);
 insert into PromoByRestaurant (pcid, rid) values (2, 2);
 
+insert into PromoBFDS (pcid) values (3);
+insert into PromoBFDS (pcid) values (4);
+
 insert into DiscountPromo (pcid, min_spend, max_spend, discount) values (1, 10, null, 10);
 insert into DiscountPromo (pcid, min_spend, max_spend, discount) values (2, 50, null, 10);
+insert into DiscountPromo (pcid, min_spend, max_spend, discount) values (3, 20, 100, 15);
+insert into DiscountPromo (pcid, min_spend, max_spend, discount) values (4, 30, 150, 25);
 
 -- Customer and Manager Mock Data
 INSERT INTO LocationArea VALUES
@@ -908,32 +915,484 @@ INSERT INTO LocationArea VALUES
 
 alter sequence LocationArea_area_id_seq restart with 16;
 
-INSERT INTO Customers (cid, c_first_name, c_last_name, email, cpassword, credit_card_info, reward_pts, created_on) VALUES (1, 'Benedict', 'Quek', 'bene@hotmail.com', 'dictdict96', 'DBS 9821-2112', 10, current_timestamp), (2, 'Zachary', 'Tan', 'tanzack@nus.com', 'fhas7612', 'POSB 312321132', 0, current_timestamp), (3, 'Chen', 'Hua', 'chenhua@gmail.com', 'fdsf64324', 'DBS 1232', 50, current_timestamp), (4, 'Joyce', 'Tan', 'joyceytan@gmail.com', 'ashda6969', 'OCBC 321123', 61, current_timestamp), (5, 'John', 'Elijah Tan', 'elijah@dbs.email.co', 'dasni324', 'DBS 1213', 1, current_timestamp);
-alter sequence Customers_cid_seq restart with 6;
+INSERT INTO Customers VALUES
+(1,'Duky','Ygou','dygou0@diigo.com','ArON4PeFM','3584108734748626',35,'2019-06-06 13:17:11'),
+(2,'Frasco','Gile','fgile1@theglobeandmail.com','Lbhspqq','4917090131310471',28,'2019-02-06 09:33:59'),
+(3,'Allx','Abbyss','aabbyss2@msn.com','SAGxToemjoy','6334577972923735',35,'2019-03-23 08:19:19'),
+(4,'Symon','Vasyukov','svasyukov3@jugem.jp','Dka5HbT05','4905795725508403174',85,'2019-05-19 02:47:39'),
+(5,'Jenifer','Tong','jtong4@friendfeed.com','TCDUXT24l','560223919173980090',56,'2020-02-15 12:45:39'),
+(6,'Jacky','MacSharry','jmacsharry5@stumbleupon.com','1k4KQ1','3534058872053464',23,'2019-04-16 05:46:12'),
+(7,'Tabina','Mindenhall','tmindenhall6@umn.edu','Sdmjyn','374288422646165',26,'2019-05-08 00:08:03'),
+(8,'Ettore','Baskerville','ebaskerville7@sun.com','TT4ILffH5GUt','201402923508035',93,'2019-09-20 23:20:32'),
+(9,'Torrance','Flanigan','tflanigan8@whitehouse.gov','yLZ2ef6','4913395068383969',88,'2020-01-26 05:59:11'),
+(10,'Dolf','Leare','dleare9@webeden.co.uk','aqeoIF','337941931180318',85,'2019-05-26 23:27:50'),
+(11,'Shela','Foss','sfossa@cmu.edu','50svyuM69Kz','374283918969833',62,'2019-05-28 12:01:13'),
+(12,'Abbey','Gush','agushb@infoseek.co.jp','3cwgeXM','4041597001551',81,'2020-03-29 03:41:00'),
+(13,'Sauveur','Earney','searneyc@blog.com','DIRNlrtv1','675939267885670612',17,'2019-07-02 07:21:59'),
+(14,'Melody','Olivier','molivierd@epa.gov','cv8n2kx','3547136050853767',79,'2019-12-24 11:40:34'),
+(15,'Mildred','Osipov','mosipove@mysql.com','lLvJDiM','67624565452084723',48,'2019-06-03 17:53:07'),
+(16,'Gavrielle','Leonard','gleonardf@adobe.com','ydKXEOrwxAuH','67638179179931168',45,'2019-10-22 22:53:13'),
+(17,'Dick','Stegers','dstegersg@nba.com','FsjCIQZ','30460392400586',5,'2019-10-02 16:25:39'),
+(18,'Norrie','Boutellier','nboutellierh@imgur.com','UGSf5zuDsQ','3528614564355472',20,'2019-03-16 10:35:49'),
+(19,'Temple','Leebetter','tleebetteri@slate.com','aCu60Ig','6759904647102832',7,'2019-06-19 23:06:15'),
+(20,'Katharina','Antosik','kantosikj@netscape.com','qxxsIR','346997268140985',38,'2019-02-23 06:08:12'),
+(21,'Desi','Caps','dcapsk@usatoday.com','QHiD4d','30417912505054',31,'2019-08-07 06:53:17'),
+(22,'Terrie','Perel','tperell@oaic.gov.au','0xh3kOGCHX','201439204358383',3,'2020-05-03 12:41:31'),
+(23,'Allianora','Habershaw','ahabershawm@usda.gov','Xg3EJZq','3562198167385042',3,'2019-12-10 06:13:35'),
+(24,'Tonie','Greggor','tgreggorn@lycos.com','rX9PzSK02','374622263097163',79,'2019-12-23 01:47:43'),
+(25,'Obadiah','Canlin','ocanlino@bandcamp.com','9CkU2gU','3536706260559868',62,'2019-05-09 04:40:08'),
+(26,'Garvin','Shortan','gshortanp@trellian.com','AI2637auefHk','30440558592558',60,'2019-11-25 03:12:47'),
+(27,'Jasmin','Silcocks','jsilcocksq@mozilla.org','gPDEKx9Jow','5383094046152665',32,'2019-02-15 10:27:58'),
+(28,'Marten','Keane','mkeaner@wunderground.com','yc5TFVcjSd','3564837912436729',17,'2019-12-16 09:52:02'),
+(29,'Pebrook','Hallstone','phallstones@webeden.co.uk','CieyELn9','5100172752387295',27,'2019-10-11 20:34:30'),
+(30,'Emalia','Gratland','egratlandt@tripod.com','tERJJm3','6759629419592460',86,'2019-03-07 21:57:55');
+alter sequence Customers_cid_seq restart with 31;
+INSERT INTO Customers (c_first_name, c_last_name, email, cpassword, credit_card_info, reward_pts, created_on)
+VALUES ('Benedict', 'Quek', 'bene@hotmail.com', 'dictdict96', 'DBS 9821-2112', 10, current_timestamp),
+('Zachary', 'Tan', 'tanzack@nus.com', 'fhas7612', 'POSB 312321132', 0, current_timestamp),
+('Chen', 'Hua', 'chenhua@gmail.com', 'fdsf64324', 'DBS 1232', 50, current_timestamp),
+('Joyce', 'Tan', 'joyceytan@gmail.com', 'ashda6969', 'OCBC 321123', 61, current_timestamp),
+('John', 'Elijah Tan', 'elijah@dbs.email.co', 'dasni324', 'DBS 1213', 1, current_timestamp);
 
+INSERT INTO Eligible VALUES
+(20,3),
+(13,3),
+(5,4),
+(2,1),
+(18,1),
+(16,1),
+(21,1),
+(28,1),
+(9,4),
+(35,4),
+(14,3),
+(14,2),
+(31,4),
+(9,1),
+(6,3),
+(9,2),
+(15,3),
+(17,2),
+(13,1),
+(13,2),
+(1,1),
+(30,4),
+(33,3),
+(33,2),
+(14,1),
+(3,3),
+(5,2);
+
+INSERT INTO Orders VALUES
+(1,true,false,'2020-04-11 16:42:51','COMPLETED',475.22,5,'51 Huxley Way','Geylang',20,5,5),
+(2,true,false,'2020-05-01 02:42:04','COMPLETED',338.21,5,'791 Forest Run Park','Pasir Ris',27,23,8),
+(3,true,false,'2020-04-18 15:05:21','COMPLETED',373.29,5,'19373 Dwight Alley','Tampines',23,54,4),
+(4,true,false,'2020-04-11 03:53:59','COMPLETED',153.02,5,'38706 Sundown Park','Yishun',14,61,8),
+(5,false,false,'2020-04-18 21:12:41','COMPLETED',133.33,5,'629 Sunfield Terrace','Toa Payoh',7,72,6),
+(6,false,false,'2020-04-22 16:04:09','COMPLETED',108.26,5,'87673 Pawling Terrace','Boon Lay',25,58,6),
+(7,false,false,'2020-04-11 12:19:41','COMPLETED',408.54,5,'6 Drewry Terrace','Toa Payoh',30,20,1),
+(8,false,false,'2020-04-21 14:01:44','COMPLETED',130.02,5,'96 Waubesa Hill','Tampines',12,40,5),
+(9,true,false,'2020-04-06 03:02:00','COMPLETED',133.84,5,'55 Esch Parkway','Tampines',30,81,10),
+(10,true,false,'2020-04-18 19:36:03','COMPLETED',368.22,5,'5103 Stuart Street','Clementi',23,46,5),
+(11,false,false,'2020-04-09 12:11:12','COMPLETED',464.94,5,'10 Rusk Plaza','Bukit Batok',33,26,10),
+(12,false,false,'2020-04-22 04:01:31','COMPLETED',179.37,5,'909 8th Pass','Boon Lay',3,26,10),
+(13,true,false,'2020-04-20 18:38:23','COMPLETED',460.1,5,'977 Comanche Road','Serangoon',3,88,10),
+(14,true,false,'2020-04-23 04:59:29','COMPLETED',289.46,5,'051 Dwight Court','Toa Payoh',23,88,10),
+(15,true,false,'2020-04-28 04:07:58','COMPLETED',397.4,5,'52 Milwaukee Park','Clementi',23,50,10),
+(16,false,false,'2020-04-09 07:48:09','COMPLETED',60.85,5,'28509 La Follette Plaza','Boon Lay',16,35,10),
+(17,true,false,'2020-04-21 20:11:12','COMPLETED',382.88,5,'68246 Forster Circle','Pasir Ris',23,3,10),
+(18,false,false,'2020-04-17 20:06:09','COMPLETED',121.76,5,'6 Rieder Place','Clementi',8,48,10),
+(19,true,false,'2020-04-14 23:46:13','COMPLETED',129.86,5,'278 Dexter Way','Holland Village',15,2,10),
+(20,true,false,'2020-04-08 01:17:04','COMPLETED',270.77,5,'33789 Stone Corner Trail','Bukit Batok',34,92,10),
+(21,false,false,'2020-04-16 04:34:39','COMPLETED',314.36,5,'5 Bay Hill','Hougang',30,43,10),
+(22,true,false,'2020-04-01 18:50:54','COMPLETED',278.97,5,'90 Artisan Pass','Yishun',19,28,10),
+(23,false,false,'2020-04-22 11:58:28','COMPLETED',283.67,5,'0 Golf Court','Clementi',8,93,10),
+(24,false,false,'2020-04-24 00:51:34','COMPLETED',330.25,5,'50373 Chinook Terrace','Toa Payoh',31,37,10),
+(25,false,false,'2020-04-25 12:08:11','COMPLETED',261.1,5,'011 Gerald Pass','Kent Ridge',31,21,10),
+(26,false,false,'2020-04-02 08:46:51','COMPLETED',318.04,5,'95177 Nancy Lane','Pasir Ris',27,86,10),
+(27,true,false,'2020-04-13 17:20:23','COMPLETED',250.94,5,'272 Mallory Street','Tampines',3,68,10),
+(28,true,false,'2020-04-05 07:39:24','COMPLETED',422.34,5,'0 Gina Park','Serangoon',34,32,10),
+(29,false,false,'2020-04-14 18:31:24','COMPLETED',136.86,5,'5193 Eastwood Plaza','Serangoon',35,85,10),
+(30,false,false,'2020-05-02 16:02:44','COMPLETED',226.84,5,'2 Hallows Park','Hougang',8,80,10),
+(31,false,false,'2020-04-11 07:20:03','COMPLETED',308.58,5,'8 Kim Center','Holland Village',13,2,10),
+(32,true,false,'2020-04-25 09:57:33','COMPLETED',281.56,5,'98052 Bayside Alley','Serangoon',31,41,10),
+(33,true,false,'2020-04-19 19:49:37','COMPLETED',493.15,5,'545 Esker Crossing','Toa Payoh',33,35,10),
+(34,false,false,'2020-04-04 20:01:56','COMPLETED',166.79,5,'912 Blackbird Drive','Geylang',10,23,10),
+(35,true,false,'2020-04-29 16:41:34','COMPLETED',283.08,5,'5 Stoughton Way','Clementi',11,1,10),
+(36,false,false,'2020-04-09 02:57:08','COMPLETED',473.23,5,'5726 Homewood Road','Boon Lay',32,11,10),
+(37,false,false,'2020-04-07 04:05:20','COMPLETED',122.47,5,'8647 Dexter Junction','Clementi',16,9,10),
+(38,false,false,'2020-04-12 11:08:26','COMPLETED',88.22,5,'2036 Grover Park','Tampines',29,43,10),
+(39,true,false,'2020-04-01 08:17:56','COMPLETED',325.9,5,'3358 Drewry Parkway','Yishun',19,40,10),
+(40,false,false,'2020-04-17 03:23:17','COMPLETED',448.94,5,'1009 Northwestern Circle','One-North',6,68,10),
+(41,true,false,'2020-04-18 18:12:01','COMPLETED',438.59,5,'456 Merchant Center','Kent Ridge',24,28,10),
+(42,false,false,'2020-04-01 05:51:19','COMPLETED',225.13,5,'9160 Sauthoff Junction','Pasir Ris',24,50,10),
+(43,true,false,'2020-04-20 12:27:29','COMPLETED',461.24,5,'0 Schlimgen Point','One-North',27,91,10),
+(44,false,false,'2020-04-14 19:07:02','COMPLETED',310.9,5,'5 7th Center','Boon Lay',21,65,10),
+(45,false,false,'2020-04-23 09:19:08','COMPLETED',423.9,5,'98 Twin Pines Court','Boon Lay',27,76,10),
+(46,true,false,'2020-04-18 11:37:31','COMPLETED',490.93,5,'5 Forest Run Road','Serangoon',18,37,10),
+(47,false,false,'2020-04-02 20:22:25','COMPLETED',247.92,5,'907 Golf Course Plaza','Pasir Ris',1,37,10),
+(48,false,false,'2020-04-11 16:08:34','COMPLETED',213.64,5,'1 Starling Point','Punggol',9,58,10),
+(49,false,false,'2020-04-25 05:36:41','COMPLETED',280.55,5,'911 Morningstar Place','Punggol',8,38,10),
+(50,true,false,'2020-04-24 02:31:50','COMPLETED',372.86,5,'9771 Norway Maple Circle','Holland Village',17,16,10);
+
+
+-- ORDERS WITH USE_POINTS
+
+INSERT INTO Orders VALUES
+(51,false,true,'2020-04-18 04:49:31','COMPLETED',106.11,5,'7069 Morningstar Place','Hougang',22,22,10),
+(52,true,true,'2020-04-18 14:39:55','COMPLETED',409.22,5,'3526 Gulseth Place','Yishun',14,85,10),
+(53,true,true,'2020-04-01 16:52:05','COMPLETED',171.38,5,'3 Esker Lane','Kent Ridge',3,50,10),
+(54,true,true,'2020-04-17 21:37:07','COMPLETED',121.83,5,'6 Lakeland Trail','Bukit Batok',33,71,10),
+(55,false,true,'2020-04-17 14:02:17','COMPLETED',133.0,5,'46 Barby Way','Sengkang',1,19,10),
+(56,true,true,'2020-04-16 23:45:09','COMPLETED',434.05,5,'86874 Oakridge Park','Holland Village',3,5,10),
+(57,false,true,'2020-04-29 16:05:48','COMPLETED',258.75,5,'20 Granby Plaza','Boon Lay',34,39,10),
+(58,false,true,'2020-04-14 06:01:21','COMPLETED',197.64,5,'9 Westport Crossing','Yishun',7,8,10),
+(59,false,true,'2020-04-12 04:25:28','COMPLETED',442.49,5,'7 Alpine Place','Bukit Batok',16,27,10),
+(60,false,true,'2020-04-25 01:59:05','COMPLETED',403.54,5,'60 Springview Center','Sengkang',3,2,10),
+(61,true,true,'2020-04-03 16:22:18','COMPLETED',481.45,5,'2 Quincy Center','Toa Payoh',20,33,10),
+(62,false,true,'2020-04-16 12:56:06','COMPLETED',198.9,5,'484 Charing Cross Pass','Punggol',1,93,10),
+(63,false,true,'2020-04-13 22:57:47','COMPLETED',282.25,5,'475 South Plaza','Geylang',22,81,10),
+(64,true,true,'2020-04-20 04:56:16','COMPLETED',286.95,5,'7 Barby Street','Boon Lay',29,6,10),
+(65,false,true,'2020-04-28 07:16:55','COMPLETED',384.08,5,'13898 Surrey Avenue','Geylang',3,34,10),
+(66,true,true,'2020-04-03 18:18:12','COMPLETED',348.69,5,'7445 Donald Place','Clementi',26,10,10),
+(67,false,true,'2020-04-24 09:36:46','COMPLETED',310.42,5,'7420 Mcbride Junction','Hougang',22,69,10),
+(68,true,true,'2020-04-24 21:50:43','COMPLETED',142.17,5,'8465 Knutson Center','Yishun',35,89,10),
+(69,false,true,'2020-04-30 22:45:21','COMPLETED',295.57,5,'1 Stang Drive','Hougang',22,21,10);
 INSERT INTO Orders (oid, use_credit_card, use_points, order_time, order_status, price, delivery_fee, address, location_area, gain_reward_pts, cid, rid)
-VALUES (1, true, false, now() - INTERVAL '1 HOUR 20 minute' ,'COMPLETED', 10.50, 3.00, 'Clementi 96', 'Clementi', 20, 1, 1),
-(2, true, false, now() - INTERVAL '1 HOUR 5 minute' ,'COMPLETED', 10.50, 3.00, 'Clementi 96','Clementi', 20, 1, 2);
-alter sequence Orders_oid_seq restart with 3;
+VALUES (70, true, false, now() - INTERVAL '1 HOUR 20 minute' ,'COMPLETED', 10.50, 3.00, 'Clementi 96', 'Clementi', 20, 1, 1),
+(71, true, false, now() - INTERVAL '1 HOUR 5 minute' ,'COMPLETED', 10.50, 3.00, 'Clementi 96','Clementi', 20, 1, 2);
+alter sequence Orders_oid_seq restart with 72;
 
+INSERT INTO OrderWaitingList(oid, orderAssigned) VALUES
+(1,true),
+(2,true),
+(3,true),
+(4,true),
+(5,true),
+(6,true),
+(7,true),
+(8,true),
+(9,true),
+(10,true),
+(11,true),
+(12,true),
+(13,true),
+(14,true),
+(15,true),
+(16,true),
+(17,true),
+(18,true),
+(19,true),
+(20,true),
+(21,true),
+(22,true),
+(23,true),
+(24,true),
+(25,true),
+(26,true),
+(27,true),
+(28,true),
+(29,true),
+(30,true),
+(31,true),
+(32,true),
+(33,true),
+(34,true),
+(35,true),
+(36,true),
+(37,true),
+(38,true),
+(39,true),
+(40,true),
+(41,true),
+(42,true),
+(43,true),
+(44,true),
+(45,true),
+(46,true),
+(47,true),
+(48,true),
+(49,true),
+(50,true),
+(51,true),
+(52,true),
+(53,true),
+(54,true),
+(55,true),
+(56,true),
+(57,true),
+(58,true),
+(59,true),
+(60,true),
+(61,true),
+(62,true),
+(63,true),
+(64,true),
+(65,true),
+(66,true),
+(67,true),
+(68,true),
+(69,true);
 INSERT INTO OrderWaitingList(oid, orderAssigned)
-VALUES(1, true);
+VALUES(70, true);
 INSERT INTO OrderWaitingList(oid, orderAssigned)
-VALUES(2, true);
+VALUES(71, true);
+
+INSERT INTO Assigned VALUES
+(1,51,(Select order_time + INTERVAL '5 minute' from Orders where oid=1),(Select order_time + INTERVAL '25 minute' from Orders where oid=1),(Select order_time + INTERVAL '50 minute' from Orders where oid=1),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=1),28.92),
+(2,52,(Select order_time + INTERVAL '5 minute' from Orders where oid=2),(Select order_time + INTERVAL '25 minute' from Orders where oid=2),(Select order_time + INTERVAL '50 minute' from Orders where oid=2),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=2),28.43),
+(3,53,(Select order_time + INTERVAL '5 minute' from Orders where oid=3),(Select order_time + INTERVAL '25 minute' from Orders where oid=3),(Select order_time + INTERVAL '50 minute' from Orders where oid=3),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=3),17.04),
+(4,54,(Select order_time + INTERVAL '5 minute' from Orders where oid=4),(Select order_time + INTERVAL '25 minute' from Orders where oid=4),(Select order_time + INTERVAL '50 minute' from Orders where oid=4),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=4),4.74),
+(5,55,(Select order_time + INTERVAL '5 minute' from Orders where oid=5),(Select order_time + INTERVAL '25 minute' from Orders where oid=5),(Select order_time + INTERVAL '50 minute' from Orders where oid=5),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=5),8.8),
+(6,56,(Select order_time + INTERVAL '5 minute' from Orders where oid=6),(Select order_time + INTERVAL '25 minute' from Orders where oid=6),(Select order_time + INTERVAL '50 minute' from Orders where oid=6),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=6),13.76),
+(7,57,(Select order_time + INTERVAL '5 minute' from Orders where oid=7),(Select order_time + INTERVAL '25 minute' from Orders where oid=7),(Select order_time + INTERVAL '50 minute' from Orders where oid=7),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=7),22.84),
+(8,58,(Select order_time + INTERVAL '5 minute' from Orders where oid=8),(Select order_time + INTERVAL '25 minute' from Orders where oid=8),(Select order_time + INTERVAL '50 minute' from Orders where oid=8),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=8),3.06),
+(9,59,(Select order_time + INTERVAL '5 minute' from Orders where oid=9),(Select order_time + INTERVAL '25 minute' from Orders where oid=9),(Select order_time + INTERVAL '50 minute' from Orders where oid=9),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=9),18.1),
+(10,60,(Select order_time + INTERVAL '5 minute' from Orders where oid=10),(Select order_time + INTERVAL '20 minute' from Orders where oid=10),(Select order_time + INTERVAL '40 minute' from Orders where oid=10),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=10),3.63),
+(11,61,(Select order_time + INTERVAL '5 minute' from Orders where oid=11),(Select order_time + INTERVAL '20 minute' from Orders where oid=11),(Select order_time + INTERVAL '40 minute' from Orders where oid=11),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=11),26.31),
+(12,62,(Select order_time + INTERVAL '5 minute' from Orders where oid=12),(Select order_time + INTERVAL '20 minute' from Orders where oid=12),(Select order_time + INTERVAL '40 minute' from Orders where oid=12),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=12),29.19),
+(13,63,(Select order_time + INTERVAL '5 minute' from Orders where oid=13),(Select order_time + INTERVAL '20 minute' from Orders where oid=13),(Select order_time + INTERVAL '40 minute' from Orders where oid=13),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=13),5.71),
+(14,64,(Select order_time + INTERVAL '5 minute' from Orders where oid=14),(Select order_time + INTERVAL '20 minute' from Orders where oid=14),(Select order_time + INTERVAL '40 minute' from Orders where oid=14),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=14),3.94),
+(15,65,(Select order_time + INTERVAL '5 minute' from Orders where oid=15),(Select order_time + INTERVAL '20 minute' from Orders where oid=15),(Select order_time + INTERVAL '40 minute' from Orders where oid=15),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=15),22.59),
+(16,66,(Select order_time + INTERVAL '5 minute' from Orders where oid=16),(Select order_time + INTERVAL '20 minute' from Orders where oid=16),(Select order_time + INTERVAL '40 minute' from Orders where oid=16),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=16),28.62),
+(17,67,(Select order_time + INTERVAL '5 minute' from Orders where oid=17),(Select order_time + INTERVAL '20 minute' from Orders where oid=17),(Select order_time + INTERVAL '40 minute' from Orders where oid=17),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=17),27.33),
+(18,68,(Select order_time + INTERVAL '5 minute' from Orders where oid=18),(Select order_time + INTERVAL '20 minute' from Orders where oid=18),(Select order_time + INTERVAL '40 minute' from Orders where oid=18),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=18),26.92),
+(19,69,(Select order_time + INTERVAL '5 minute' from Orders where oid=19),(Select order_time + INTERVAL '20 minute' from Orders where oid=19),(Select order_time + INTERVAL '40 minute' from Orders where oid=19),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=19),11.76),
+(20,70,(Select order_time + INTERVAL '5 minute' from Orders where oid=20),(Select order_time + INTERVAL '20 minute' from Orders where oid=20),(Select order_time + INTERVAL '40 minute' from Orders where oid=20),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=20),9.63),
+(21,71,(Select order_time + INTERVAL '5 minute' from Orders where oid=21),(Select order_time + INTERVAL '20 minute' from Orders where oid=21),(Select order_time + INTERVAL '40 minute' from Orders where oid=21),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=21),15.94),
+(22,51,(Select order_time + INTERVAL '5 minute' from Orders where oid=22),(Select order_time + INTERVAL '20 minute' from Orders where oid=22),(Select order_time + INTERVAL '40 minute' from Orders where oid=22),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=22),21.6),
+(23,52,(Select order_time + INTERVAL '5 minute' from Orders where oid=23),(Select order_time + INTERVAL '20 minute' from Orders where oid=23),(Select order_time + INTERVAL '40 minute' from Orders where oid=23),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=23),26.14),
+(24,53,(Select order_time + INTERVAL '5 minute' from Orders where oid=24),(Select order_time + INTERVAL '20 minute' from Orders where oid=24),(Select order_time + INTERVAL '40 minute' from Orders where oid=24),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=24),2.97),
+(25,54,(Select order_time + INTERVAL '5 minute' from Orders where oid=25),(Select order_time + INTERVAL '20 minute' from Orders where oid=25),(Select order_time + INTERVAL '40 minute' from Orders where oid=25),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=25),29.71),
+(26,55,(Select order_time + INTERVAL '5 minute' from Orders where oid=26),(Select order_time + INTERVAL '20 minute' from Orders where oid=26),(Select order_time + INTERVAL '40 minute' from Orders where oid=26),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=26),22.56),
+(27,56,(Select order_time + INTERVAL '5 minute' from Orders where oid=27),(Select order_time + INTERVAL '20 minute' from Orders where oid=27),(Select order_time + INTERVAL '40 minute' from Orders where oid=27),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=27),2.31),
+(28,57,(Select order_time + INTERVAL '5 minute' from Orders where oid=28),(Select order_time + INTERVAL '20 minute' from Orders where oid=28),(Select order_time + INTERVAL '40 minute' from Orders where oid=28),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=28),7.42),
+(29,58,(Select order_time + INTERVAL '5 minute' from Orders where oid=29),(Select order_time + INTERVAL '20 minute' from Orders where oid=29),(Select order_time + INTERVAL '40 minute' from Orders where oid=29),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=29),13.19),
+(30,59,(Select order_time + INTERVAL '5 minute' from Orders where oid=30),(Select order_time + INTERVAL '20 minute' from Orders where oid=30),(Select order_time + INTERVAL '40 minute' from Orders where oid=30),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=30),16.36),
+(31,60,(Select order_time + INTERVAL '5 minute' from Orders where oid=31),(Select order_time + INTERVAL '20 minute' from Orders where oid=31),(Select order_time + INTERVAL '40 minute' from Orders where oid=31),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=31),29.83),
+(32,61,(Select order_time + INTERVAL '5 minute' from Orders where oid=32),(Select order_time + INTERVAL '20 minute' from Orders where oid=32),(Select order_time + INTERVAL '40 minute' from Orders where oid=32),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=32),2.86),
+(33,62,(Select order_time + INTERVAL '5 minute' from Orders where oid=33),(Select order_time + INTERVAL '20 minute' from Orders where oid=33),(Select order_time + INTERVAL '40 minute' from Orders where oid=33),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=33),6.31),
+(34,63,(Select order_time + INTERVAL '5 minute' from Orders where oid=34),(Select order_time + INTERVAL '20 minute' from Orders where oid=34),(Select order_time + INTERVAL '40 minute' from Orders where oid=34),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=34),9.28),
+(35,64,(Select order_time + INTERVAL '5 minute' from Orders where oid=35),(Select order_time + INTERVAL '20 minute' from Orders where oid=35),(Select order_time + INTERVAL '40 minute' from Orders where oid=35),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=35),21.93),
+(36,65,(Select order_time + INTERVAL '5 minute' from Orders where oid=36),(Select order_time + INTERVAL '20 minute' from Orders where oid=36),(Select order_time + INTERVAL '40 minute' from Orders where oid=36),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=36),1.5),
+(37,66,(Select order_time + INTERVAL '5 minute' from Orders where oid=37),(Select order_time + INTERVAL '20 minute' from Orders where oid=37),(Select order_time + INTERVAL '40 minute' from Orders where oid=37),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=37),24.51),
+(38,67,(Select order_time + INTERVAL '5 minute' from Orders where oid=38),(Select order_time + INTERVAL '20 minute' from Orders where oid=38),(Select order_time + INTERVAL '40 minute' from Orders where oid=38),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=38),2.08),
+(39,68,(Select order_time + INTERVAL '5 minute' from Orders where oid=39),(Select order_time + INTERVAL '20 minute' from Orders where oid=39),(Select order_time + INTERVAL '40 minute' from Orders where oid=39),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=39),28.65),
+(40,69,(Select order_time + INTERVAL '5 minute' from Orders where oid=40),(Select order_time + INTERVAL '20 minute' from Orders where oid=40),(Select order_time + INTERVAL '40 minute' from Orders where oid=40),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=40),20.85),
+(41,70,(Select order_time + INTERVAL '5 minute' from Orders where oid=41),(Select order_time + INTERVAL '20 minute' from Orders where oid=41),(Select order_time + INTERVAL '40 minute' from Orders where oid=41),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=41),2.13),
+(42,71,(Select order_time + INTERVAL '5 minute' from Orders where oid=42),(Select order_time + INTERVAL '20 minute' from Orders where oid=42),(Select order_time + INTERVAL '40 minute' from Orders where oid=42),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=42),4.24),
+(43,51,(Select order_time + INTERVAL '5 minute' from Orders where oid=43),(Select order_time + INTERVAL '20 minute' from Orders where oid=43),(Select order_time + INTERVAL '40 minute' from Orders where oid=43),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=43),23.36),
+(44,52,(Select order_time + INTERVAL '5 minute' from Orders where oid=44),(Select order_time + INTERVAL '20 minute' from Orders where oid=44),(Select order_time + INTERVAL '40 minute' from Orders where oid=44),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=44),10.06),
+(45,53,(Select order_time + INTERVAL '5 minute' from Orders where oid=45),(Select order_time + INTERVAL '20 minute' from Orders where oid=45),(Select order_time + INTERVAL '40 minute' from Orders where oid=45),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=45),4.18),
+(46,54,(Select order_time + INTERVAL '5 minute' from Orders where oid=46),(Select order_time + INTERVAL '20 minute' from Orders where oid=46),(Select order_time + INTERVAL '40 minute' from Orders where oid=46),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=46),21.7),
+(47,55,(Select order_time + INTERVAL '5 minute' from Orders where oid=47),(Select order_time + INTERVAL '20 minute' from Orders where oid=47),(Select order_time + INTERVAL '40 minute' from Orders where oid=47),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=47),22.89),
+(48,56,(Select order_time + INTERVAL '5 minute' from Orders where oid=48),(Select order_time + INTERVAL '20 minute' from Orders where oid=48),(Select order_time + INTERVAL '40 minute' from Orders where oid=48),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=48),13.13),
+(49,57,(Select order_time + INTERVAL '5 minute' from Orders where oid=49),(Select order_time + INTERVAL '20 minute' from Orders where oid=49),(Select order_time + INTERVAL '40 minute' from Orders where oid=49),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=49),20.39),
+(50,58,(Select order_time + INTERVAL '5 minute' from Orders where oid=50),(Select order_time + INTERVAL '20 minute' from Orders where oid=50),(Select order_time + INTERVAL '40 minute' from Orders where oid=50),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=50),5.08),
+(51,59,(Select order_time + INTERVAL '5 minute' from Orders where oid=51),(Select order_time + INTERVAL '20 minute' from Orders where oid=51),(Select order_time + INTERVAL '40 minute' from Orders where oid=51),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=51),3.62),
+(52,60,(Select order_time + INTERVAL '5 minute' from Orders where oid=52),(Select order_time + INTERVAL '20 minute' from Orders where oid=52),(Select order_time + INTERVAL '40 minute' from Orders where oid=52),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=52),18.17),
+(53,61,(Select order_time + INTERVAL '5 minute' from Orders where oid=53),(Select order_time + INTERVAL '20 minute' from Orders where oid=53),(Select order_time + INTERVAL '40 minute' from Orders where oid=53),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=53),19.15),
+(54,62,(Select order_time + INTERVAL '5 minute' from Orders where oid=54),(Select order_time + INTERVAL '20 minute' from Orders where oid=54),(Select order_time + INTERVAL '40 minute' from Orders where oid=54),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=54),13.03),
+(55,63,(Select order_time + INTERVAL '5 minute' from Orders where oid=55),(Select order_time + INTERVAL '20 minute' from Orders where oid=55),(Select order_time + INTERVAL '40 minute' from Orders where oid=55),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=55),12.13),
+(56,64,(Select order_time + INTERVAL '5 minute' from Orders where oid=56),(Select order_time + INTERVAL '20 minute' from Orders where oid=56),(Select order_time + INTERVAL '40 minute' from Orders where oid=56),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=56),21.32),
+(57,65,(Select order_time + INTERVAL '5 minute' from Orders where oid=57),(Select order_time + INTERVAL '20 minute' from Orders where oid=57),(Select order_time + INTERVAL '40 minute' from Orders where oid=57),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=57),3.92),
+(58,66,(Select order_time + INTERVAL '5 minute' from Orders where oid=58),(Select order_time + INTERVAL '20 minute' from Orders where oid=58),(Select order_time + INTERVAL '40 minute' from Orders where oid=58),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=58),16.72),
+(59,67,(Select order_time + INTERVAL '5 minute' from Orders where oid=59),(Select order_time + INTERVAL '20 minute' from Orders where oid=59),(Select order_time + INTERVAL '40 minute' from Orders where oid=59),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=59),11.56),
+(60,68,(Select order_time + INTERVAL '5 minute' from Orders where oid=60),(Select order_time + INTERVAL '20 minute' from Orders where oid=60),(Select order_time + INTERVAL '40 minute' from Orders where oid=60),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=60),11.18),
+(61,69,(Select order_time + INTERVAL '5 minute' from Orders where oid=61),(Select order_time + INTERVAL '20 minute' from Orders where oid=61),(Select order_time + INTERVAL '40 minute' from Orders where oid=61),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=61),9.63),
+(62,70,(Select order_time + INTERVAL '5 minute' from Orders where oid=62),(Select order_time + INTERVAL '20 minute' from Orders where oid=62),(Select order_time + INTERVAL '40 minute' from Orders where oid=62),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=62),27.43),
+(63,71,(Select order_time + INTERVAL '5 minute' from Orders where oid=63),(Select order_time + INTERVAL '20 minute' from Orders where oid=63),(Select order_time + INTERVAL '40 minute' from Orders where oid=63),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=63),29.88),
+(64,51,(Select order_time + INTERVAL '5 minute' from Orders where oid=64),(Select order_time + INTERVAL '20 minute' from Orders where oid=64),(Select order_time + INTERVAL '40 minute' from Orders where oid=64),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=64),18.48),
+(65,52,(Select order_time + INTERVAL '5 minute' from Orders where oid=65),(Select order_time + INTERVAL '20 minute' from Orders where oid=65),(Select order_time + INTERVAL '40 minute' from Orders where oid=65),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=65),29.83),
+(66,53,(Select order_time + INTERVAL '5 minute' from Orders where oid=66),(Select order_time + INTERVAL '20 minute' from Orders where oid=66),(Select order_time + INTERVAL '40 minute' from Orders where oid=66),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=66),3.97),
+(67,54,(Select order_time + INTERVAL '5 minute' from Orders where oid=67),(Select order_time + INTERVAL '20 minute' from Orders where oid=67),(Select order_time + INTERVAL '40 minute' from Orders where oid=67),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=67),4.4),
+(68,55,(Select order_time + INTERVAL '5 minute' from Orders where oid=68),(Select order_time + INTERVAL '20 minute' from Orders where oid=68),(Select order_time + INTERVAL '40 minute' from Orders where oid=68),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=68),8.92),
+(69,56,(Select order_time + INTERVAL '5 minute' from Orders where oid=69),(Select order_time + INTERVAL '20 minute' from Orders where oid=69),(Select order_time + INTERVAL '40 minute' from Orders where oid=69),(Select order_time + INTERVAL '1 HOUR' from Orders where oid=69),9.3);
 
 INSERT INTO Assigned
-VALUES (1, 51, now() - INTERVAL '1 HOUR', 
+VALUES
+(70, 51, now() - INTERVAL '1 HOUR',
 now() - INTERVAL '40 minute', now() - INTERVAL '30 minute',
-now() - INTERVAL '10 minute'),(2, 71, now() - INTERVAL '1 HOUR', 
+now() - INTERVAL '10 minute'),
+(71, 71, now() - INTERVAL '1 HOUR',
 now() - INTERVAL '40 minute', now() - INTERVAL '30 minute',
 now() - INTERVAL '10 minute');
 
-INSERT INTO OrderPromoCampaignUsage (oid, pcid) VALUES (1, 1), (2, 1);
 
+insert into OrderItem (oiid, oid, qty, fid, notes_to_restaurant) values (1, 1, 1, 319, 'Sharable reciprocal task-force');
+insert into OrderItem (oiid, oid, qty, fid, notes_to_restaurant) values (2, 1, 1, 222, 'Synergistic global orchestration');
+insert into OrderItem (oiid, oid, qty, fid, notes_to_restaurant) values (3, 1, 1, 41, 'Proactive analyzing process improvement');
+insert into OrderItem (oiid, oid, qty, fid, notes_to_restaurant) values (1, 2, 1, 203, 'Customer-focused clear-thinking hardware');
+insert into OrderItem (oiid, oid, qty, fid, notes_to_restaurant) values (2, 2, 3, 200, 'Total human-resource synergy');
+insert into OrderItem (oiid, oid, qty, fid, notes_to_restaurant) values (1, 3, 3, 47, 'Total didactic synergy');
+insert into OrderItem (oiid, oid, qty, fid, notes_to_restaurant) values (2, 3, 1, 18, 'Customizable bandwidth-monitored secured line');
+insert into OrderItem (oiid, oid, qty, fid, notes_to_restaurant) values (3, 3, 2, 18, 'Versatile neutral superstructure');
+insert into OrderItem (oiid, oid, qty, fid, notes_to_restaurant) values (1, 4, 1, 44, 'Distributed optimal database');
+insert into OrderItem (oiid, oid, qty, fid, notes_to_restaurant) values (1, 5, 3, 40, 'Face to face logistical paradigm');
+insert into OrderItem (oiid, oid, qty, fid, notes_to_restaurant) values (1, 6, 2, 12, 'Versatile real-time emulation');
+insert into OrderItem (oiid, oid, qty, fid, notes_to_restaurant) values (1, 7, 2, 13, 'Multi-channelled systemic throughput');
+insert into OrderItem (oiid, oid, qty, fid, notes_to_restaurant) values (1, 8, 3, 45, 'Exclusive hybrid toolset');
+insert into OrderItem (oiid, oid, qty, fid, notes_to_restaurant) values (1, 9, 3, 73, 'Polarised regional local area network');
+insert into OrderItem (oiid, oid, qty, fid, notes_to_restaurant) values (1, 10, 1, 45, 'Stand-alone coherent model');
+
+INSERT INTO OrderItem VALUES
+(1,11,1,452,'Public-key 6th generation project'),
+(1,12,3,437,'Re-engineered system-worthy task-force'),
+(1,13,3,253,'Self-enabling content-based matrix'),
+(1,14,3,127,'Cloned context-sensitive budgetary management'),
+(1,15,2,437,'Open-source discrete help-desk'),
+(1,16,1,134,'Distributed global framework'),
+(1,17,1,160,'Upgradable analyzing collaboration'),
+(1,18,1,376,'Team-oriented scalable contingency'),
+(1,19,1,370,'Multi-channelled dynamic contingency'),
+(1,20,2,127,'Pre-emptive methodical installation'),
+(1,21,2,239,'Distributed tangible customer loyalty'),
+(1,22,1,239,'Programmable bifurcated hardware'),
+(1,23,1,103,'Distributed 6th generation access'),
+(1,24,2,129,'Total reciprocal database'),
+(1,25,2,103,'Profound empowering knowledge base'),
+(1,26,3,177,'Expanded exuding data-warehouse'),
+(1,27,3,350,'Secured analyzing concept'),
+(1,28,1,216,'De-engineered optimal system engine'),
+(1,29,2,36,'Organized incremental productivity'),
+(1,30,2,471,'Persistent user-facing product'),
+(1,31,3,94,'Switchable 6th generation orchestration'),
+(1,32,2,108,'Right-sized homogeneous approach'),
+(1,33,2,335,'Monitored leading edge project'),
+(1,34,3,343,'Visionary uniform migration'),
+(1,35,2,335,'Seamless client-server database'),
+(1,36,2,458,'Balanced human-resource encryption'),
+(1,37,2,275,'Fundamental multi-state focus group'),
+(1,38,2,458,'Open-source directional policy'),
+(1,39,2,335,'Digitized leading edge data-warehouse'),
+(1,40,3,127,'User-friendly explicit framework'),
+(1,41,2,471,'Innovative multi-state secured line'),
+(1,42,3,73,'Versatile analyzing neural-net'),
+(1,43,3,177,'Multi-layered asymmetric portal'),
+(1,44,3,299,'Distributed holistic Graphic Interface'),
+(1,45,1,275,'Grass-roots maximized groupware'),
+(1,46,1,340,'Profit-focused systemic capability'),
+(1,47,3,23,'Front-line multimedia secured line'),
+(1,48,1,494,'Mandatory motivating circuit'),
+(1,49,2,151,'Ameliorated 24/7 process improvement'),
+(1,50,2,388,'Multi-layered uniform product'),
+(1,51,2,73,'Mandatory explicit orchestration'),
+(1,52,2,74,'Quality-focused coherent portal'),
+(1,53,3,488,'Customer-focused homogeneous groupware'),
+(1,54,2,462,'Secured dedicated alliance'),
+(1,55,1,108,'Persevering zero administration groupware'),
+(1,56,1,239,'Future-proofed content-based policy'),
+(1,57,3,134,'Exclusive non-volatile challenge'),
+(1,58,1,73,'Persevering non-volatile software'),
+(1,59,2,313,'User-centric actuating benchmark'),
+(1,60,2,346,'Ameliorated encompassing process improvement'),
+(1,61,2,57,'Ameliorated secondary pricing structure'),
+(1,62,3,239,'Fundamental reciprocal service-desk'),
+(1,63,2,462,'Ameliorated holistic interface'),
+(1,64,3,179,'Quality-focused optimizing alliance'),
+(1,65,2,239,'Team-oriented bifurcated hardware'),
+(1,66,2,151,'Business-focused logistical ability'),
+(1,67,1,374,'Intuitive eco-centric hub'),
+(1,68,1,437,'Compatible systemic protocol'),
+(1,69,3,23,'Proactive optimal architecture');
 INSERT INTO OrderItem (oiid, oid, qty, fid, notes_to_restaurant)
 VALUES
-(1, 1, 5, 5, 'order 1'), (2, 1, 2, 13, 'more chilli'), (3, 1, 1, 20, 'more pepper');
+(1, 70, 5, 5, 'order 1'), (2, 70, 2, 13, 'more chilli'), (3, 70, 1, 20, 'more pepper');
+INSERT INTO OrderItem (oiid, oid, qty, fid, notes_to_restaurant)
+VALUES
+(1, 71, 5, 5, 'order 1'), (2, 71, 2, 13, 'more chilli'), (3, 71, 1, 20, 'more pepper');
 
 
--- INSERT INTO Belongs (oid, rid) VALUES (1, 1); 
+
+INSERT INTO PointUsage VALUES
+(51,192,(select order_time from orders where oid=51)),
+(52,908,(select order_time from orders where oid=52)),
+(53,860,(select order_time from orders where oid=53)),
+(54,662,(select order_time from orders where oid=54)),
+(55,246,(select order_time from orders where oid=55)),
+(56,230,(select order_time from orders where oid=56)),
+(57,419,(select order_time from orders where oid=57)),
+(58,804,(select order_time from orders where oid=58)),
+(59,866,(select order_time from orders where oid=59)),
+(60,524,(select order_time from orders where oid=60)),
+(61,889,(select order_time from orders where oid=61)),
+(62,512,(select order_time from orders where oid=62)),
+(63,663,(select order_time from orders where oid=63)),
+(64,886,(select order_time from orders where oid=64)),
+(65,196,(select order_time from orders where oid=65)),
+(66,104,(select order_time from orders where oid=66)),
+(67,942,(select order_time from orders where oid=67)),
+(68,353,(select order_time from orders where oid=68)),
+(69,6,(select order_time from orders where oid=69));
+
+INSERT INTO OrderPromoCampaignUsage VALUES
+(25,4),
+(54,3),
+(47,3),
+(8,1),
+(31,3),
+(9,3),
+(40,2),
+(41,4),
+(21,3),
+(53,2),
+(64,3),
+(44,2);
+
+
+INSERT INTO RestaurantReview VALUES
+(52,'radical'),
+(2,'functionalities'),
+(56,'bandwidth-monitored'),
+(13,'Centralized'),
+(36,'customer loyalty'),
+(16,'Assimilated'),
+(71,'secondary'),
+(42,'Secured'),
+(23,'Future-proofed'),
+(21,'Function-based'),
+(48,'coherent'),
+(19,'throughput'),
+(61,'matrices'),
+(15,'adapter'),
+(65,'project'),
+(28,'interface'),
+(35,'forecast'),
+(62,'methodical'),
+(68,'bottom-line'),
+(26,'discrete'),
+(44,'Re-contextualized'),
+(54,'Customer-focused'),
+(14,'Decentralized'),
+(27,'high-level');
+
+
+
+INSERT INTO RiderRatings VALUES
+(52,0),
+(2,2),
+(56,5),
+(13,5),
+(36,4),
+(16,2),
+(71,1),
+(42,0),
+(23,5),
+(21,3),
+(48,0),
+(19,4),
+(61,2),
+(15,3),
+(65,0),
+(28,5),
+(35,5),
+(62,1),
+(68,0),
+(26,1),
+(44,3),
+(54,5),
+(14,0),
+(27,0);
+
+-- INSERT INTO Belongs (oid, rid) VALUES (1, 1);
 
