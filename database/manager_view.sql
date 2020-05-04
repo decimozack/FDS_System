@@ -5,6 +5,7 @@ DROP VIEW IF EXISTS CustomerOrderSummary CASCADE;
 DROP VIEW IF EXISTS DeliveryLocationSummary CASCADE;
 DROP VIEW IF EXISTS RiderPartSummary CASCADE;
 DROP VIEW IF EXISTS RiderSummary CASCADE;
+DROP VIEW IF EXISTS RestaurantFoodItem CASCADE;
 
 /* 
 Login Table with all the information from all the tables
@@ -68,9 +69,9 @@ A1.empid,
 count(A1.oid) as deliveryOrderCount,
 avg(A1.arriveAtCustomerTime - A1.toRestaurantTime) as avgDeliveryTime,
 count(RR.rating) as ratingCount,
-avg(RR.rating) as avgRating
+coalesce(avg(RR.rating),0) as avgRating
 FROM Assigned A1
-join RiderRatings RR on RR.oid = A1.oid
+left join RiderRatings RR on RR.oid = A1.oid
 group by date_part('year', A1.toRestaurantTime),
 date_part('month', A1.toRestaurantTime),
 A1.empid; 
@@ -88,3 +89,8 @@ RPS.avgRating
 FROM RiderPartSummary RPS left join Salary S1 on RPS.empid = S1.empid and 
 RPS.t_month = extract(MONTH FROM S1.month) and
 RPS.t_year = extract(YEAR FROM S1.month);
+
+
+---- Customer Views ----
+create view RestaurantFoodItem as
+select * from Restaurants R join FoodItem FI using(rid);

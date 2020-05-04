@@ -24,11 +24,53 @@ class ManagerDataService {
     return http.post(`/manager/EmpSignup/`, emprData);
   }
 
-  retrieveCustomer(cid) {
+  retrieveFDSPromos() {
+    return http.get("/manager/getFDSPromos/");
+  }
+
+  retrieveFDSPromo(id) {
+    return http.get("/manager/getFDSPromo/" + id);
+  }
+
+  addFDSDiscountPromo(startTime, endTime, minSpend, maxSpend, discount) {
     const data = {
-      id: cid,
+      startTime: startTime,
+      endTime: endTime,
+      minSpend: minSpend,
+      maxSpend: maxSpend,
+      discount: discount,
     };
-    return http.post(`/manager/retrieveCustomer/`, data);
+    return http.post("/manager/addFDSDiscountPromo/", data);
+  }
+
+  updateFDSDiscountPromo(
+    pcid,
+    startTime,
+    endTime,
+    minSpend,
+    maxSpend,
+    discount
+  ) {
+    const data = {
+      pcid: pcid,
+      startTime: startTime,
+      endTime: endTime,
+      minSpend: minSpend,
+      maxSpend: maxSpend,
+      discount: discount,
+    };
+    return http.post("/manager/updateFDSDiscountPromo/", data);
+  }
+  retrieveLocationAreaList() {
+    return http.get("/manager/getLocationAreaList");
+  }
+
+  retrieveRiderList() {
+    return http.get("/manager/retrieveRiders");
+  }
+
+  retrieveCustomers() {
+    return http.get("/manager/getCustomerList");
   }
 
   retrieveCustomer(cid, usertype) {
@@ -41,10 +83,8 @@ class ManagerDataService {
   retrieveEmployee(id, usertype) {
     if (usertype === "m") {
       return this.retrieveManager(id);
-    } else if (usertype === "ri") {
-      return this.retrieveRider(id);
     } else {
-      return null;
+      return this.retrieveRider(id);
     }
   }
 
@@ -80,6 +120,25 @@ class ManagerDataService {
 
   updateRider(empData) {
     return http.post(`/manager/updateRider/`, empData);
+  }
+
+  getMonthlySummary(year, month) {
+    const data = { year: year, month: month };
+    return http.post(`/manager/getMonthlySummary/`, data);
+  }
+
+  getCustomerOrderSummary(year, month, cid) {
+    const data = { year: year, month: month, id: cid };
+    return http.post(`/manager/getCustomerOrderSummary/`, data);
+  }
+
+  getDeliveryLocationSummary(year, month, day, hour, area) {
+    const data = { year: year, month: month, day: day, hour: hour, area: area };
+    return http.post(`/manager/getDeliveryLocationSummary/`, data);
+  }
+  getRiderSummary(year, month, emp_id) {
+    const data = { year: year, month: month, id: emp_id };
+    return http.post(`/manager/getRiderSummary/`, data);
   }
 }
 

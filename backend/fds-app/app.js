@@ -3,6 +3,7 @@ import express from "express";
 import path from "path";
 import logger from "morgan";
 
+import customer from "./routes/customer";
 import sample from "./routes/sample";
 import rider from "./routes/rider";
 import manager from "./routes/manager";
@@ -30,6 +31,7 @@ app.locals.db = pool;
 
 // Backend Page Links
 app.use("/sample", sample); //This means that all page directed to localhost:3001/sample/........ is redirected to sample.js
+app.use("/customer", customer);
 app.use("/rider", rider);
 app.use("/manager", manager);
 app.use("/restaurant", restaurant);

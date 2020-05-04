@@ -19,6 +19,110 @@ router.get("/getCustomerList", (req, res, next) => {
     });
 });
 
+router.get("/getFDSPromos/", (req, res, next) => {
+  var db = req.app.locals.db;
+
+  db.query(
+    "select * from promocampaign join promobfds using (pcid) join discountpromo using (pcid) order by pcid desc"
+  )
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find promo by fds");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.get("/getFDSPromo/:id", (req, res, next) => {
+  var db = req.app.locals.db;
+  const id = req.params.id;
+
+  db.query(
+    "select * from promocampaign join promobfds using (pcid) join discountpromo using (pcid) where pcid=$1 order by pcid desc",
+    [id]
+  )
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find promo by fds");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/addFDSDiscountPromo/", (req, res, next) => {
+  var db = req.app.locals.db;
+  var { startTime, endTime, minSpend, maxSpend, discount } = req.body;
+  db.query("SELECT fdsAddDiscountPromo($1, $2, $3, $4, $5)", [
+    startTime,
+    endTime,
+    minSpend,
+    maxSpend,
+    discount,
+  ])
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot add");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/updateFDSDiscountPromo/", (req, res, next) => {
+  var db = req.app.locals.db;
+  var { pcid, startTime, endTime, minSpend, maxSpend, discount } = req.body;
+  db.query("SELECT fdsUpdateDiscountPromo($1, $2, $3, $4, $5, $6)", [
+    startTime,
+    endTime,
+    minSpend,
+    maxSpend,
+    discount,
+    pcid,
+  ])
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot add");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err.message);
+    });
+});
+
+router.get("/getLocationAreaList", (req, res, next) => {
+  var db = req.app.locals.db;
+
+  db.query("SELECT * FROM LocationArea")
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find area list");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
 router.get("/getRiderSummaryOverall", (req, res, next) => {
   var db = req.app.locals.db;
 
@@ -79,7 +183,7 @@ router.post("/getDeliveryLocationSummary", (req, res, next) => {
   var db = req.app.locals.db;
 
   db.query(
-    "SELECT * FROM DeliveryLocationSummary WHERE t_year=$1 and t_month=$2 and t_month=$3 and t_day=$3 and t_hour=$4 and location_area=$5",
+    "SELECT * FROM DeliveryLocationSummary WHERE t_year=$1 and t_month=$2 and t_day=$3 and t_hour=$4 and location_area=$5",
     [year, month, day, hour, area]
   )
     .then(function (rows) {
@@ -112,26 +216,26 @@ router.get("/getCustomerOrderSummaryOverall", (req, res, next) => {
     });
 });
 
-router.post("/getCustomerOrderSummary", (req, res, next) => {
-  var { id, year, month } = req.body;
-  var db = req.app.locals.db;
+// router.post("/getCustomerOrderSummary", (req, res, next) => {
+//   var { id, year, month } = req.body;
+//   var db = req.app.locals.db;
 
-  db.query(
-    "SELECT * FROM CustomerOrderSummary WHERE t_year=$1 and t_month=$2 and cid=$3",
-    [year, month, id]
-  )
-    .then(function (rows) {
-      if (rows) {
-        res.status(200).send(rows);
-      } else {
-        res.status(404).send("Error find CustomerOrderSummary");
-      }
-    })
-    .catch(function (err) {
-      console.error(err);
-      res.status(500).send(err);
-    });
-});
+//   db.query(
+//     "SELECT * FROM CustomerOrderSummary WHERE t_year=$1 and t_month=$2 and cid=$3",
+//     [year, month, id]
+//   )
+//     .then(function (rows) {
+//       if (rows) {
+//         res.status(200).send(rows);
+//       } else {
+//         res.status(404).send("Error find CustomerOrderSummary");
+//       }
+//     })
+//     .catch(function (err) {
+//       console.error(err);
+//       res.status(500).send(err);
+//     });
+// });
 
 router.get("/getCustomerOrderSummaryOverall", (req, res, next) => {
   var db = req.app.locals.db;
@@ -175,7 +279,7 @@ router.post("/getMonthlySummary", (req, res, next) => {
   var { year, month } = req.body;
   var db = req.app.locals.db;
 
-  db.query("SELECT getmonthsummary($1,$2)", [year, month])
+  db.query("SELECT * FROM getmonthsummary($1,$2)", [year, month])
     .then(function (rows) {
       if (rows) {
         res.status(200).send(rows);
@@ -214,6 +318,23 @@ router.post("/retrieveManager", (req, res, next) => {
   db.query("SELECT * FROM Manager NATURAL JOIN FDSEmployee WHERE (empid=$1)", [
     id,
   ])
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find user information");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.get("/retrieveRiders", (req, res, next) => {
+  var db = req.app.locals.db;
+
+  db.query("SELECT * FROM Rider NATURAL JOIN FDSEmployee")
     .then(function (rows) {
       if (rows) {
         res.status(200).send(rows);

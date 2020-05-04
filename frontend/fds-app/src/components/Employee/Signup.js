@@ -128,11 +128,7 @@ class EmployeeSignUp extends React.Component {
           {this.state.errorMsg.length > 0 && (
             <Alert severity="error">{this.state.errorMsg}</Alert>
           )}
-          <form
-            className={classes.form}
-            onSubmit={this.handleSubmit}
-            noValidate
-          >
+          <form className={classes.form} onSubmit={this.handleSubmit}>
             <TextField
               id="workRole"
               select
@@ -142,6 +138,7 @@ class EmployeeSignUp extends React.Component {
               onChange={this.handleChange}
               helperText="Please select your role"
               name="workRole"
+              required
             >
               {workRoles.map((option) => (
                 <MenuItem key={option.value} value={option.value}>

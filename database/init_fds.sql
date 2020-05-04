@@ -27,6 +27,8 @@ DROP TABLE IF EXISTS RiderRatings CASCADE;
 DROP TABLE IF EXISTS Assigned CASCADE;
 DROP TABLE IF EXISTS ClockIn CASCADE;
 DROP TABLE IF EXISTS Manager CASCADE;
+DROP TABLE IF EXISTS PointUsage CASCADE;
+DROP TABLE IF EXISTS LocationArea CASCADE;
 DROP TYPE IF EXISTS ostatus CASCADE;
 DROP TYPE IF EXISTS campaignEnum CASCADE;
 DROP TYPE IF EXISTS emp_type CASCADE;
@@ -58,6 +60,11 @@ CREATE TABLE Customers (
 	created_on TIMESTAMP NOT NULL 
 ); 
 
+CREATE TABLE LocationArea (
+	area_id SERIAL UNIQUE NOT NULL,
+	area_name varchar(200) PRIMARY KEY
+);
+
 CREATE TYPE ostatus as ENUM('WAITING', 'DELIVERING', 'COMPLETED');
 CREATE TABLE Orders ( -- total part from Order to Contains not enforced
 	oid SERIAL PRIMARY KEY,
@@ -65,14 +72,24 @@ CREATE TABLE Orders ( -- total part from Order to Contains not enforced
 	use_points BOOL NOT NULL,
 	order_time TIMESTAMP NOT NULL,
 	order_status ostatus NOT NULL, -- this ok?
-	price DECIMAL(5, 2) NOT NULL,
+	price DECIMAL(10, 2) NOT NULL,
 	delivery_fee DECIMAL(5, 2) NOT NULL,
 	address VARCHAR(100) NOT NULL,
 	location_area varchar(200) NOT NULL,
 	cid INTEGER NOT NULL,
 	gain_reward_pts INTEGER NOT NULL,
-	FOREIGN KEY (cid) REFERENCES Customers
+	rid INTEGER NOT NULL,
+	FOREIGN KEY (cid) REFERENCES Customers,
+	FOREIGN KEY (location_area) REFERENCES LocationArea,
+	FOREIGN KEY (rid) REFERENCES Restaurants
 );
+
+CREATE TABLE PointUsage (
+	oid INTEGER PRIMARY KEY,
+	point_used INTEGER NOT NULL,
+	used_on TIMESTAMP NOT NULL,
+	FOREIGN KEY (oid) REFERENCES Orders
+); 
 
 CREATE TABLE Category (
 	catid SERIAL PRIMARY KEY,
@@ -131,20 +148,31 @@ CREATE TABLE OrderPromoCampaignUsage (
 );
 
 
-CREATE TABLE OrderItem (  -- full part from OrderItem to Place not enforced
-	ooid SERIAL UNIQUE, -- have to add UNIQUE, but i thot SERIAL ensures uniqueness?
+-- CREATE TABLE OrderItem (  -- full part from OrderItem to Place not enforced
+-- 	ooid SERIAL UNIQUE, -- have to add UNIQUE, but i thot SERIAL ensures uniqueness?
+-- 	oid INTEGER,
+-- 	qty INTEGER NOT NULL,
+-- 	PRIMARY KEY (ooid, oid),
+-- 	FOREIGN KEY (oid) REFERENCES Orders ON DELETE CASCADE	
+-- );
+CREATE TABLE OrderItem (  
+	oiid INTEGER, -- order item number that is depending on Order. eg orderItem 1 for Order 1
 	oid INTEGER,
-	PRIMARY KEY (ooid, oid),
-	FOREIGN KEY (oid) REFERENCES Orders ON DELETE CASCADE	
+	qty INTEGER NOT NULL,
+	fid INTEGER NOT NULL,
+	notes_to_restaurant varchar(500),
+	PRIMARY KEY (oiid, oid),
+	FOREIGN KEY (oid) REFERENCES Orders ON DELETE CASCADE,
+	FOREIGN KEY (fid) REFERENCES FoodItem ON DELETE CASCADE	
 );
 
-CREATE TABLE Place (
-	ooid INTEGER REFERENCES OrderItem(ooid) on DELETE CASCADE,
-	fid INTEGER,
-	qty INTEGER NOT NULL,
-	PRIMARY KEY (ooid, fid),
-	FOREIGN KEY (fid) REFERENCES FoodItem(fid) ON DELETE CASCADE
-);
+-- CREATE TABLE Place (
+-- 	ooid INTEGER REFERENCES OrderItem(ooid) on DELETE CASCADE,
+-- 	fid INTEGER,
+-- 	qty INTEGER NOT NULL,
+-- 	PRIMARY KEY (ooid, fid),
+-- 	FOREIGN KEY (fid) REFERENCES FoodItem(fid) ON DELETE CASCADE
+-- );
 
 CREATE TABLE RestaurantReview (
 	oid INTEGER Primary key,
@@ -152,13 +180,13 @@ CREATE TABLE RestaurantReview (
 	FOREIGN key (oid) REFERENCES Orders
 );
 
-CREATE TABLE Belongs (
-	oid INTEGER, 
-	rid INTEGER,
-	PRIMARY KEY (oid, rid),
-	FOREIGN KEY (oid) REFERENCES Orders,
-	FOREIGN KEY (rid) REFERENCES Restaurants
-);
+-- CREATE TABLE Belongs (
+-- 	oid INTEGER, 
+-- 	rid INTEGER,
+-- 	PRIMARY KEY (oid, rid),
+-- 	FOREIGN KEY (oid) REFERENCES Orders,
+-- 	FOREIGN KEY (rid) REFERENCES Restaurants
+-- );
 
 CREATE TABLE Eligible (
 	cid INTEGER,
@@ -358,30 +386,30 @@ CREATE TABLE OrderWaitingList (
 );
 
 
--- incomplete trigger
-CREATE OR REPLACE FUNCTION total_part_orderitem_wrt_place () RETURNS TRIGGER AS
-$$ 
-DECLARE
-	orderitem_id INTEGER;
-	ok boolean;
-BEGIN
-	IF (TG_TABLE_NAME = 'Place') THEN
-		orderitem_id = NEW.ooid;
-	ELSE
-		orderitem_id = OLD.ooid;
-	END IF;
-END;
-$$ 
-LANGUAGE plpgsql;
+-- -- incomplete trigger
+-- CREATE OR REPLACE FUNCTION total_part_orderitem_wrt_place () RETURNS TRIGGER AS
+-- $$ 
+-- DECLARE
+-- 	orderitem_id INTEGER;
+-- 	ok boolean;
+-- BEGIN
+-- 	IF (TG_TABLE_NAME = 'Place') THEN
+-- 		orderitem_id = NEW.ooid;
+-- 	ELSE
+-- 		orderitem_id = OLD.ooid;
+-- 	END IF;
+-- END;
+-- $$ 
+-- LANGUAGE plpgsql;
 
-/* Trigger for insert/update on OrderItem */
---DROP TRIGGER IF EXISTS
---total_part_orderitem_place_trigger_on_place on Place CASCADE;
-CREATE constraint TRIGGER
-total_part_orderitem_place_trigger_on_place
-AFTER INSERT OR UPDATE of ooid ON Place
-deferrable initially deferred
-FOR EACH ROW 
-EXECUTE FUNCTION
-total_part_orderitem_wrt_place();
+-- /* Trigger for insert/update on OrderItem */
+-- --DROP TRIGGER IF EXISTS
+-- --total_part_orderitem_place_trigger_on_place on Place CASCADE;
+-- CREATE constraint TRIGGER
+-- total_part_orderitem_place_trigger_on_place
+-- AFTER INSERT OR UPDATE of ooid ON Place
+-- deferrable initially deferred
+-- FOR EACH ROW 
+-- EXECUTE FUNCTION
+-- total_part_orderitem_wrt_place();
 

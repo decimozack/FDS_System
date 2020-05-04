@@ -143,9 +143,74 @@ RETURNS TABLE (
 ) AS $$
 BEGIN
     RETURN QUERY 
-    SELECT TC.t_year, TC.t_month, TC.customerCount, TOM.orderCount, TOM.totalPrice 
-    FROM TotalNewCustomerMonth TC join TotalOrderMonth TOM 
+    SELECT case
+    WHEN TC.t_year IS NOT NULL THEN TC.t_year
+    ELSE TOM.t_year
+    end as t_year, case 
+    WHEN TC.t_month IS NOT NULL THEN TC.t_month
+    ELSE TOM.t_month
+    end as t_month, coalesce(TC.customerCount, 0), coalesce(TOM.orderCount,0), coalesce(TOM.totalPrice,0) 
+    FROM TotalNewCustomerMonth TC full join TotalOrderMonth TOM 
     on TC.t_year = TOM.t_year and TC.t_month = TOM.t_month
-    WHERE TC.t_year = inYear and TC.t_month = inMonth;
+    WHERE (TC.t_year = inYear and TC.t_month = inMonth) or
+    (TOM.t_year = inYear and TOM.t_month = inMonth);
 END;
 $$ LANGUAGE plpgsql;
+
+-- fdsAddDiscountPromo
+CREATE OR REPLACE FUNCTION fdsAddDiscountPromo(startTime TIMESTAMP, endTime TIMESTAMP,
+minSpend INTEGER, maxSpend INTEGER, inDiscount INTEGER)
+RETURNS void as $$
+DECLARE
+    re_pcid INTEGER;
+BEGIN
+    INSERT INTO PromoCampaign(campaign_type, start_time, end_time)
+    VALUES ('DiscountPromo', startTime, endTime) RETURNING pcid INTO re_pcid;
+
+    INSERT INTO PromoBFDS
+    VALUES (re_pcid);
+
+    INSERT INTO DiscountPromo(pcid, min_spend, max_spend, discount)
+    VALUES (re_pcid, minSpend, maxSpend, inDiscount);
+
+END;
+$$ LANGUAGE plpgsql;
+
+-- Update Promo
+CREATE OR REPLACE FUNCTION fdsUpdateDiscountPromo(startTime TIMESTAMP, endTime TIMESTAMP,
+minSpend INTEGER, maxSpend INTEGER, inDiscount INTEGER, in_pcid INTEGER)
+RETURNS void as $$
+DECLARE
+    re_pcid INTEGER;
+BEGIN
+    UPDATE PromoCampaign
+    SET start_time=startTime, end_time=endTime
+    WHERE pcid=in_pcid;
+    
+    UPDATE DiscountPromo
+    SET min_spend=minSpend, max_spend=maxSpend, discount=inDiscount
+    WHERE pcid=in_pcid;
+
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- trigger for FDSEmployee
+
+CREATE OR REPLACE FUNCTION update_insert_discount_promo_restrict() RETURNS TRIGGER AS $$
+BEGIN
+    
+    IF NEW.min_spend > NEW.max_spend THEN 
+        RAISE exception 'Minimum Spend is more than Maximum spend';
+    END IF;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS update_insert_discount_promo ON DiscountPromo CASCADE;
+CREATE CONSTRAINT TRIGGER update_insert_discount_promo
+AFTER UPDATE OF max_spend,min_spend OR INSERT
+ON DiscountPromo
+DEFERRABLE INITIALLY IMMEDIATE
+FOR EACH ROW
+EXECUTE FUNCTION update_insert_discount_promo_restrict();

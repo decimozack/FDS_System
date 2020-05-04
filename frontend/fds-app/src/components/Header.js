@@ -39,13 +39,25 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Header(props) {
   const classes = useStyles();
-  const { sections, managerSections, riderSections, title, restaurantSections } = props;
+  const {
+    sections,
+    customerSections,
+    managerSections,
+    riderSections,
+    title,
+    restaurantSections,
+  } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorCustomer, setAnchorCustomer] = React.useState(null);
   const [anchorE2, setAnchorE2] = React.useState(null);
   const [anchorE3, setAnchorE3] = React.useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleClickCustomer = (event) => {
+    setAnchorCustomer(event.currentTarget);
   };
 
   const handleClickRider = (event) => {
@@ -58,6 +70,7 @@ export default function Header(props) {
 
   const handleClose = () => {
     setAnchorEl(null);
+    setAnchorCustomer(null);
     setAnchorE2(null);
     setAnchorE3(null);
   };
@@ -119,6 +132,35 @@ export default function Header(props) {
               {section.title}
             </Link>
           ))}
+          <Button
+            aria-controls="customer-menu"
+            aria-haspopup="true"
+            onClick={handleClickCustomer}
+            color="white"
+            className={classes.overrides}
+          >
+            Customer
+          </Button>
+          <Menu
+            id="customer-menu"
+            anchorEl={anchorCustomer}
+            keepMounted
+            open={Boolean(anchorCustomer)}
+            onClose={handleClose}
+          >
+            {customerSections.map((section) => (
+              <MenuItem onClick={handleClose}>
+                <Link
+                  className={classes.linkcolor}
+                  noWrap
+                  key={section.title}
+                  href={section.url}
+                >
+                  {section.title}
+                </Link>
+              </MenuItem>
+            ))}
+          </Menu>
 
           <Button
             aria-controls="simple-menu"

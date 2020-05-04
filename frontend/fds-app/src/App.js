@@ -17,6 +17,12 @@ import { ProtectedRoute } from "./protected.route";
 import { CustomerProtectedRoute } from "./customer_protected.route";
 import { ManagerProtectedRoute } from "./manager_protected.route";
 import { RiderProtectedRoute } from "./rider_protected.route";
+import ViewRestaurants from "./components/Customer/ViewRestaurants";
+import ViewRestaurant from "./components/Customer/ViewRestaurant";
+import OverallFDSDashboard from "./components/Employee/Dashboard/OverallFDSDashboard";
+import CustomerOrderDashboard from "./components/Employee/Dashboard/CustomerOrderDashboard";
+import DeliveryLocationDashboard from "./components/Employee/Dashboard/DeliveryLocationDashboard";
+import RiderDashboard from "./components/Employee/Dashboard/RiderDashboard";
 import { RestaurantProtectedRoute } from "./restaurant_protected.route";
 import auth from "./auth";
 import WorkSchedule from "./components/Riders/workshift.js";
@@ -29,6 +35,12 @@ import RestaurantNewFoodItem from "./components/Restaurants/newFoodItem.js";
 import RestaurantPromo from "./components/Restaurants/promo.js";
 import RestaurantNewPromo from "./components/Restaurants/newPromo.js";
 import RestaurantReview from "./components/Restaurants/review.js";
+import Checkout from "./components/Customer/Checkout";
+import OrdersTable from "./components/Customer/OrdersTable";
+import RatingForm from "./components/Customer/RatingForm";
+import ViewPromos from "./components/Employee/ViewPromos";
+import AddPromo from "./components/Employee/AddPromo";
+import UpdatePromo from "./components/Employee/UpdatePromo";
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
@@ -38,8 +50,12 @@ const useStyles = makeStyles((theme) => ({
 
 const sections = [
   { title: "Home", url: "/" },
-  { title: "Update Info", url: "/updateCustomer" },
   { title: "About", url: "/about" },
+];
+const customerSections = [
+  { title: "Update Info", url: "/updateCustomer" },
+  { title: "View Restaurants", url: "/customer/restaurants" },
+  { title: "View All Orders", url: "/customer/orders/" },
 ];
 
 const managerSections = [
@@ -48,7 +64,18 @@ const managerSections = [
   { title: "Customer Management", url: "/contact" },
   { title: "Employee Management", url: "/about" },
   { title: "Restaurant Management", url: "/about" },
-  { title: "Dashboard", url: "/about" },
+  { title: "View All FDS Promos", url: "/promos" },
+  { title: "Add FDS Promo", url: "/promos/add" },
+  { title: "Overall FDS Dashboard", url: "/dashboard/fds" },
+  {
+    title: "Customer Order Summary Dashboard",
+    url: "/dashboard/customerorder",
+  },
+  {
+    title: "Delivery Location Summary Dashboard",
+    url: "/dashboard/deliverylocation",
+  },
+  { title: "Rider Summary Dashboard", url: "/dashboard/rider" },
 ];
 
 const riderSections = [
@@ -59,7 +86,6 @@ const riderSections = [
   { title: "Ratings", url: "/riders/ratings" },
   { title: "Update Info", url: "/updateEmployee" },
 ];
-
 
 const restaurantSections = [
   { title: "Menu", url: "/restaurant/menu" },
@@ -89,6 +115,7 @@ class App extends Component {
           <Header
             title="FDS System"
             sections={sections}
+            customerSections={customerSections}
             managerSections={managerSections}
             riderSections={riderSections}
             restaurantSections={restaurantSections}
@@ -132,6 +159,58 @@ class App extends Component {
                         isLogin={this.state.isLogin}
                       />
                     )}
+                  />
+                  <CustomerProtectedRoute
+                    path="/customer/restaurants"
+                    component={ViewRestaurants}
+                  />
+                  <CustomerProtectedRoute
+                    path="/customer/restaurant/:id"
+                    component={ViewRestaurant}
+                  />
+                  <CustomerProtectedRoute
+                    path="/customer/checkout"
+                    component={Checkout}
+                  />
+                  <CustomerProtectedRoute
+                    path="/customer/orders/"
+                    component={OrdersTable}
+                  />
+                  <CustomerProtectedRoute
+                    path="/customer/rating/"
+                    component={RatingForm}
+                  />
+                  <CustomerProtectedRoute
+                    path="/customer/*"
+                    component={ViewRestaurants}
+                  />
+                  <ManagerProtectedRoute
+                    path="/promos/add"
+                    component={AddPromo}
+                  />
+                  <ManagerProtectedRoute
+                    path="/promos/update/:id"
+                    component={UpdatePromo}
+                  />
+                  <ManagerProtectedRoute
+                    path="/promos"
+                    component={ViewPromos}
+                  />
+                  <ManagerProtectedRoute
+                    path="/dashboard/fds"
+                    component={OverallFDSDashboard}
+                  />
+                  <ManagerProtectedRoute
+                    path="/dashboard/customerorder"
+                    component={CustomerOrderDashboard}
+                  />
+                  <ManagerProtectedRoute
+                    path="/dashboard/deliverylocation"
+                    component={DeliveryLocationDashboard}
+                  />
+                  <ManagerProtectedRoute
+                    path="/dashboard/rider"
+                    component={RiderDashboard}
                   />
                   <RiderProtectedRoute
                     path="/riders/workschedule"
