@@ -60,13 +60,6 @@ CREATE TABLE Customers (
 	created_on TIMESTAMP NOT NULL 
 ); 
 
-CREATE TABLE PointUsage (
-	cid INTEGER PRIMARY KEY,
-	point_used INTEGER NOT NULL,
-	used_on TIMESTAMP NOT NULL,
-	FOREIGN KEY (cid) REFERENCES Customers
-); 
-
 CREATE TABLE LocationArea (
 	area_id SERIAL UNIQUE NOT NULL,
 	area_name varchar(200) PRIMARY KEY
@@ -90,6 +83,13 @@ CREATE TABLE Orders ( -- total part from Order to Contains not enforced
 	FOREIGN KEY (location_area) REFERENCES LocationArea,
 	FOREIGN KEY (rid) REFERENCES Restaurants
 );
+
+CREATE TABLE PointUsage (
+	oid INTEGER PRIMARY KEY,
+	point_used INTEGER NOT NULL,
+	used_on TIMESTAMP NOT NULL,
+	FOREIGN KEY (oid) REFERENCES Orders
+); 
 
 CREATE TABLE Category (
 	catid SERIAL PRIMARY KEY,

@@ -24,6 +24,11 @@ class CustomerDataService {
     return http.get(baseUrl + "/getReview/" + id);
   }
 
+  getDiscountPromo(price) {
+    const data = { price: price };
+    return http.post(baseUrl + "/getDiscountPromo/", data);
+  }
+
   submitOrder(data) {
     const sendData = {
       userId: data.user.userid,
@@ -37,6 +42,7 @@ class CustomerDataService {
       address: data.address,
       location_area: data.location_area,
       gain_reward_pts: data.gain_reward_pts,
+      pcid: data.pcid,
     };
     return http.post(baseUrl + "/submitOrder/", sendData);
   }

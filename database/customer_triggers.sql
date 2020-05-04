@@ -10,7 +10,7 @@ fname text, food_limit integer, notes text, price DECIMAL(10,2), qty integer, ri
 CREATE OR REPLACE FUNCTION submitOrder(inUserId integer, inRid integer,
 in_min_order_cost Decimal(10,2), in_use_credit_card boolean, in_use_points boolean,
 inPrice Decimal(10,2), in_delivery_fee Decimal(10,2),
-inAddress text, in_location_area text, in_gain_reward_pts integer,inOrderItems text)
+inAddress text, in_location_area text, in_gain_reward_pts integer,inOrderItems text, inPcid integer)
 RETURNS void as $$
 DECLARE
     meet_min_cost boolean;
@@ -33,6 +33,11 @@ BEGIN
 
     INSERT INTO OrderWaitingList(oid)
     VALUES (order_id);
+
+    IF inPcid > 0 THEN
+        INSERT INTO OrderPromoCampaignUsage(oid, pcid)
+        VALUES (order_id, inPcid);
+    END IF;
 
     FOR temprow IN
         SELECT * FROM json_populate_recordset(null:: OrderItemInput, inOrderItems::json)
@@ -58,8 +63,8 @@ BEGIN
 
     IF NEW.use_points THEN
 
-        INSERT INTO PointUsage(cid, point_used, used_on)
-        VALUES (NEW.cid, inRewardPts, now());
+        INSERT INTO PointUsage(oid, point_used, used_on)
+        VALUES (NEW.oid, inRewardPts, now());
 
         UPDATE Customers
         SET reward_pts = NEW.gain_reward_pts

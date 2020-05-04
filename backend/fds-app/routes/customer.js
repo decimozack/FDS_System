@@ -93,6 +93,27 @@ router.post("/getOrders", (req, res, next) => {
     });
 });
 
+router.post("/getDiscountPromo", (req, res, next) => {
+  var db = req.app.locals.db;
+  var { price } = req.body;
+
+  db.query(
+    "select * from promocampaign join discountpromo using(pcid) where start_time < now() and end_time > now() and $1 > min_spend;",
+    [price]
+  )
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find discount promo");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
 router.get("/getReviews", (req, res, next) => {
   var db = req.app.locals.db;
 
@@ -182,6 +203,7 @@ router.post("/submitOrder", (req, res, next) => {
     address,
     location_area,
     gain_reward_pts,
+    pcid,
   } = req.body;
 
   price = parseFloat(price);
@@ -190,19 +212,23 @@ router.post("/submitOrder", (req, res, next) => {
   use_points = use_points === "true";
   var orderItemsString = JSON.stringify(orderItems);
 
-  db.query("select submitOrder($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)", [
-    userId,
-    restaurantId,
-    min_order_cost,
-    use_credit_card,
-    use_points,
-    price,
-    delivery_fee,
-    address,
-    location_area,
-    gain_reward_pts,
-    orderItemsString,
-  ])
+  db.query(
+    "select submitOrder($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
+    [
+      userId,
+      restaurantId,
+      min_order_cost,
+      use_credit_card,
+      use_points,
+      price,
+      delivery_fee,
+      address,
+      location_area,
+      gain_reward_pts,
+      orderItemsString,
+      pcid,
+    ]
+  )
     .then(function (rows) {
       if (rows) {
         res.status(200).send(rows);

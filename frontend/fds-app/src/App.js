@@ -52,11 +52,7 @@ const sections = [
 const customerSections = [
   { title: "Update Info", url: "/updateCustomer" },
   { title: "View Restaurants", url: "/customer/restaurants" },
-  { title: "View Food Items Of Restaurant", url: "/customer/restaurant/:id" },
-  { title: "Shopping Cart", url: "/customer/cart" },
-  { title: "Checkout", url: "/customer/checkout" },
   { title: "View All Orders", url: "/customer/orders/" },
-  { title: "Rating Form", url: "/customer/rating" },
 ];
 
 const managerSections = [

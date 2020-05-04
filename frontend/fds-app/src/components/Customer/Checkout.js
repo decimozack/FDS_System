@@ -28,6 +28,10 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import PointUsage from "../../utils/PointUsage";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import Select from "@material-ui/core/Select";
 
 const useStyles = (theme) => ({
   root: {
@@ -80,6 +84,13 @@ const useStyles = (theme) => ({
     margin: theme.spacing(3, 2, 2),
     width: 300,
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
 });
 
 class Checkout extends React.Component {
@@ -100,6 +111,8 @@ class Checkout extends React.Component {
       successMsg: "",
       areaList: [],
       customer: null,
+      promocampaign: null,
+      pcList: [],
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -112,12 +125,29 @@ class Checkout extends React.Component {
     this.calRewardPoints = this.calRewardPoints.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.retrieveCustomer = this.retrieveCustomer.bind(this);
+    this.retrieveDiscountPromo = this.retrieveDiscountPromo.bind(this);
+    this.calOverallTotalPrice = this.calOverallTotalPrice.bind(this);
+    this.calOverallTotalPriceDisplay = this.calOverallTotalPriceDisplay.bind(
+      this
+    );
   }
 
   componentDidMount() {
     this.retrieveAreas();
     this.retrieveCustomer();
+    this.retrieveDiscountPromo();
   }
+
+  retrieveDiscountPromo() {
+    CustomerDataService.getDiscountPromo(this.calTotalPrice())
+      .then((response) => {
+        this.setState({ pcList: response.data.rows });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
   retrieveCustomer() {
     const user = auth.getUser();
     ManagerDataService.retrieveCustomer(user.userid)
@@ -140,11 +170,12 @@ class Checkout extends React.Component {
       orderItems: this.state.orderItems,
       use_credit_card: this.state.use_credit_card,
       use_points: this.state.use_points,
-      price: this.calTotalPrice() + this.state.delivery_fee,
+      price: this.calOverallTotalPrice(),
       delivery_fee: this.state.delivery_fee,
       address: this.state.address,
       location_area: this.state.location_area.area_name,
       gain_reward_pts: this.calRewardPoints(),
+      pcid: this.state.promocampaign ? this.state.promocampaign.pcid : -1,
     };
     console.log(data);
     CustomerDataService.submitOrder(data)
@@ -186,6 +217,28 @@ class Checkout extends React.Component {
     this.setState({ errorMsg: "", successMsg: "" });
     this.createOrder();
   }
+
+  calOverallTotalPrice = () => {
+    const promoDiscount = this.state.promocampaign
+      ? 1 - this.state.promocampaign.discount / 100
+      : 1;
+
+    return this.calTotalPrice() * promoDiscount + this.state.delivery_fee;
+  };
+
+  calOverallTotalPriceDisplay = () => {
+    const promoDiscount = this.state.promocampaign
+      ? 1 - this.state.promocampaign.discount / 100
+      : 1;
+    let usePoint = 0;
+    if (this.state.use_points === "true") {
+      usePoint = PointUsage.convertPointToMoney(this.state.customer.reward_pts);
+    }
+
+    return (
+      this.calTotalPrice() * promoDiscount + this.state.delivery_fee - usePoint
+    );
+  };
 
   calTotalPrice = () => {
     const totalPrice = this.state.orderItems.reduce((acc, orderItem) => {
@@ -278,6 +331,31 @@ class Checkout extends React.Component {
                   />
                 )}
               />
+              <FormControl className={classes.formControl}>
+                <InputLabel shrink id="promo-campaign-label">
+                  PromoCampaign
+                </InputLabel>
+                <Select
+                  labelId="promo-campaign-label"
+                  id="promo-campaign"
+                  name="promocampaign"
+                  value={this.state.promocampaign}
+                  onChange={this.handleChange}
+                  displayEmpty
+                  className={classes.selectEmpty}
+                >
+                  <MenuItem value={null}>
+                    <em>None</em>
+                  </MenuItem>
+                  {this.state.pcList.map((pc) => (
+                    <MenuItem value={pc}>
+                      {pc.campaign_type + " - " + pc.discount + "%"}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>Select a discount to use</FormHelperText>
+              </FormControl>
+
               <Grid container direction="row" className={classes.spacing5}>
                 <Grid item xs={6}>
                   <FormControl component="fieldset">
@@ -415,23 +493,17 @@ class Checkout extends React.Component {
                         )}
                       </Typography>
                     )}
+                    {this.state.promocampaign !== null && (
+                      <Typography variant="body2" color="textSecondary">
+                        Promo Code Discount:{" "}
+                        {this.state.promocampaign.discount + "%"}
+                      </Typography>
+                    )}
                   </Grid>
                 </Grid>
                 <Grid item>
                   <Typography variant="subtitle1">
-                    $
-                    {this.state.use_points === "true" &&
-                      formatMoney(
-                        this.calTotalPrice() +
-                          this.state.delivery_fee -
-                          PointUsage.convertPointToMoney(
-                            this.state.customer.reward_pts
-                          )
-                      )}
-                    {this.state.use_points === "false" &&
-                      formatMoney(
-                        this.calTotalPrice() + this.state.delivery_fee
-                      )}
+                    ${formatMoney(this.calOverallTotalPriceDisplay())}
                   </Typography>
                 </Grid>
               </Grid>
