@@ -17,6 +17,7 @@ DECLARE
     order_id integer;
     oiid_count integer := 1;
     temprow record;
+    existTuple boolean;
 BEGIN
     select true into meet_min_cost from Restaurants R where R.rid = inRid 
     and (inPrice - in_delivery_fee) < R.min_order_cost; 
@@ -35,6 +36,11 @@ BEGIN
     VALUES (order_id);
 
     IF inPcid > 0 THEN
+        SELECT true into existTuple FROM Eligible where pcid=inPcid and cid=inUserId;
+        IF NOT FOUND THEN
+            RAISE exception 'Not Eligible for the current promo';
+        END IF;
+
         INSERT INTO OrderPromoCampaignUsage(oid, pcid)
         VALUES (order_id, inPcid);
     END IF;
