@@ -193,7 +193,7 @@ export default function Header(props) {
           </Menu>
 
           <Button
-            aria-controls="simple-menu"
+            aria-controls="simple-menu-3"
             aria-haspopup="true"
             onClick={handleClickRider}
             color="white"
@@ -202,8 +202,8 @@ export default function Header(props) {
             Riders
           </Button>
           <Menu
-            id="simple-menu"
-            anchorE2={anchorE2}
+            id="simple-menu-3"
+            anchorEl={anchorE2}
             keepMounted
             open={Boolean(anchorE2)}
             onClose={handleClose}
@@ -223,7 +223,7 @@ export default function Header(props) {
           </Menu>
 
           <Button
-            aria-controls="simple-menu"
+            aria-controls="simple-menu-2"
             aria-haspopup="true"
             onClick={handleClickRestaurant}
             color="white"
@@ -232,8 +232,8 @@ export default function Header(props) {
             Restaurant
           </Button>
           <Menu
-            id="simple-menu"
-            anchorE2={anchorE3}
+            id="simple-menu-2"
+            anchorEl={anchorE3}
             keepMounted
             open={Boolean(anchorE3)}
             onClose={handleClose}

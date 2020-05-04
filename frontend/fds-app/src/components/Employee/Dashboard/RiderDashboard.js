@@ -108,8 +108,8 @@ class RiderDashboard extends React.Component {
         const row = response.data.rows[0];
         this.setState({
           totalDeliveryOrder: row.deliveryordercount,
-          totalHours: row.totalhours,
-          totalSalarys: row.totalsalarys,
+          totalHours: row.totalhours ? row.totalhours : 0,
+          totalSalarys: row.totalsalarys ? row.totalsalarys : 0,
           avgDeliveryTime: row.avgdeliverytime,
           ratingCount: row.ratingcount,
           avgrating: row.avgrating,
@@ -164,7 +164,17 @@ class RiderDashboard extends React.Component {
     const deliveryProp = [
       {
         label: "Average Delivery Time",
-        value: this.state.avgDeliveryTime + " hrs",
+        value: this.state.avgDeliveryTime
+          ? (
+              (this.state.avgDeliveryTime.hours
+                ? this.state.avgDeliveryTime.hours
+                : 0) +
+              (this.state.avgDeliveryTime.minutes
+                ? this.state.avgDeliveryTime.minutes
+                : 0) /
+                60
+            ).toFixed(2) + " hrs"
+          : "0 hrs",
       },
     ];
 
@@ -175,7 +185,7 @@ class RiderDashboard extends React.Component {
       },
       {
         label: "Avg Rating",
-        value: this.state.avgrating,
+        value: parseFloat(this.state.avgrating).toFixed(2),
       },
     ];
 
