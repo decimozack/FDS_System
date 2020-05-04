@@ -72,6 +72,7 @@ count(RR.rating) as ratingCount,
 coalesce(avg(RR.rating),0) as avgRating
 FROM Assigned A1
 left join RiderRatings RR on RR.oid = A1.oid
+where A1.arriveAtCustomerTime is not null and A1.toRestaurantTime is not null
 group by date_part('year', A1.toRestaurantTime),
 date_part('month', A1.toRestaurantTime),
 A1.empid; 
