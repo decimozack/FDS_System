@@ -19,6 +19,48 @@ router.get("/getCustomerList", (req, res, next) => {
     });
 });
 
+router.get("/getFDSPromos/", (req, res, next) => {
+  var db = req.app.locals.db;
+
+  db.query(
+    "select * from promocampaign join promobfds using (pcid) join discountpromo using (pcid)"
+  )
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find promo by fds");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.post("/addFDSDiscountPromo/", (req, res, next) => {
+  var db = req.app.locals.db;
+  var { startTime, endTime, minSpend, maxSpend, discount } = req.body;
+  db.query("SELECT fdsAddDiscountPromo($1, $2, $3, $4, $5)", [
+    startTime,
+    endTime,
+    minSpend,
+    maxSpend,
+    discount,
+  ])
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot add");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
 router.get("/getLocationAreaList", (req, res, next) => {
   var db = req.app.locals.db;
 

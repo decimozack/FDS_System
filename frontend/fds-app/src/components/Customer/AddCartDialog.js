@@ -74,7 +74,7 @@ class ViewRestaurant extends React.Component {
             onClose={this.props.onClose}
             aria-labelledby="form-dialog-title"
           >
-            <form onSubmit={this.onSubmit} noValidate>
+            <form onSubmit={this.onSubmit}>
               <DialogTitle id="form-dialog-title">
                 {this.props.selectedFoodItem.fname} - $
                 {formatMoney(this.props.selectedFoodItem.price)}

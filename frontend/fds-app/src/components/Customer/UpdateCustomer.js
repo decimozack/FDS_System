@@ -142,11 +142,7 @@ class UpdateCustomer extends React.Component {
           {this.state.successMsg.length > 0 && (
             <Alert severity="success">{this.state.successMsg}</Alert>
           )}
-          <form
-            className={classes.form}
-            onSubmit={this.handleSubmit}
-            noValidate
-          >
+          <form className={classes.form} onSubmit={this.handleSubmit}>
             <TextField
               variant="outlined"
               margin="normal"

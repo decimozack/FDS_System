@@ -156,3 +156,22 @@ BEGIN
     (TOM.t_year = inYear and TOM.t_month = inMonth);
 END;
 $$ LANGUAGE plpgsql;
+
+-- fdsAddDiscountPromo
+CREATE OR REPLACE FUNCTION fdsAddDiscountPromo(startTime TIMESTAMP, endTime TIMESTAMP,
+minSpend INTEGER, maxSpend INTEGER, discount INTEGER)
+RETURNS void as $$
+DECLARE
+    re_pcid INTEGER;
+BEGIN
+    INSERT INTO PromoCampaign(campaign_type, start_time, end_time)
+    VALUES ('DiscountPromo', startTime, endTime) RETURNING pcid INTO re_pcid;
+
+    INSERT INTO PromoBFDS
+    VALUES (re_pcid);
+
+    INSERT INTO DiscountPromo(pcid, min_spend, max_spend, discount)
+    VALUES (re_pcid, minSpend, maxSpend, discount);
+
+END;
+$$ LANGUAGE plpgsql;

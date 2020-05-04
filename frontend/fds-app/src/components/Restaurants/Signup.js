@@ -110,11 +110,7 @@ class RestaurantSignUp extends React.Component {
           {this.state.errorMsg.length > 0 && (
             <Alert severity="error">{this.state.errorMsg}</Alert>
           )}
-          <form
-            className={classes.form}
-            onSubmit={this.handleSubmit}
-            noValidate
-          >
+          <form className={classes.form} onSubmit={this.handleSubmit}>
             <TextField
               variant="outlined"
               margin="normal"

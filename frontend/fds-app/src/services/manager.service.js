@@ -24,6 +24,21 @@ class ManagerDataService {
     return http.post(`/manager/EmpSignup/`, emprData);
   }
 
+  retrieveFDSPromos() {
+    return http.get("/manager/getFDSPromos/");
+  }
+
+  addFDSDiscountPromo(startTime, endTime, minSpend, maxSpend, discount) {
+    const data = {
+      startTime: startTime,
+      endTime: endTime,
+      minSpend: minSpend,
+      maxSpend: maxSpend,
+      discount: discount,
+    };
+    return http.post("/manager/addFDSDiscountPromo/", data);
+  }
+
   retrieveLocationAreaList() {
     return http.get("/manager/getLocationAreaList");
   }

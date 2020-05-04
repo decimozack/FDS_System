@@ -178,11 +178,7 @@ class UpdateEmployee extends React.Component {
           {this.state.successMsg.length > 0 && (
             <Alert severity="success">{this.state.successMsg}</Alert>
           )}
-          <form
-            className={classes.form}
-            onSubmit={this.handleSubmit}
-            noValidate
-          >
+          <form className={classes.form} onSubmit={this.handleSubmit}>
             {this.state.workRole === "Rider" && (
               <TextField
                 id="isPartTime"

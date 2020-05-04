@@ -38,6 +38,7 @@ import RestaurantReview from "./components/Restaurants/review.js";
 import Checkout from "./components/Customer/Checkout";
 import OrdersTable from "./components/Customer/OrdersTable";
 import RatingForm from "./components/Customer/RatingForm";
+import ViewPromos from "./components/Employee/ViewPromos";
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
@@ -61,6 +62,8 @@ const managerSections = [
   { title: "Customer Management", url: "/contact" },
   { title: "Employee Management", url: "/about" },
   { title: "Restaurant Management", url: "/about" },
+  { title: "View All FDS Promos", url: "/promos" },
+  { title: "Add FDS Promo", url: "/promos/add" },
   { title: "Overall FDS Dashboard", url: "/dashboard/fds" },
   {
     title: "Customer Order Summary Dashboard",
@@ -178,6 +181,18 @@ class App extends Component {
                   <CustomerProtectedRoute
                     path="/customer/*"
                     component={ViewRestaurants}
+                  />
+                  <ManagerProtectedRoute
+                    path="/promos/add"
+                    component={ViewPromos}
+                  />
+                  <ManagerProtectedRoute
+                    path="/promos/update"
+                    component={ViewPromos}
+                  />
+                  <ManagerProtectedRoute
+                    path="/promos"
+                    component={ViewPromos}
                   />
                   <ManagerProtectedRoute
                     path="/dashboard/fds"
