@@ -159,7 +159,7 @@ $$ LANGUAGE plpgsql;
 
 -- fdsAddDiscountPromo
 CREATE OR REPLACE FUNCTION fdsAddDiscountPromo(startTime TIMESTAMP, endTime TIMESTAMP,
-minSpend INTEGER, maxSpend INTEGER, discount INTEGER)
+minSpend INTEGER, maxSpend INTEGER, inDiscount INTEGER)
 RETURNS void as $$
 DECLARE
     re_pcid INTEGER;
@@ -171,7 +171,46 @@ BEGIN
     VALUES (re_pcid);
 
     INSERT INTO DiscountPromo(pcid, min_spend, max_spend, discount)
-    VALUES (re_pcid, minSpend, maxSpend, discount);
+    VALUES (re_pcid, minSpend, maxSpend, inDiscount);
 
 END;
 $$ LANGUAGE plpgsql;
+
+-- Update Promo
+CREATE OR REPLACE FUNCTION fdsUpdateDiscountPromo(startTime TIMESTAMP, endTime TIMESTAMP,
+minSpend INTEGER, maxSpend INTEGER, inDiscount INTEGER, in_pcid INTEGER)
+RETURNS void as $$
+DECLARE
+    re_pcid INTEGER;
+BEGIN
+    UPDATE PromoCampaign
+    SET start_time=startTime, end_time=endTime
+    WHERE pcid=in_pcid;
+    
+    UPDATE DiscountPromo
+    SET min_spend=minSpend, max_spend=maxSpend, discount=inDiscount
+    WHERE pcid=in_pcid;
+
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- trigger for FDSEmployee
+
+CREATE OR REPLACE FUNCTION update_insert_discount_promo_restrict() RETURNS TRIGGER AS $$
+BEGIN
+    
+    IF NEW.min_spend > NEW.max_spend THEN 
+        RAISE exception 'Minimum Spend is more than Maximum spend';
+    END IF;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS update_insert_discount_promo ON DiscountPromo CASCADE;
+CREATE CONSTRAINT TRIGGER update_insert_discount_promo
+AFTER UPDATE OF max_spend,min_spend OR INSERT
+ON DiscountPromo
+DEFERRABLE INITIALLY IMMEDIATE
+FOR EACH ROW
+EXECUTE FUNCTION update_insert_discount_promo_restrict();

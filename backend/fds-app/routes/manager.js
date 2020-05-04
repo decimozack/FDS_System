@@ -23,7 +23,28 @@ router.get("/getFDSPromos/", (req, res, next) => {
   var db = req.app.locals.db;
 
   db.query(
-    "select * from promocampaign join promobfds using (pcid) join discountpromo using (pcid)"
+    "select * from promocampaign join promobfds using (pcid) join discountpromo using (pcid) order by pcid desc"
+  )
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot find promo by fds");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+router.get("/getFDSPromo/:id", (req, res, next) => {
+  var db = req.app.locals.db;
+  const id = req.params.id;
+
+  db.query(
+    "select * from promocampaign join promobfds using (pcid) join discountpromo using (pcid) where pcid=$1 order by pcid desc",
+    [id]
   )
     .then(function (rows) {
       if (rows) {
@@ -58,6 +79,30 @@ router.post("/addFDSDiscountPromo/", (req, res, next) => {
     .catch(function (err) {
       console.error(err);
       res.status(500).send(err);
+    });
+});
+
+router.post("/updateFDSDiscountPromo/", (req, res, next) => {
+  var db = req.app.locals.db;
+  var { pcid, startTime, endTime, minSpend, maxSpend, discount } = req.body;
+  db.query("SELECT fdsUpdateDiscountPromo($1, $2, $3, $4, $5, $6)", [
+    startTime,
+    endTime,
+    minSpend,
+    maxSpend,
+    discount,
+    pcid,
+  ])
+    .then(function (rows) {
+      if (rows) {
+        res.status(200).send(rows);
+      } else {
+        res.status(404).send("Error cannot add");
+      }
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.status(500).send(err.message);
     });
 });
 

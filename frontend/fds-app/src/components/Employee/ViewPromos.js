@@ -81,7 +81,7 @@ class ViewPromos extends React.Component {
                 icon: "arrow_forward_ios",
                 tooltip: "Update Promo",
                 onClick: (event, rowData) => {
-                  this.props.history.push("/manager/promo/" + rowData.pcid);
+                  this.props.history.push("/promos/update/" + rowData.pcid);
                 },
               },
             ]}

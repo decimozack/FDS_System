@@ -98,7 +98,7 @@ router.post("/getDiscountPromo", (req, res, next) => {
   var { price } = req.body;
 
   db.query(
-    "select * from promocampaign join discountpromo using(pcid) where start_time < now() and end_time > now() and $1 > min_spend;",
+    "select * from promocampaign join discountpromo using(pcid) where start_time < now() and end_time > now() and (min_spend is null or $1 >= min_spend) and (max_spend is null or $1 <= max_spend)",
     [price]
   )
     .then(function (rows) {

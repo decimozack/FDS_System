@@ -39,6 +39,8 @@ import Checkout from "./components/Customer/Checkout";
 import OrdersTable from "./components/Customer/OrdersTable";
 import RatingForm from "./components/Customer/RatingForm";
 import ViewPromos from "./components/Employee/ViewPromos";
+import AddPromo from "./components/Employee/AddPromo";
+import UpdatePromo from "./components/Employee/UpdatePromo";
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
@@ -184,11 +186,11 @@ class App extends Component {
                   />
                   <ManagerProtectedRoute
                     path="/promos/add"
-                    component={ViewPromos}
+                    component={AddPromo}
                   />
                   <ManagerProtectedRoute
-                    path="/promos/update"
-                    component={ViewPromos}
+                    path="/promos/update/:id"
+                    component={UpdatePromo}
                   />
                   <ManagerProtectedRoute
                     path="/promos"

@@ -28,6 +28,10 @@ class ManagerDataService {
     return http.get("/manager/getFDSPromos/");
   }
 
+  retrieveFDSPromo(id) {
+    return http.get("/manager/getFDSPromo/" + id);
+  }
+
   addFDSDiscountPromo(startTime, endTime, minSpend, maxSpend, discount) {
     const data = {
       startTime: startTime,
@@ -39,6 +43,24 @@ class ManagerDataService {
     return http.post("/manager/addFDSDiscountPromo/", data);
   }
 
+  updateFDSDiscountPromo(
+    pcid,
+    startTime,
+    endTime,
+    minSpend,
+    maxSpend,
+    discount
+  ) {
+    const data = {
+      pcid: pcid,
+      startTime: startTime,
+      endTime: endTime,
+      minSpend: minSpend,
+      maxSpend: maxSpend,
+      discount: discount,
+    };
+    return http.post("/manager/updateFDSDiscountPromo/", data);
+  }
   retrieveLocationAreaList() {
     return http.get("/manager/getLocationAreaList");
   }

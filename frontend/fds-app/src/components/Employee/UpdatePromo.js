@@ -33,7 +33,7 @@ const useStyles = (theme) => ({
   },
 });
 
-class AddPromo extends React.Component {
+class UpdatePromo extends React.Component {
   constructor(props) {
     super(props);
 
@@ -45,14 +45,36 @@ class AddPromo extends React.Component {
       discount: 0,
       errorMsg: "",
       successMsg: "",
+      pcid: this.props.match.params.id,
     };
+
     this.handleChange = this.handleChange.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
     this.handleEndDateChange = this.handleEndDateChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.retrievePromo = this.retrievePromo.bind(this);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.retrievePromo();
+  }
+
+  retrievePromo() {
+    ManagerDataService.retrieveFDSPromo(this.state.pcid)
+      .then((res) => {
+        const row = res.data.rows[0];
+        this.setState({
+          startTime: row.start_time,
+          endTime: row.end_time,
+          minSpend: row.min_spend,
+          maxSpend: row.max_spend,
+          discount: row.discount,
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
 
   handleChange(event) {
     const target = event.target;
@@ -78,7 +100,8 @@ class AddPromo extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    ManagerDataService.addFDSDiscountPromo(
+    ManagerDataService.updateFDSDiscountPromo(
+      this.state.pcid,
       this.state.startTime,
       this.state.endTime,
       this.state.minSpend,
@@ -86,10 +109,11 @@ class AddPromo extends React.Component {
       this.state.discount
     )
       .then((response) => {
-        this.props.history.push("/promos/", { successMsg: "promo created" });
+        this.setState({ successMsg: "Update successful" });
       })
       .catch((e) => {
         console.log(e);
+        this.setState({ errorMsg: e });
       });
   }
 
@@ -181,7 +205,7 @@ class AddPromo extends React.Component {
               color="primary"
               className={classes.submit}
             >
-              Add Promo
+              Update Promo
             </Button>
           </form>
         </div>
@@ -190,4 +214,4 @@ class AddPromo extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(AddPromo);
+export default withStyles(useStyles)(UpdatePromo);
