@@ -61,9 +61,6 @@ const customerSections = [
 const managerSections = [
   { title: "Sign Up", url: "/empsignup" },
   { title: "Update Info", url: "/updateEmployee" },
-  { title: "Customer Management", url: "/contact" },
-  { title: "Employee Management", url: "/about" },
-  { title: "Restaurant Management", url: "/about" },
   { title: "View All FDS Promos", url: "/promos" },
   { title: "Add FDS Promo", url: "/promos/add" },
   { title: "Overall FDS Dashboard", url: "/dashboard/fds" },
