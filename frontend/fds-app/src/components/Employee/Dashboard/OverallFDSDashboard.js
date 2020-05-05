@@ -112,7 +112,7 @@ class OverallFDSDashboard extends React.Component {
 
     const totalOrderProp = [
       { label: "Total Order", value: this.state.totalOrder },
-      { label: "Total Order Cost", value: this.state.totalOrderCost },
+      { label: "Total Order Cost", value: "$ " + this.state.totalOrderCost },
     ];
 
     return (

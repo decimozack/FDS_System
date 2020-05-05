@@ -491,8 +491,12 @@ class Checkout extends React.Component {
                     )}
                     {this.state.promocampaign !== null && (
                       <Typography variant="body2" color="textSecondary">
-                        Promo Code Discount:{" "}
-                        {this.state.promocampaign.discount + "%"}
+                        Promo Code Discount{" "}
+                        {this.state.promocampaign.discount + "% : - $"}
+                        {formatMoney(
+                          (this.state.promocampaign.discount / 100) *
+                            this.calTotalPrice()
+                        )}
                       </Typography>
                     )}
                   </Grid>
