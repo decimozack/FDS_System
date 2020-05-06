@@ -89,6 +89,16 @@ BEGIN
 		(total_work_day != 5 or NOT (offWindow1 = 0 or offWindow2 = 0 or offWindow3 = 0 or offWindow4 = 0 or offWindow5 = 0 or offWindow6 = 0 or offWindow7 = 0)) THEN
 		RAISE exception 'Invalid Full time WWS';
 	END IF;
+	IF NOT (select isPartTime from Rider where empid = NEW.empid) and
+		NOT (select 1 from WWS where empid=NEW.empid and Monday in (0,1,2,3,4)) and
+		NOT (select 1 from WWS where empid=NEW.empid and Tuesday in (0,1,2,3,4)) and
+		NOT (select 1 from WWS where empid=NEW.empid and Wednesday in (0,1,2,3,4)) and
+		NOT (select 1 from WWS where empid=NEW.empid and Thursday in (0,1,2,3,4)) and
+		NOT (select 1 from WWS where empid=NEW.empid and Friday in (0,1,2,3,4)) and
+		NOT (select 1 from WWS where empid=NEW.empid and Saturday in (0,1,2,3,4)) and
+		NOT (select 1 from WWS where empid=NEW.empid and Sunday in (0,1,2,3,4)) and THEN
+		RAISE exception 'Invalid Full time WWS';
+	END if;
 	RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
