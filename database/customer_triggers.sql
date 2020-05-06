@@ -122,6 +122,31 @@ DEFERRABLE INITIALLY IMMEDIATE
 FOR EACH ROW
 EXECUTE FUNCTION create_orderitem_task();
 
+-- trigger for OrderPromoCampaignUsage Insertion
+-- this is to ensure that each order is only linked to one promocampaign
+
+CREATE OR REPLACE FUNCTION insert_order_pc_check() RETURNS TRIGGER AS $$
+DECLARE
+    out_oid integer;
+BEGIN
+    
+    SELECT oid INTO out_oid FROM OrderPromoCampaignUsage WHERE oid = NEW.oid and pcid <> NEW.pcid;
+
+    IF FOUND THEN 
+        RAISE exception 'Order has already applied PromoCampaign before';
+    END IF;
+    
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS check_key_constraint_order_pc_trigger ON OrderPromoCampaignUsage CASCADE;
+CREATE CONSTRAINT TRIGGER check_key_constraint_order_pc_trigger
+AFTER UPDATE OR INSERT
+ON OrderPromoCampaignUsage
+DEFERRABLE INITIALLY IMMEDIATE
+FOR EACH ROW
+EXECUTE FUNCTION insert_order_pc_check();
 
 -- submit review
 
