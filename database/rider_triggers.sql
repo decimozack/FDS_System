@@ -96,7 +96,7 @@ BEGIN
 		NOT (select 1 from WWS where empid=NEW.empid and Thursday in (0,1,2,3,4)) and
 		NOT (select 1 from WWS where empid=NEW.empid and Friday in (0,1,2,3,4)) and
 		NOT (select 1 from WWS where empid=NEW.empid and Saturday in (0,1,2,3,4)) and
-		NOT (select 1 from WWS where empid=NEW.empid and Sunday in (0,1,2,3,4)) and THEN
+		NOT (select 1 from WWS where empid=NEW.empid and Sunday in (0,1,2,3,4)) THEN
 		RAISE exception 'Invalid Full time WWS';
 	END if;
 	RETURN NULL;
