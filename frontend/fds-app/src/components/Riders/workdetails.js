@@ -76,7 +76,7 @@ class WorkDetails extends Component {
           <th>Depart to Restaurant Time</th>
           <th>Arrive at Restaurant Time</th>
           <th>Depart to Customer Time</th>
-          <th>Arrive to Restaurant Time</th>
+          <th>Arrive at Customer Time</th>
           <th>Commission</th>
         </tr>
       </thead>
