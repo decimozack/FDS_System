@@ -41,6 +41,7 @@ class OrdersTable extends React.Component {
     this.state = {
       orders: [],
       user: auth.getUser(),
+      errorMsg: "",
       successMsg: this.props.location.state
         ? this.props.location.state.successMsg
         : "",
@@ -63,6 +64,9 @@ class OrdersTable extends React.Component {
 
     return (
       <Container>
+        {this.state.errorMsg.length > 0 && (
+          <Alert severity="error">{this.state.errorMsg}</Alert>
+        )}
         {this.state.successMsg !== null && this.state.successMsg.length > 0 && (
           <Alert severity="success" className={classes.spacing}>
             {this.state.successMsg}
@@ -130,7 +134,15 @@ class OrdersTable extends React.Component {
                 icon: "rate_review",
                 tooltip: "Give Review",
                 onClick: (event, rowData) => {
-                  this.props.history.push("/customer/rating/", rowData);
+                  if (rowData.order_status !== "COMPLETED") {
+                    this.setState({
+                      errorMsg:
+                        "Review cannot be given to orders that are not completed yet",
+                      successMsg: "",
+                    });
+                  } else {
+                    this.props.history.push("/customer/rating/", rowData);
+                  }
                 },
               },
             ]}

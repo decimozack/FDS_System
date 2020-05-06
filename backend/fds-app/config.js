@@ -1,9 +1,9 @@
 const config = {
   DB_CONNECTION: {
-    user: "postgres",
+    user: "fds",
     host: "localhost",
     database: "fds",
-    password: "Asdf1234",
+    password: "password",
     port: "5432",
   },
 };

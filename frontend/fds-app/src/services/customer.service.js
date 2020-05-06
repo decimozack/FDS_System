@@ -56,6 +56,10 @@ class CustomerDataService {
     const data = { oid: oid, rating: rating, comments: comments };
     return http.post(baseUrl + "/submitReview/", data);
   }
+
+  getRestaurantReview(rid) {
+    return http.get("restaurant/getReview/" + rid);
+  }
 }
 
 export default new CustomerDataService();
