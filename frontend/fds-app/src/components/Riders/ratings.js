@@ -25,8 +25,9 @@ class RiderRatings extends Component {
     .then(res => {
       var average = 0;
       for (var i =0; i < res.data.length; i++) {
-        average += res.data.rating;
+        average += res.data[i].rating;
       }
+      console.log(average)
       if (res.data.length > 0) {
         average /= res.data.length;
       }
@@ -52,7 +53,7 @@ class RiderRatings extends Component {
     console.log(this.state)
     return (
       <div>
-        <h3>Work Details</h3>
+        <h3>Ratings</h3>
         <div>
         <h4>{"Average Rating: " + this.state.average}</h4>
         </div>

@@ -13,7 +13,7 @@ export const RestaurantProtectedRoute = ({ component: Component, ...rest }) => {
         ) : (
           <Redirect
             to={{
-              pathname: "/signin",
+              pathname: "/home",
               state: {
                 from: props.location,
               },

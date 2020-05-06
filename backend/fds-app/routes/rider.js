@@ -244,6 +244,7 @@ router.get('/getAssignedOrders/:id', (req, res, next) => {
   var db = req.app.locals.db;
 
   var riderid = req.params.id;
+  console.log(riderid)
   
   db.query('SELECT oid, toRestaurantTime, arriveAtRestaurantTime, restaurantToCustomerTime, arriveAtCustomerTime, commission\
    FROM Assigned WHERE empid = $1 order by oid desc', [riderid])

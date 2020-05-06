@@ -45,7 +45,7 @@ class RiderSalary extends Component {
     console.log(this.state)
     return (
       <div>
-        <h3>Work Details</h3>
+        <h3>Salary</h3>
         <div>
         <h4>{"Message: " + this.state.message}</h4>
         </div>
